@@ -1,6 +1,9 @@
 <?php
     
-require($_SERVER['DOCUMENT_ROOT'] . "/include/class/class.Page.php");
+// Automatické nahrávanie všetkých CLASS pri ich prvom zavolaní
+spl_autoload_register(function ($class_name) {
+    include_once $_SERVER['DOCUMENT_ROOT'] . "/include/class/class.".$class_name.'.php';
+});
 
 class PageClear extends Page
 {

@@ -1,19 +1,19 @@
 <?php
     // Automatické nahrávanie všetkých CLASS pri ich prvom zavolaní
     spl_autoload_register(function ($class_name) {
-        include $_SERVER['DOCUMENT_ROOT'] . "/include/class/class.".$class_name.'.php';
+        include_once $_SERVER['DOCUMENT_ROOT'] . "/include/class/class.".$class_name.'.php';
     });
     
     // založenie novej triedy na stranku
     $homepage = new PageClear('index', 1);
-    
     // prepísanie hodnôt stránky ručne. Štandardne sa hodnoty načítavajú z _variables.php
     // $homepage->nadpis = 'Nadpis';
 
-    
     // inicializácia konštánt formulára v prípade volania metódou GET
-    $validation_values['login-osobne-cislo'] = $validation_classes['login-osobne-cislo'] = $validation_feedback['login-osobne-cislo'] = '';
-    $validation_values['login-pasword'] = $validation_classes['login-pasword'] = $validation_feedback['login-pasword'] = '';
+    $mena_vsetkych_poli = array ('login-osobne-cislo', 'login-pasword');
+    foreach ($mena_vsetkych_poli as $key => $value) {
+        $validation_values[$value] = $validation_classes[$value] = $validation_feedback[$value] = '';
+    }
 
     $request_method = strtoupper($_SERVER['REQUEST_METHOD']);
 
@@ -102,7 +102,7 @@
             </form>
 
             <p class="mb-1">
-                <a href="/pages/signup" class="text-center">Zaregistrovať nový účet</a>
+                <a href="/pages/signup" class="btn btn-secondary d-block mt-3">Zaregistrovať nový účet</a>
             </p>
         </div>
         <!-- /.login-card-body -->

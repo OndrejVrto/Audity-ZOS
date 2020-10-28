@@ -1,6 +1,9 @@
 <?php
 
-require_once($_SERVER['DOCUMENT_ROOT'] . "/include/class/class.Validator.php");
+// Automatické nahrávanie všetkých CLASS pri ich prvom zavolaní
+spl_autoload_register(function ($class_name) {
+    include_once $_SERVER['DOCUMENT_ROOT'] . "/include/class/class.".$class_name.'.php';
+});
 
 class ValidatorLogin extends Validator
 {
@@ -28,15 +31,12 @@ class ValidatorLogin extends Validator
 
     private function validateLoginOsobneCislo($name)
     {
+        $value = $this->privat_data[$name];
 
-        $val = trim($this->privat_data[$name]);
-
-        if (empty($val)) {
+        if ($this->is_required($value)) {
             $this->addError($name, 'Poľe nesmie byť prázdne.');
-            $this->addError($name, 'Druhý riadok');
-            $this->addError($name, 'Tretí riadok');
-        } else if (!preg_match('/^[0-9]{1,6}+[0-9a-zA-Z]{0,3}$/', $val)) {
-            $this->addError($name, 'Osobné číslo je mimo vzor');
+        } else if (!$this->is_alphanum($value)) {
+            $this->addError($name, 'Osobné číslo môže byť zložené len s číslic a písmen.');
         } else {
             $this->addSucces($name, 'Správna hodnota. Super.');
         }
@@ -44,15 +44,13 @@ class ValidatorLogin extends Validator
 
     private function validateLoginPasword($name)
     {
-        $val = trim($this->privat_data[$name]);
+        $value = trim($this->privat_data[$name]);
 
-        if (empty($val)) {
+        if ($this->is_required($value)) {
             $this->addError($name, 'Poľe s heslom nesmie byť prázdne.');
-        } else if (!preg_match('/^[0-9a-zA-Z\#\$\%\^\&]{1,6}$/', $val)) {
-            $this->addError($name, 'Heslo je slabé');
-
         } else {
             $this->addSucces($name, 'Vcelku dobré heslo');
-        }
+        } 
+
     }
 }
