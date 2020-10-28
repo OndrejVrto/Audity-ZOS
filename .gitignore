@@ -1,0 +1,21 @@
+# Ignore list
+# najskor som zakazal vsetko
+
+*
+
+#  a potom som povolil len to co som potreboval
+!*.php
+
+!include
+!include/class
+!pages
+
+!include/*.php
+!include/class/*.php
+!pages/*.php
+
+!.gitignore
+!.htaccess
+
+# nakoniec som zakázal jednotlivé súbory ktoré nechcem zverejňovať
+inc.dBconnect.php
