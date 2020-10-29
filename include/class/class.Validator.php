@@ -94,7 +94,7 @@ class Validator
             $list .= "\n\t".$odsad.'</ul>';
         }
 
-        $this->privat_feedback[$key] = $odsad.'<div class="'.($bool ? 'valid' : 'invalid').'-feedback">'."\n\t".$odsad.$list."\n".$odsad.'</div>'."\n";
+        $this->privat_feedback[$key] = $odsad.'<div class="mb-n2 d-block '.($bool ? 'valid' : 'invalid').'-feedback">'."\n\t".$odsad.$list."\n".$odsad.'</div>'."\n";
     }
     // fynkcia čistí text pre výstup do HTML
     protected function purify($string){

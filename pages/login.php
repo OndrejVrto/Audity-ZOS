@@ -48,7 +48,7 @@
 
     ob_start();  // Začiatok definície hlavného obsahu
 ?>
-
+<div class="login-box">
     <!-- login-logo -->
     <div class="login-logo">
         <a href="/"><b>Audity</b>ŽOS</a>
@@ -107,7 +107,7 @@
         </div>
         <!-- /.login-card-body -->
     </div>
-
+</div>
 <?php
     $homepage->content = ob_get_clean();  // Koniec hlavného obsahu
     $homepage->display();  // vykreslenie stranky

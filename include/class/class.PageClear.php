@@ -17,7 +17,7 @@ class PageClear extends Page
     <!-- <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> -->
     <link rel="stylesheet" href="/dist/css/ionicons/css/ionicons.min.css">
     <!-- icheck bootstrap -->
-    <link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="/dist/css/adminlte.css">
     <!-- Google Font: Source Sans Pro -->
@@ -34,9 +34,19 @@ class PageClear extends Page
     <script src="/plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap 4 -->
     <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- bs-custom-file-input -->
+    <script src="/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>    
     <!-- AdminLTE App -->
     <script src="/dist/js/adminlte.min.js"></script>
-
+    <!-- AdminLTE for demo purposes -->
+    <script src="/dist/js/demo.js"></script>
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+            bsCustomFileInput.init();
+        });
+    </script>
+    
     <!-- END - Skripty clear štandard -->    
     ';
 
@@ -61,15 +71,13 @@ class PageClear extends Page
 </head>
 
 <body class="hold-transition register-page">
-<div class="register-box">
 <?php
     }
 
     public function displayBodyFooter()
     {
 ?>
-</div>
-<!-- /.register-box -->
+<!-- nic -->
 <?php
     }
 }

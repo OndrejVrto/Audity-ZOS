@@ -8,14 +8,30 @@ spl_autoload_register(function ($class_name) {
 class ValidatorSignup extends Validator
 {
 
+    public function __construct($post_data)
+    {
+        $this->privat_data = $post_data;
+        
+        // ak nieje zaskrtnute tlacitko checkbox tak v POST metode chyba kluc aj hodnota
+        // preto nastavím priamo chybu
+        $this->addError('signup-checkbox', 'Súhlas je nevyhnutný.');
+        if (isset($_FILES)) {
+            $this->privat_data['signup-avatar'] = $_FILES['signup-avatar']['name'];
+        }
+        
+        //print_r($this->privat_data);
+        //print_r($_FILES);
+
+    }
+
     public function validateForm()
     {
         foreach ($this->privat_data as $key => $value) {
 
             $this->addValue($key, $value);
             
-// 'signup-osobne-cislo', 'signup-titul', 'signup-meno', 'signup-priezvisko', 'signup-email', 'signup-pasword', 'signup-pasword-repeater'
-            switch ($key) {
+            switch ($key) 
+                {
                 case "signup-osobne-cislo":
                     $this->validateSignupOsobneCislo($key);
                     break;
@@ -31,9 +47,18 @@ class ValidatorSignup extends Validator
                     $this->validateSignupPasword($key);
                     break;
                 case "signup-titul":    
-                    $this->addSucces($key, 'OK. Titul nemusí byť vyplnený.');
-                    break;                                       
-            }
+                    $this->addSucces($key, '');
+                    break;
+                case "signup-checkbox":
+                    $this->validateSignupCheckbox($key);
+                    break;
+                case "signup-telefon":
+                    $this->validateSignupTelefon($key);
+                    break;
+                case "signup-avatar":
+                    $this->validateSignupAvatar($key);
+                    break;                    
+                }
         }
         return $this->privat_succes;
     }
@@ -44,7 +69,6 @@ class ValidatorSignup extends Validator
     private function validateSignupUsername($name)
     {
         $val = trim($this->privat_data[$name]);
-
         if (empty($val)) {
             $this->addError($name, 'Poľe nesmie byť prázdne.');
         } else if (!$this->is_alphanum($val)) {
@@ -57,7 +81,6 @@ class ValidatorSignup extends Validator
     private function validateEmail($name)
     {
         $val = trim($this->privat_data[$name]);
-
         if (empty($val)) {
             $this->addError($name, 'Poľe nesmie byť prázdne.');
         } else if (!$this->is_email($val)) {
@@ -66,11 +89,10 @@ class ValidatorSignup extends Validator
             $this->addSucces($name, 'Pochvala. Zvládol si to.');
         }
     }
-    
+
     private function validateSignupOsobneCislo($name)
     {
         $value = $this->privat_data[$name];
-
         if ($this->is_required($value)) {
             $this->addError($name, 'Poľe nesmie byť prázdne.');
         } else if (!$this->is_alphanum($value)) {
@@ -83,13 +105,54 @@ class ValidatorSignup extends Validator
     private function validateSignupPasword($name)
     {
         $value = trim($this->privat_data[$name]);
-
         if ($this->is_required($value)) {
             $this->addError($name, 'Poľe s heslom nesmie byť prázdne.');
         } else {
             $this->addSucces($name, 'Vcelku dobré heslo');
         } 
-
     }
 
+    private function validateSignupCheckbox($name)
+    {
+        $value = trim($this->privat_data[$name]);
+        if (!$this->is_required($value)) {
+            // vymazanie chyby s construktora
+            $this->privat_errors[$name] = '';
+            // nastavenie prazdnej validnej hodnoty
+            $this->addSucces($name, '');
+        }
+    }
+
+    private function validateSignupTelefon($name)
+    {
+        $value = trim($this->privat_data[$name]);
+        if ($this->is_required($value)) {
+            $this->addError($name, 'Telefónny kontakt je dôležitý. Vyplňte ho.');
+        } else {
+            if ($this->is_numeric($value)) {
+                $this->addError($name, 'Telefónne číslo sa skladá iba z číslic.');
+            } else {
+                if ($this->is_minLength($value, 10)) {
+                    $this->addError($name, 'Telefónne číslo musí mať minimálne 10 číslic');
+                } else {
+                    if ($this->is_maxLength($value, 14)) {
+                        $this->addError($name, 'Telefónne číslo môže mať maximálne 14 číslic');
+                    }else {
+                        $this->addSucces($name, 'Telefónne číslo je v poriadku');
+                    }   
+                } 
+            } 
+        }
+    }
+
+    private function validateSignupAvatar($name)
+    {
+        $value = trim($this->privat_data[$name]);
+        if ($this->is_required($value)) {
+            $this->addError($name, 'Súbor nieje vybratý');
+        } else {
+            $this->addSucces($name, 'Súbor si si vybral, ale nevidíš ho lebo je to pokazenuo.');
+        } 
+    }
+    
 }
