@@ -59,7 +59,7 @@
         <div class="card-body login-card-body">
             <p class="login-box-msg">Prihlás sa na začiatku práce</p>
 
-            <form action="/pages/login" method="POST">
+            <form action="/login" method="POST">
 
                 <!-- FORM - osobne cislo -->
                 <div class="input-group mb-3">
@@ -94,7 +94,7 @@
                     </div>
 
                     <div class="col-5">
-                        <button type="submit" name="submit" class="btn btn-primary btn-block">Prihlásiť</button>
+                        <button type="submit" name="submit" class="btn btn-block bg-gradient-primary btn-lg">Prihlásiť</button>
                     </div>
                 </div>
                 <!-- /.row -->
@@ -102,7 +102,7 @@
             </form>
 
             <p class="mb-1">
-                <a href="/signup" class="btn btn-secondary d-block mt-3">Zaregistrovať nový účet</a>
+                <a href="/signup" class="btn btn-outline-secondary d-block mt-3">Zaregistrovať nový účet</a>
             </p>
         </div>
         <!-- /.login-card-body -->

@@ -216,11 +216,11 @@
 
                     <!-- FORM - Tlacitko Submit -->
                     <div class="col-xl-5">                    
-                        <button name="submit" type="submit" class="btn btn-primary btn-lg btn-block">Registrovať</button>
+                        <button name="submit" type="submit" class="btn btn-block bg-gradient-primary btn-lg">Registrovať</button>
                     </div>
                     <!-- FORM - Tlacitko Login -->                
                     <div class="col-xl-4">  
-                        <a href="/login" class="btn btn-secondary btn-lg btn-block mt-2 mt-xl-0">Už som zaregistrovaný</a>
+                        <a href="/login" class="btn btn-outline-secondary btn-lg btn-block mt-2 mt-xl-0">Už som zaregistrovaný</a>
                     </div>
                 
                 </div>
