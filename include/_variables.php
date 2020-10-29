@@ -9,61 +9,40 @@ class Premenne
     public $bublinkoveMenu;
     public $nadpisPrvejSekcie;
 
-    // MENU hlavné a zoznam liniek do stránok jednotlivých sekcií
-    public $menuHlavne = array (
-        "Farnosť" => array (
-            1	=> array ("farnost"								,"text-success"		,"/"														,"Aktuality"),
-            5	=> "separator",
-            6	=> array ("farnost->historia-kostola"			,""					,"/farnost/historia-kostola-sv-frantiska-v-detve"			,"História kostola"),
-
-        ),
-
-        "Spoločenstvá" => array (
-            1	=> array ("spolocenstva->zbor-hosanna"			,"text-danger"		,"/spolocenstva/mladeznicky-zbor-hosanna" 		,"Mládežnícky zbor Hosanna"),
-            5	=> "separator",
-            6	=> array ("spolocenstva->lektori"				,"text-danger"		,"/spolocenstva/lektori" 						,"Lektori"),
-
-        ),
-
-        "Liturgia" => array (
-            1	=> array ("liturgia->sviatost-krstu"			,"text-warning"		,"/liturgia/sviatost-krstu" 			 	,"Sviatosť krstu"),
-            8	=> "separator",
-            9	=> array ("liturgia->pohreb"					,"text-danger"		,"/liturgia/pohreb" 					 	,"Pohreb"),
-
-        ),
-
-        "Dekanát" => array (
-            1	=> array ("dekanat->schematizmus"				,"text-warning"		,"/dekanat/schematizmus-dekanatu-detva-zoznam-farnosti-a-knazov"	,"Mapa a zoznam farností"),
-            4	=> "separator",
-            5	=> array ("dekanat->svate-omse-v-okoli"			,"text-danger"		,"/dekanat/svate-omse-v-okoli" 										,"Sväté omše v okolí"),
-
-        ),
-
-    );
-
     // Konštanty stránok individuálne
     Public $konstantyStranok = array(
 
         // Meta značka stránky - TITLE -> Zobrazuje sa ako názov okna.
         "Titulok Stránky" => array(
-            "Chybová 404" 						=>	"Farnosť Detva - chybová stránka",
-            "Čistá" 							=>	"Farnosť Detva - oficiálna stránka farnosti aj dekanátu, na stránke sa pracuje",
+            "Chybová 404" 						=>	"Chybová stránka 404 | Audity ŽOS Zvolen",
+            "Čistá" 							=>	"Prázdna stránka | Audity ŽOS Zvolen",
             "index" 					        =>	"Home | Audity ŽOS Zvolen",
             "login" 					        =>	"Login | Audity ŽOS Zvolen",
             "signup" 					        =>	"Signup | Audity ŽOS Zvolen",
-
+            "30_zoznam_oblast_auditu"          =>	"Zoznam oblastí auditovania | Audity ŽOS Zvolen",
         ),	// "Titulok Stránky"
 
         // Meta značka stránky - description -> popisuje stránku
         "Popis Stránky" => array(
-            "Chybová 404" 						=>	"Farnosť Detva - stránka chybová - Error 404",
-            "Čistá" 							=>	"Farnosť Detva - čistá stránka, na ktorej nieje žiadny obsah. Zobrazuje sa pri neexistujúcom odkaze.",
+            "Chybová 404" 						=>	"Audity ŽOS Zvolen - chyba 404 - odkaz neexistuje",
+            "Čistá" 							=>	"Audity ŽOS Zvolen - prázdna stránka pre potreby vývoja",
             "index" 					        =>	"Audity ŽOS Zvolen - hlavná stránka",
             "login" 					        =>	"Audity ŽOS Zvolen - prihlasovanie uživateľa",
             "signup" 					        =>	"Audity ŽOS Zvolen - vytvorenie nového účtu uživateľa",            
+            "30_zoznam_oblast_auditu"           =>	"Audity ŽOS Zvolen - zoznam oblastí auditovania",
 
         ),	// "Popis Stránky"
 
+        // Nadpisy prvej kapitoly.
+        "Nadpis" => array(
+            "Chybová 404" 						=>	"Chybová stránka 404",
+            "Čistá" 							=>	"Prázdna stránka pre potreby vývoja",
+            "index" 					        =>	"Predľad všetkých auditov",
+            "login" 					        =>	false,
+            "signup" 					        =>	false,
+            "30_zoznam_oblast_auditu"           =>	"Zoznam oblastí auditovania",               
+
+        ),	// "_Nadpis kapitoly"
 
         // Bublinkové menu ->  určuje či sa na stránke zobrazí bublinkové menu a následne ho naplní
         "Bublinkové Menu" => array(
@@ -72,28 +51,152 @@ class Premenne
             "index"  					        =>	array ( array("", "Prehľad auditov")),
             "login" 					        =>	false,
             "signup" 					        =>	false,
+            "30_zoznam_oblast_auditu"           =>	array ( array("", "Audit"),
+                                                            array("", "Zoznam oblasti")),           
+            
 
-            "farnost"							=>	array ( array("", "Farnosť")),
-            "farnost->liturgicke-oznamy"		=>	array ( array("/farnost", "Farnosť"),
-                                                            array("", "Litgurgické oznamy")),
-            "farnost->rozpisy-lektorov-detva"	=>	array ( array("/farnost", "Farnosť"),
-                                                            array("", "Rozpisy lektorov")),
-            "farnost->svate-omse-farnosti-detva"=>	array ( array("/farnost", "Farnosť"),
-                                                            array("", "Omše vo farnosti")),
-            "farnost->historia-kostola"			=>	array ( array("/farnost", "Farnosť"),
-                                                            array("", "História kostola sv. Frantiska v Detve")),
+            // VZORY
+            "podstranka"						=>	array ( array("", "Audity")),
+            "podstranka->stranka"       		=>	array ( array("/audity", "Audity"),
+                                                            array("", "Zoznam auditov")),
         ),	// "Bublinkové Menu"
-
-        // Nadpisy prvej kapitoly.
-        "Nadpis" => array(
-            "Chybová 404" 						=>	"Farnosť Detva - chybová stránka",
-            "Čistá" 							=>	"Farnosť Detva - oficiálna stránka farnosti aj dekanátu, na stránke sa pracuje",
-            "index" 					        =>	"Predľad všetkých auditov",
-            "login" 					        =>	false,
-            "signup" 					        =>	false,
-
-        ),	// "Titulok Stránky"
     );
+
+    // MENU hlavné
+    public $menuHlavne = array(
+        1 => array(
+            "KodStranky" => false,
+            "Nazov" => "Audity",
+            "Link" => "#",
+            "Doplnok" => "badge badge-danger",
+            "PopisDoplnku" => "Kuk",
+            "Ikona" => "fas fa-check-double",
+            "SUBMENU" => array(
+                1 => array(
+                    "KodStranky" => "index",
+                    "Nazov" => "Prehľad auditov",
+                    "Link" => "/",
+                    "Doplnok" => "badge badge-warning",
+                    "PopisDoplnku" => "návrh",                    
+                ),
+                2 => array(
+                    "KodStranky" => "Čistá",
+                    "Nazov" => "Nový audit",
+                    "Link" => "#",
+                    "Doplnok" => false,
+                    "PopisDoplnku" => false,                    
+                ),
+            ),
+        ),
+        2 => "Reporty",
+        3 => array(
+            "KodStranky" => "Čistá",
+            "Nazov" => "Grafy",
+            "Link" => "#",
+            "Doplnok" => false,
+            "PopisDoplnku" => false,
+            "Ikona" => "fas fa-chart-area",
+            "SUBMENU" => false,
+        ),
+        4 => array(
+            "KodStranky" => "Čistá",
+            "Nazov" => "Tabulky",
+            "Link" => "#",
+            "Doplnok" => false,
+            "PopisDoplnku" => false,
+            "Ikona" => "fas fa-table",
+            "SUBMENU" => false,
+        ),
+        5 => array(
+            "KodStranky" => false,
+            "Nazov" => "Prehlady",
+            "Link" => "#",
+            "Doplnok" => false,
+            "PopisDoplnku" => false,
+            "Ikona" => "fas fa-binoculars",
+            "SUBMENU" => array(
+                1 => array(
+                    "KodStranky" => "Čistá",
+                    "Nazov" => "Prehľad 1",
+                    "Link" => "#",
+                    "Doplnok" => false,
+                    "PopisDoplnku" => false,                    
+                ),
+                2 => array(
+                    "KodStranky" => "Čistá",
+                    "Nazov" => "Tabuľka 2",
+                    "Link" => "#",
+                    "Doplnok" => false,
+                    "PopisDoplnku" => false,                    
+                ),
+            ),
+        ),
+        6 => "Zoznamy",
+        7 => array(
+            "KodStranky" => false,
+            "Nazov" => "Firma",
+            "Link" => "#",
+            "Doplnok" => false,
+            "PopisDoplnku" => false,
+            "Ikona" => "fas fa-list-ul",
+            "SUBMENU" => array(
+                1 => array(
+                    "KodStranky" => "Čistá",
+                    "Nazov" => "Zoznam firiem",
+                    "Link" => "#",
+                    "Doplnok" => false,
+                    "PopisDoplnku" => false,                    
+                ),
+                2 => array(
+                    "KodStranky" => "Čistá",
+                    "Nazov" => "Osoby vo firme",
+                    "Link" => "#",
+                    "Doplnok" => false,
+                    "PopisDoplnku" => false,                    
+                ),
+                3 => array(
+                    "KodStranky" => "Čistá",
+                    "Nazov" => "Útvary",
+                    "Link" => "#",
+                    "Doplnok" => false,
+                    "PopisDoplnku" => false,                    
+                ),                
+            ),
+        ),
+        8 => array(
+            "KodStranky" => false,
+            "Nazov" => "Audit",
+            "Link" => "#",
+            "Doplnok" => "badge badge-danger",
+            "PopisDoplnku" => "kuk",
+            "Ikona" => "fas fa-clipboard-list",
+            "SUBMENU" => array(
+                1 => array(
+                    "KodStranky" => "30_zoznam_oblast_auditu",
+                    "Nazov" => "Zoznam oblastí",
+                    "Link" => "/audit/zoznam-oblasti-auditu",
+                    "Doplnok" => "badge badge-warning",
+                    "PopisDoplnku" => "Návrh",
+                ),
+                2 => array(
+                    "KodStranky" => "Čistá",
+                    "Nazov" => "Rola pri audite",
+                    "Link" => "#",
+                    "Doplnok" => false,
+                    "PopisDoplnku" => false,                    
+                ),
+                3 => array(
+                    "KodStranky" => "Čistá",
+                    "Nazov" => "Rola pri opatrení",
+                    "Link" => "#",
+                    "Doplnok" => false,
+                    "PopisDoplnku" => false,                    
+                ),                
+            ),
+        ),
+    );
+
+
 
 
     function __construct($nazov)

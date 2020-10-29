@@ -39,14 +39,14 @@
 
             // if result is TRUE (1) --> save data to db  OR  reditect page
             if ($result == 1) {
-                header("Location: ../pages/login.php");
+                header("Location: /login");
             }
         }
     }
 
     ob_start();  // Začiatok definície hlavného obsahu
 ?>
-<div class="register-box" style="width: 60rem;">
+<div class="register-box">
     <div class="register-logo">
         <a href="/"><b>Audity</b>ŽOS</a>
     </div>
@@ -55,7 +55,7 @@
         <div class="card-body register-card-body">
             <p class="login-box-msg">Registrácia nového uživateľa</p>
 
-            <form action="/pages/signup" enctype="multipart/form-data" action="__URL__" method="POST">
+            <form action="/signup" enctype="multipart/form-data" action="__URL__" method="POST">
                 <div class="form-row">
 
                     <?php $meno_pola = 'signup-osobne-cislo'; ?><!-- FORM - osobne cislo -->
@@ -204,7 +204,7 @@
                 <div class="form-row mt-4">
 
                     <?php $meno_pola = 'signup-checkbox'; ?><!-- FORM - CheckBox podmienky -->
-                    <div class="col-md-3">
+                    <div class="col-xl-3">
                         <div class="input-group mb-4 icheck-primary">
                             <input type="checkbox" class="form-check-input<?= $validation_classes[$meno_pola]; ?>" value="Súhlasím s podmienkami." id="agreeTerms" name="<?= $meno_pola; ?>" <?php if (!empty($validation_values[$meno_pola])) { echo 'checked';} ?> >
                             <label class="" for="agreeTerms">
@@ -215,12 +215,12 @@
                     </div>
 
                     <!-- FORM - Tlacitko Submit -->
-                    <div class="col-md-6">                    
+                    <div class="col-xl-5">                    
                         <button name="submit" type="submit" class="btn btn-primary btn-lg btn-block">Registrovať</button>
                     </div>
                     <!-- FORM - Tlacitko Login -->                
-                    <div class="col-md-3">  
-                        <a href="/pages/login" class="btn btn-secondary btn-lg btn-block">Už som zaregistrovaný</a>
+                    <div class="col-xl-4">  
+                        <a href="/login" class="btn btn-secondary btn-lg btn-block mt-2 mt-xl-0">Už som zaregistrovaný</a>
                     </div>
                 
                 </div>

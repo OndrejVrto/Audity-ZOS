@@ -10,6 +10,7 @@ class Page
     public $bubbleMenu = array();
     public $list = 1;
     public $hlavneMenu = array();
+    protected $_nazovstranky;
 
     public $styles = '
     <!-- START - CSS štandard -->
@@ -49,8 +50,13 @@ class Page
         session_start();
 
         header('Content-Type: text/html; charset=utf-8');
-        
+
         $path = $_SERVER['DOCUMENT_ROOT'] . "/include/";
+        // Automatické nahrávanie všetkých CLASS pri ich prvom zavolaní
+        spl_autoload_register(function ($class_name) {
+            include_once  $path . "class/class.".$class_name.'.php';
+        });
+        
         // $conn pripojenie do databazy
         require $path . 'inc.dBconnect.php';
         require $path . 'inc.dBfunction.php';
@@ -66,6 +72,8 @@ class Page
         $this->bubbleMenu = $premenne->bublinkoveMenu;
         $this->hlavneMenu = $premenne->menuHlavne;
         $this->list = $listStranky;
+
+        $this->_nazovstranky = $nazovStranky;
     }
 
     public function display()
@@ -88,6 +96,7 @@ class Page
         $this->displayFooter();
         $this->displayBodyFooter();
         echo $this->skripty;
+        $this->VYVOJ();
         echo "\n</body>\n</html>\n";
     }
 
@@ -155,7 +164,7 @@ class Page
 ?>
 
     <!-- Navbar -->
-    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <nav class="main-header navbar navbar-expand navbar-dark">
         <!-- Left navbar links -->
         <ul class="navbar-nav">
             <li class="nav-item">
@@ -165,7 +174,7 @@ class Page
                 <a href="/" class="nav-link">Domov</a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
-                <a href="/kontakt" class="nav-link">Kontakt</a>
+                <a href="#" class="nav-link">Kontakt</a>
             </li>
         </ul>
 
@@ -200,7 +209,7 @@ class Page
 					<input class="btn btn-primary" type="submit" name="logout-submit" value="LogOut">
 				</form>
 <?php } else { ?>
-				<a class="btn btn-danger" href="/pages/login">Login</a>
+				<a class="btn btn-danger" href="/login">Login</a>
 <?php } ?>
             </li>
         </ul>
@@ -217,14 +226,14 @@ class Page
                 <img src="/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="/pages/user-detail" class="d-block">Ing. Ondrej VRŤO</a>
+                <a href="/user-detail" class="d-block">Ing. Ondrej VRŤO</a>
             </div>
 <?php } else { ?>
             <div class="image">
                 <img src="/dist/img/user-anonymous.png" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="/pages/login" class="d-block text-warning">NEPRIHLASENÝ</a>
+                <a href="/login" class="d-block text-warning">NEPRIHLASENÝ</a>
             </div>
 <?php } ?>
 
@@ -236,7 +245,7 @@ class Page
 ?>
 
     <!-- Main Sidebar Container -->
-    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <aside class="main-sidebar sidebar-dark-warning elevation-4">
         <!-- Brand Logo -->
         <a href="/" class="brand-link">
             <img src="/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
@@ -255,49 +264,19 @@ class Page
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                     <!-- Add icons to the links using the .nav-icon class
                         with font-awesome or any other icon font library -->
-
 <?php
     }
 
     public function displayLeftMenuSitebar()
     {
-?>
-                    <li class="nav-header">AUDITY</li>                            
-                    <li class="nav-item has-treeview menu-open">
-                        <a href="#" class="nav-link active">
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>
-                                Prehľady
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="/" class="nav-link active">
-                                    <i class="fas fa-circle nav-icon text-danger"></i>
-                                    <p>Prehľad v1</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Report v2</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/" class="nav-link">
-                                    <i class="far fa-dot-circle nav-icon"></i>
-                                    <p>Výstup v3</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-<?php
+        $menuclass = new Menu($this->_nazovstranky);
+        $menuclass->odsadenie = 5;
+        $menuclass->getMenu();
     }
+
     public function displayLeftMenuFooter()
     {
 ?>
-
                 </ul>
             </nav>
             <!-- /.sidebar-menu -->
@@ -418,7 +397,75 @@ class Page
 <?php
     }
 
+    protected function VYVOJ () {
 
+        $indicesServer = array('PHP_SELF',
+        'argv',
+        'argc',
+        'GATEWAY_INTERFACE',
+        'SERVER_ADDR',
+        'SERVER_NAME',
+        'SERVER_SOFTWARE',
+        'SERVER_PROTOCOL',
+        'REQUEST_METHOD',
+        'REQUEST_TIME',
+        'REQUEST_TIME_FLOAT',
+        'QUERY_STRING',
+        'DOCUMENT_ROOT',
+        'HTTP_ACCEPT',
+        'HTTP_ACCEPT_CHARSET',
+        'HTTP_ACCEPT_ENCODING',
+        'HTTP_ACCEPT_LANGUAGE',
+        'HTTP_CONNECTION',
+        'HTTP_HOST',
+        'HTTP_REFERER',
+        'HTTP_USER_AGENT',
+        'HTTPS',
+        'REMOTE_ADDR',
+        'REMOTE_HOST',
+        'REMOTE_PORT',
+        'REMOTE_USER',
+        'REDIRECT_REMOTE_USER',
+        'SCRIPT_FILENAME',
+        'SERVER_ADMIN',
+        'SERVER_PORT',
+        'SERVER_SIGNATURE',
+        'PATH_TRANSLATED',
+        'SCRIPT_NAME',
+        'REQUEST_URI',
+        'PHP_AUTH_DIGEST',
+        'PHP_AUTH_USER',
+        'PHP_AUTH_PW',
+        'AUTH_TYPE',
+        'PATH_INFO',
+        'ORIG_PATH_INFO') ;
+        
+        echo "\n\n". '<!--  Pre potreby vývoja tejto stránky  -->' ;
+        echo "\n\n". '<footer class="main-footer"> <h3 class="text-danger">Vývoj: VZORY</h3>' ;
+            echo '<a href="/_vzor/index.html">audity.zoszv.adminlte/_vzor</a>';
+        echo '</footer>' ;
+        echo "\n\n". '<footer class="main-footer"> <h3 class="text-danger">Vývoj: $_GET</h3>' ;
+            print_r($_GET);
+        echo '</footer>' ;
+        echo "\n\n". '<footer class="main-footer"> <h3 class="text-danger">Vývoj: $_POST</h3>' ;
+            print_r($_POST);
+        echo '</footer>' ;
+        echo "\n\n". '<footer class="main-footer"> <h3 class="text-danger">Vývoj: $_FILES</h3>' ;
+            print_r($_FILES);
+        echo '</footer>' ;
+        echo "\n\n". '<footer class="main-footer"> <h3 class="text-danger">Vývoj: $_SERVER</h3>';
+            echo '<div class="table-responsive"> <table class="table table-sm table-borderless table-hover">' ;
+            foreach ($indicesServer as $arg) {
+                if (isset($_SERVER[$arg])) {
+                    echo '<tr><td>'.$arg.'</td><td>' . $_SERVER[$arg] . '</td></tr>' ;
+                }
+                else {
+                    echo '<tr><td>'.$arg.'</td><td>-</td></tr>' ;
+                }
+            }
+            echo '</table> </div>';
+        echo "</footer>\n\n";
+    }
 
 
 

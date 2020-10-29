@@ -37,7 +37,7 @@
 
             // if result is TRUE (1) --> save data to db  OR  reditect page
             if ($result == 1) {
-                header("Location: ../index.php");
+                header("Location: index.php");
             }
         }
     }
@@ -84,7 +84,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-8">
+                    <div class="col-7">
                         <div class="icheck-primary">
                             <input type="checkbox" id="remember">
                             <label for="remember">
@@ -93,7 +93,7 @@
                         </div>
                     </div>
 
-                    <div class="col-4">
+                    <div class="col-5">
                         <button type="submit" name="submit" class="btn btn-primary btn-block">Prihlásiť</button>
                     </div>
                 </div>
@@ -102,7 +102,7 @@
             </form>
 
             <p class="mb-1">
-                <a href="/pages/signup" class="btn btn-secondary d-block mt-3">Zaregistrovať nový účet</a>
+                <a href="/signup" class="btn btn-secondary d-block mt-3">Zaregistrovať nový účet</a>
             </p>
         </div>
         <!-- /.login-card-body -->
