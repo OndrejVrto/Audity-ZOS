@@ -58,26 +58,10 @@ class PageClear extends Page
         $this->displayDescription();
         $this->displayIcons();
         echo $this->styles;
-        $this->displayBodyHeader();
+        echo "\n</head>\n\n";
+        echo '<body class="hold-transition register-page vh-100">'."\n";
         echo $this->content;
-        $this->displayBodyFooter();
         echo $this->skripty;
         echo "\n</body>\n</html>\n";
-    }
-
-    public function displayBodyHeader()
-    {
-?>
-</head>
-
-<body class="hold-transition register-page">
-<?php
-    }
-
-    public function displayBodyFooter()
-    {
-?>
-<!-- nic -->
-<?php
     }
 }

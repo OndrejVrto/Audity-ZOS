@@ -46,7 +46,8 @@
 
     ob_start();  // Začiatok definície hlavného obsahu
 ?>
-<div class="register-box">
+    
+<div class="register-box" style="max-width: 950px;">
     <div class="register-logo">
         <a href="/"><b>Audity</b>ŽOS</a>
     </div>

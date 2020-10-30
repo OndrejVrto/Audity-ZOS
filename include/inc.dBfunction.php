@@ -22,9 +22,29 @@ function dBzoznam($sql, $volaciaStranka = "/index.php")
             }
         } else {
             // v databaze je prazdna tabulka
+            // alebo je vykonaný DOTAZ ktorý nevracia výsledok>  INSERT, UPDATE, ....
+
             header("Location: " . $volaciaStranka . "?error=prazdnatabulkavdatabaze");
             exit();
         }
+    }
+
+    return $data;
+}
+
+function dBzoznam2($sql, $volaciaStranka = "/index.php")
+{
+
+    require 'inc.dBconnect.php';
+
+    $stmt = mysqli_stmt_init($conn);
+    if (!mysqli_stmt_prepare($stmt, $sql)) {
+        // kontrola či je relácia v poriadku
+        header("Location: " . $volaciaStranka . "?error=sqlerror");
+        exit();
+    } else {
+        // spustenie dotazu s parametrom
+        mysqli_stmt_execute($stmt);
     }
 
     return $data;

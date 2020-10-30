@@ -6,6 +6,7 @@ spl_autoload_register(function ($class_name) {
 
 // založenie novej triedy na stranku
 $homepage = new Page('30_zoznam_oblast_auditu', 1);
+$uri = "/audit/zoznam-oblasti-auditu";
 
 // prepísanie hodnôt stránky ručne. Štandardne sa hodnoty načítavajú z _variables.php
 // $homepage->nadpis = 'Nadpis';
@@ -73,31 +74,24 @@ ob_start();  // Začiatok definície SKRIPTov pre túto stránku
 <script src="/dist/js/adminlte.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="/dist/js/demo.js"></script>
-<script>
-    $('#ModalEdit').on('show.bs.modal', function(event) {
-        var button = $(event.relatedTarget) // Button that triggered the modal
-        var recipient = button.data('whatever') // Extract info from data-* attributes
-        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-        var modal = $(this)
-        modal.find('.modal-title').text('Úprava položky ' + recipient)
-        modal.find('.modal-body input').val(recipient)
-    })
-</script>
 
 <!-- END - skripty len pre túto podstránku -->
 <?php
 $homepage->skripty = ob_get_clean();  // Koniec SKRIPTov
 
 
+// vyberovy dotaz na data
+$sql = "SELECT * FROM 30_zoznam_oblast_auditu ORDER BY LOWER(OblastAuditovania) ASC";
+$data = dBzoznam($sql, $uri);
 
-
-
-
-
+// print_r($data);
 
 ob_start();  // Začiatok definície hlavného obsahu
 ?>
+<div class="row justify-content-center pb-3">
+        <a href="<?= $uri ?>-novy" type="submit" name="novy" class="btn btn-success">Pridať položku</a>
+</div>
+
 <div class="row justify-content-center">
     <div class="col-12 col-sm-10 col-md-9 col-lg-7" style="max-width: 600px;">
 
@@ -114,32 +108,33 @@ ob_start();  // Začiatok definície hlavného obsahu
 
                     </thead>
                     <tbody>
-
-                        <tr>
-                            <td>1.</td>
-                            <td>Zváranie</td>
+<?php
+    $poradie = 1;
+    foreach ($data as $key => $value) {
+        $id = htmlspecialchars($value['ID30']);
+        $oblastAuditovania = htmlspecialchars($value['OblastAuditovania']);
+?>
+                        <tr id="<?= $id ?>">
+                            <td><?= $poradie ?>.</td>
+                            <td><?= $oblastAuditovania ?></td>
                             <td>
-                                <!--                                 <div class="btn-group">
-                                    <form action="/audit/zoznam-oblasti-auditu" method="post">
-                                        <button type="submit" name="detail" value="1" class="btn btn-xs btn-outline-info">Detaily</button>
+                                <div class="btn-group">
+                                    <form action="<?= $uri ?>-detail" method="post">
+                                        <button type="submit" name="detail" value="<?= $id ?>" class="btn btn-xs btn-outline-info">Detaily</button>
                                     </form>
-                                    <form action="/audit/zoznam-oblasti-auditu" method="post" class="mx-1">
-                                        <button type="submit" name="edit" value="1" class="btn btn-xs btn-outline-secondary">Editovať</button>
+                                    <form action="<?= $uri ?>-edit" method="post" class="mx-1">
+                                        <button type="submit" name="edit" value="<?= $id ?>" class="btn btn-xs btn-outline-secondary">Editovať</button>
                                     </form>
-                                    <form action="/audit/zoznam-oblasti-auditu" method="post">
-                                        <button type="submit" name="delete" value="1" class="btn btn-xs btn-outline-danger">Zmazať</button>
+                                    <form action="<?= $uri ?>-delete" method="post">
+                                        <button type="submit" name="delete" value="<?= $id ?>" class="btn btn-xs btn-outline-danger">Zmazať</button>
                                     </form>
-                                </div> -->
-                                <div class="">
-
-                                    <button type="button" value="1" name="detail" class="btn btn-xs btn-outline-info" data-toggle="modal" data-target="#ModalDetail" data-whatever="Zváranie">Detaily</button>
-                                    <button type="button" value="1" name="edit" class="btn btn-xs btn-outline-secondary" data-toggle="modal" data-target="#ModalEdit" data-whatever="Zváranie">Editovať</button>
-                                    <button type="button" value="1" name="delete" class="btn btn-xs btn-outline-danger" data-toggle="modal" data-target="#ModalDelete" data-whatever="Zváranie">Zmazať</button>
-
                                 </div>
                             </td>
                         </tr>
-
+<?php
+        $poradie += 1;
+    }
+?>
                     </tbody>
                 </table>
             </div>
@@ -147,35 +142,6 @@ ob_start();  // Začiatok definície hlavného obsahu
         </div>
         <!-- /.card -->
 
-    </div>
-</div>
-
-
-
-<div class="modal fade" id="ModalEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Úprava položky</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="/audit/zoznam-oblasti-auditu" method="post">
-                    <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Položka:</label>
-                        <input name="nieco" type="text" class="form-control" id="recipient-name">
-                    </div>
-                    <div class="form-group">
-                        <label for="message-text" class="col-form-label">Poznámka:</label>
-                        <textarea name="text" class="form-control" id="message-text"></textarea>
-                    </div>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Späť</button>
-                    <button type="submit" name="submit" class="btn btn-primary">Uložiť</button>
-                </form>
-            </div>
-        </div>
     </div>
 </div>
 
