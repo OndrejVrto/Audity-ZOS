@@ -446,19 +446,31 @@ class Page
         'ORIG_PATH_INFO') ;
         
         echo "\n\n". '<!--  Pre potreby vývoja tejto stránky  -->' ;
-        echo "\n\n". '<footer class="main-footer"> <h3 class="text-danger">Vývoj: VZORY</h3>' ;
+
+        echo "\n\n". '<hr><footer class="main-footer pt-5"> <h3 class="text-success">Vývoj: VZORY</h3>' ;
             echo '<a href="/_vzor/index.html">audity.zoszv.adminlte/_vzor</a>';
         echo '</footer>' ;
-        echo "\n\n". '<footer class="main-footer"> <h3 class="text-danger">Vývoj: $_GET</h3>' ;
+
+        echo "\n\n". '<footer class="main-footer"> <h3 class="text-warning">Vývoj: $_GET</h3>' ;
             print_r($_GET);
         echo '</footer>' ;
+
         echo "\n\n". '<footer class="main-footer"> <h3 class="text-danger">Vývoj: $_POST</h3>' ;
             print_r($_POST);
         echo '</footer>' ;
-        echo "\n\n". '<footer class="main-footer"> <h3 class="text-danger">Vývoj: $_FILES</h3>' ;
+
+        echo "\n\n". '<footer class="main-footer"> <h3 class="text-info">Vývoj: $_COOKIE</h3>' ;
+            print_r($_COOKIE);
+        echo '</footer>' ;
+
+        echo "\n\n". '<footer class="main-footer"> <h3 class="text-info">Vývoj: $_SESSION</h3>' ;
+            print_r($_SESSION);
+        echo '</footer>' ;     
+
+        echo "\n\n". '<footer class="main-footer"> <h3 class="text-secondary">Vývoj: $_FILES</h3>' ;
             print_r($_FILES);
         echo '</footer>' ;
-        echo "\n\n". '<footer class="main-footer"> <h3 class="text-danger">Vývoj: $_SERVER</h3>';
+        echo "\n\n". '<footer class="main-footer"> <h3 class="text-primary">Vývoj: $_SERVER</h3>';
             echo '<div class="table-responsive"> <table class="table table-sm table-borderless table-hover">' ;
             foreach ($indicesServer as $arg) {
                 if (isset($_SERVER[$arg])) {
