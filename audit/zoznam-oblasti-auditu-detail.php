@@ -35,6 +35,7 @@ if ($request_method === 'GET') {
         $sql = "SELECT * FROM 30_zoznam_oblast_auditu WHERE ID30='" . $_POST['detail'] . "'; ";
         $data = dBzoznam($sql, $uri);
         $validation_values['oblast-auditu'] = $data[0]['OblastAuditovania'];
+        $validation_values['oblast-auditu-poznamka'] = $data[0]['Poznamka'];           
         //print_r($data);
     }
 }
@@ -76,14 +77,16 @@ ob_start();  // Začiatok definície hlavného obsahu
 
                 </div>
                 <!-- /.card-body -->
-                <div class="row justify-content-center">
-                    <a href="<?= $uri ?>" type="submit" name="vzad" class="btn btn-secondary mx-1">Späť</a>
-                </div>
+
             </div>
             <!-- /.card -->
-        </fieldset>            
+        </fieldset>
         </form>
+
         </div>
+        <div class="row justify-content-center">
+            <a href="<?= $uri ?>" type="submit" name="vzad" class="btn btn-secondary mx-1">Späť</a>
+        </div> 
     </div>
     <!-- /.register-box -->
 

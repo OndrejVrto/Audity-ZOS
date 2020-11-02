@@ -43,7 +43,7 @@ if ($request_method === 'GET') {
         if ($result == 1) {
 
             
-            $sql = "INSERT INTO `30_zoznam_oblast_auditu` (`OblastAuditovania`) VALUES ('" . $validation_values['oblast-auditu'] . "');";
+            $sql = "INSERT INTO `30_zoznam_oblast_auditu` (`OblastAuditovania`, `Poznamka`) VALUES ('" . $validation_values['oblast-auditu'] . "', '" . $validation_values['oblast-auditu-poznamka'] . "' );";
             dBzoznam2($sql, $uri);
 
             header("Location: $uri");

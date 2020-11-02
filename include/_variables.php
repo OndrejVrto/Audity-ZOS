@@ -176,16 +176,23 @@ class Premenne
                     "Nazov" => "Zoznam oblastí",
                     "Link" => "/audit/zoznam-oblasti-auditu",
                     "Doplnok" => "badge badge-warning",
-                    "PopisDoplnku" => "Návrh",
+                    "PopisDoplnku" => "PHP",
                 ),
                 2 => array(
+                    "KodStranky" => "30_zoznam_oblast_auditu",
+                    "Nazov" => "Zoznam oblastí B",
+                    "Link" => "/audit/zoznam-oblasti-auditu-ajax",
+                    "Doplnok" => "badge badge-warning",
+                    "PopisDoplnku" => "AJAX",
+                ),                
+                3 => array(
                     "KodStranky" => "Čistá",
                     "Nazov" => "Rola pri audite",
                     "Link" => "#",
                     "Doplnok" => false,
                     "PopisDoplnku" => false,                    
                 ),
-                3 => array(
+                4 => array(
                     "KodStranky" => "Čistá",
                     "Nazov" => "Rola pri opatrení",
                     "Link" => "#",

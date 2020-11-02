@@ -8,7 +8,7 @@ spl_autoload_register(function ($class_name) {
 
 // založenie novej triedy na stranku
 $homepage = new Page('30_zoznam_oblast_auditu', 1);
-$uri = "/audit/zoznam-oblasti-auditu";
+$uri = "/audit/zoznam-oblasti-auditu-ajax";
 
 // prepísanie hodnôt stránky ručne. Štandardne sa hodnoty načítavajú z _variables.php
 // $homepage->nadpis = 'Nadpis';
@@ -43,10 +43,12 @@ if ($request_method === 'GET') {
         if ($result == 1) {
 
             
-            $sql = "INSERT INTO `30_zoznam_oblast_auditu` (`OblastAuditovania`) VALUES ('" . $validation_values['oblast-auditu'] . "');";
+            $sql = "INSERT INTO `30_zoznam_oblast_auditu` (`OblastAuditovania`, `Poznamka`) VALUES ('" . $validation_values['oblast-auditu'] . "', '" . $validation_values['oblast-auditu-poznamka'] . "' );";
             dBzoznam2($sql, $uri);
 
             header("Location: $uri");
+        } else {
+            $zobrazmodal = true;
         }
     }
 }
@@ -105,6 +107,12 @@ ob_start();  // Začiatok definície SKRIPTov pre túto stránku
 <script src='/dist/js/adminlte.js'></script>
 <!-- AdminLTE for demo purposes -->
 <script src='/dist/js/demo.js'></script>
+
+<?php if ($zobrazmodal) { ?>
+<script>
+    $('#exampleModal').modal('show');
+</script>
+<?php } ?>
 
 <script>
     $(document).ready(function() {
@@ -165,9 +173,6 @@ ob_start();  // Začiatok definície SKRIPTov pre túto stránku
         $('#novy-zaznam').click( function() {
             $(this).attr('data-toggle','modal');
             $(this).attr('data-target','#exampleModal');
-            $('#myModal').on('shown.bs.modal', function() {
-                $('#myInput').trigger('focus');
-            });
         });           
 
         $('#UpravaDat [id^=button]').click (function() {
@@ -178,8 +183,11 @@ ob_start();  // Začiatok definície SKRIPTov pre túto stránku
                 var id = table.row('.selected').data()['DT_RowId'];
                 // alert( 'Vybral si riadok ID: '+ id + ' a  stlacil si tlacidlo ' + button);
                 switch (button) { 
-                    case 'button-detail': 
-                        alert('Kód pre detail');
+                    case 'button-detail':
+                        $('#exampleModal fieldset')[0].disabled = true;
+                        $('#button-ulozit').hide();
+                        $('#exampleModal').modal('show');
+                        //alert('Kód pre detail');
                         break;
                     case 'button-edit': 
                         alert('Kód pre edit!');
@@ -265,8 +273,8 @@ ob_start();  // Začiatok definície hlavného obsahu
 
 
 <!-- Modal -->
-<div class='modal fade odal-dialog-scrollable' id='exampleModal' tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true'>
-    <div class='modal-dialog'>
+<div class='modal fade' id='exampleModal' tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true'>
+    <div class='modal-dialog modal-dialog-centered'>
         <div class='modal-content'>
 
             <form action="<?= $uri ?>" method="post">
@@ -280,7 +288,7 @@ ob_start();  // Začiatok definície hlavného obsahu
                 <div class='modal-body'>
 
                     <div class="register-card-body">
-
+                    <fieldset>
                         <?php $meno_pola = 'oblast-auditu'; ?><!-- FORM - osobne cislo -->
                         <div class="form-group ">
                             <label>Názov oblasti</label>
@@ -303,14 +311,14 @@ ob_start();  // Začiatok definície hlavného obsahu
                             <!-- <small class="d-block w-100 mb-n2 text-muted">Osobné číslo zamestnanca</small> -->
                             <?= $validation_feedback[$meno_pola]; ?>
                         </div>
-
+                        </fieldset>
                     </div>
                     <!-- /.card-body -->
 
                 </div>
                 <div class='modal-footer'>
                     <a href="<?= $uri ?>" type="submit" name="vzad" class="btn btn-secondary mx-1">Späť</a>
-                    <button type="submit" name="submit" class="btn btn-primary mx-1">Uložiť</button>
+                    <button id="button-ulozit" type="submit" name="submit" class="btn btn-primary mx-1">Uložiť</button>
                 </div>
 
             </form>

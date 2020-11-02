@@ -45,7 +45,7 @@ if ($request_method === 'GET') {
             
             //$sql = "INSERT INTO `30_zoznam_oblast_auditu` (`OblastAuditovania`) VALUES ('" . $validation_values['oblast-auditu'] . "');";
             
-            $sql = "UPDATE `30_zoznam_oblast_auditu` SET `OblastAuditovania`='" . $validation_values['oblast-auditu'] . "' WHERE `ID30`=" . $_POST['submit'] . ";";
+            $sql = "UPDATE `30_zoznam_oblast_auditu` SET `OblastAuditovania`='" . $validation_values['oblast-auditu'] . "', `Poznamka`='" . $validation_values['oblast-auditu-poznamka'] . "' WHERE `ID30`=" . $_POST['submit'] . ";";
             dBzoznam2($sql, $uri);
 
             header("Location: $uri");
@@ -55,6 +55,7 @@ if ($request_method === 'GET') {
         $sql = "SELECT * FROM 30_zoznam_oblast_auditu WHERE ID30='" . $_POST['edit'] . "'; ";
         $data = dBzoznam($sql, $uri);
         $validation_values['oblast-auditu'] = $data[0]['OblastAuditovania'];
+        $validation_values['oblast-auditu-poznamka'] = $data[0]['Poznamka'];        
         //print_r($data);
     }
 }
