@@ -459,6 +459,10 @@ class Page
             print_r($_POST);
         echo '</footer>' ;
 
+        echo "\n\n". '<footer class="main-footer"> <h3 class="text-secondary">Vývoj: $_REQUEST</h3>' ;
+            print_r($_REQUEST);
+        echo '</footer>' ;
+
         echo "\n\n". '<footer class="main-footer"> <h3 class="text-info">Vývoj: $_COOKIE</h3>' ;
             print_r($_COOKIE);
         echo '</footer>' ;

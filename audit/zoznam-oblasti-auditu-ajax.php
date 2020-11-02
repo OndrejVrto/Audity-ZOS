@@ -171,6 +171,8 @@ ob_start();  // Začiatok definície SKRIPTov pre túto stránku
         });
 
         $('#novy-zaznam').click( function() {
+            $('#exampleModal fieldset')[0].disabled = false;
+            $('#button-ulozit').show();
             $(this).attr('data-toggle','modal');
             $(this).attr('data-target','#exampleModal');
         });           
@@ -190,7 +192,10 @@ ob_start();  // Začiatok definície SKRIPTov pre túto stránku
                         //alert('Kód pre detail');
                         break;
                     case 'button-edit': 
-                        alert('Kód pre edit!');
+                        $('#exampleModal fieldset')[0].disabled = false;
+                        $('#button-ulozit').show();
+                        $('#exampleModal').modal('show');
+                        //alert('Kód pre edit!');
                         break;		
                     case 'button-delete': 
                         alert('ZMAZ');
@@ -317,7 +322,7 @@ ob_start();  // Začiatok definície hlavného obsahu
 
                 </div>
                 <div class='modal-footer'>
-                    <a href="<?= $uri ?>" type="submit" name="vzad" class="btn btn-secondary mx-1">Späť</a>
+                    <button id="button-storno" type='button' class='btn btn-secondary mx-1' data-dismiss='modal'>Späť</button>
                     <button id="button-ulozit" type="submit" name="submit" class="btn btn-primary mx-1">Uložiť</button>
                 </div>
 
