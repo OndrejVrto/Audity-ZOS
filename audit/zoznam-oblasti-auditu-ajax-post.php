@@ -1,19 +1,14 @@
 <?php
-//  print_r($_POST);
-
 // Automatické nahrávanie všetkých CLASS pri ich prvom zavolaní
 spl_autoload_register(function ($class_name) {
     include_once  $_SERVER['DOCUMENT_ROOT'] . "/include/class/class." . $class_name . '.php';
 });
 
-// založenie novej triedy na stranku
-$homepage = new Page('/audit/zoznam-oblasti-auditu-ajax', 1);
-$homepage->zobrazitBublinky = false;
+$uri = strtolower(substr($_SERVER['PHP_SELF'], 0, -4));
+$list = (isset($_GET['p'])) ? $_GET['p'] : "1" ;
 
-$uri = "/audit/zoznam-oblasti-auditu-ajax";
+$homepage = new Page($uri, $list);
 
-// prepísanie hodnôt stránky ručne. Štandardne sa hodnoty načítavajú z _variables.php
-// $homepage->nadpis = 'Nadpis';
 
 
 // inicializácia konštánt formulára v prípade volania metódou GET
@@ -21,7 +16,7 @@ $mena_vsetkych_poli = array ('oblast-auditu', 'oblast-auditu-poznamka');
 foreach ($mena_vsetkych_poli as $key => $value) {
     $validation_values[$value] = $validation_classes[$value] = $validation_feedback[$value] = '';
 }
-
+$zobrazmodal = false;
 $request_method = strtoupper($_SERVER['REQUEST_METHOD']);
 
 if ($request_method === 'GET') {

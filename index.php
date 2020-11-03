@@ -5,7 +5,8 @@
     });
     
     // založenie novej triedy na stranku
-    $homepage = new Page('index', 1);
+    $homepage = new Page('/', 1);
+    $homepage->zobrazitBublinky = true;
     
     // prepísanie hodnôt stránky ručne. Štandardne sa hodnoty načítavajú z _variables.php
     // $homepage->nadpis = 'Nadpis';

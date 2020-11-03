@@ -8,9 +8,13 @@ class Page
     public $title;
     public $description;
     public $bubbleMenu = array();
+    public $odsadenie = 5;
     public $list = 1;
-    public $hlavneMenu = array();
+    private $link;
+    public $hlavneMenu;
     protected $_nazovstranky;
+    private $aktivnemenu = false;
+    public $zobrazitBublinky = true;
 
     public $styles = '
     <!-- START - CSS štandard -->
@@ -50,7 +54,7 @@ class Page
         $this->$name = $value;
     }
 
-    function __construct($nazovStranky, $listStranky)
+    function __construct($link, $listStranky)
     {
         session_start();
 
@@ -70,15 +74,15 @@ class Page
         // konstanty stránok
         require $path . '_variables.php';
 
-        $premenne = new Premenne($nazovStranky);
+        $this->link = $link;
+
+        $premenne = new Premenne($link);
         $this->title = $premenne->titulokStranky;
         $this->nadpis = $premenne->nadpisPrvejSekcie;
         $this->description = $premenne->popisStranky;
         $this->bubbleMenu = $premenne->bublinkoveMenu;
         $this->hlavneMenu = $premenne->menuHlavne;
         $this->list = $listStranky;
-
-        $this->_nazovstranky = $nazovStranky;
     }
 
     public function display()
@@ -87,20 +91,32 @@ class Page
         $this->displayTitle();
         $this->displayDescription();
         $this->displayIcons();
+
         echo $this->styles;
+        
         $this->displayBodyHeader();
+        
         $this->displayTopMenu();
+        
         $this->displayLeftMenuHeader();
-        $this->displayLeftMenuSitebar();
+        echo $this->displayLeftMenuSitebar($this->hlavneMenu);
         $this->displayLeftMenuFooter();
-        //$this->displayMenu($this->buttons);
-        $this->displayBubleMenu();
+        
+        if ($this->zobrazitBublinky) {
+            $this->displayBubleMenuHeader();
+            echo $this->displayBubleMenu($this->hlavneMenu);
+            $this->displayBubleMenuFooter();
+        }
+       
         $this->displayContentHeader();
         echo $this->content;
         $this->displayContentFooter();
+        
         $this->displayFooter();
         $this->displayBodyFooter();
+        
         echo $this->skripty;
+        
         $this->VYVOJ();
         echo "\n</body>\n</html>\n";
     }
@@ -266,17 +282,74 @@ class Page
 
             <!-- Sidebar Menu -->
             <nav class="mt-2">
-                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent" data-widget="treeview" role="menu" data-accordion="false">
                     <!-- Add icons to the links using the .nav-icon class
                         with font-awesome or any other icon font library -->
 <?php
     }
 
-    public function displayLeftMenuSitebar()
+    public function displayLeftMenuSitebar($vstup)
     {
-        $menuclass = new Menu($this->_nazovstranky);
-        $menuclass->odsadenie = 5;
-        $menuclass->getMenu();
+
+        $odsad = str_repeat("\t", $this->odsadenie );
+        $html = '';
+        $this->aktivnemenu = false;
+
+        foreach ($vstup as $key => $value) {
+            if (array_key_exists('Hlavicka', $value)) {
+                    $html .= "\n".$odsad.'<li class="nav-header">';
+                    $html .= "\n\t".$odsad.htmlspecialchars($value['Hlavicka']);
+                    $html .= "\n".$odsad.'</li>';
+            } else {
+                if (is_array($value['SUBMENU'])) {
+                    // rekurzívna funkcia - volá sama seba pri každej ďalšej vrste Menu !!!
+                    $submenu = $this->displayLeftMenuSitebar($value['SUBMENU']);
+
+                    $html .= "\n".$odsad.'<li class="nav-item has-treeview'.(($this->aktivnemenu === true) ? ' menu-open' : '' ).'">';
+                    $html .= "\n\t".$odsad.'<a href="'. (($value['Link'] === false) ? '#' : $value['Link'] ).'" ';
+                    $html .= 'class="nav-link'.(($this->aktivnemenu === true) ? ' active' : '' ).'">';
+                    $html .= "\n\t\t".$odsad.'<i class="nav-icon '.(($value['Ikona'] === false) ? 'far fa-circle' : $value['Ikona'] ).'"></i>';
+                    $html .= "\n\t\t".$odsad.'<p>';
+                    $html .= "\n\t\t\t".$odsad.$value['Nazov'];
+                    $html .= "\n\t\t\t".$odsad.'<i class="right fas fa-angle-left"></i>';
+                    if ($value['Doplnok'] !== false) {
+                        $html .= "\n\t\t\t".$odsad.'<span class="right '.$value['Doplnok'].'">';
+                        $html .= "\n\t\t\t\t".$odsad.$value['PopisDoplnku'];
+                        $html .= "\n\t\t\t".$odsad.'</span>';
+                    }
+                    $html .= "\n\t\t".$odsad.'</p>';
+                    $html .= "\n\t".$odsad.'</a>';
+                    $html .= "\n\t".$odsad.'<ul class="nav nav-treeview">';
+                    
+                    $html .= $submenu;
+
+                    $html .= "\n\t".$odsad.'</ul>';
+
+                } else {
+                    if ($value['Link'] == $this->link) {
+                        $this->aktivnemenu = true;
+                        $activSubMenu = true;
+                    } else {
+                        $activSubMenu = false;
+                    }
+                    $html .= "\n".$odsad.'<li class="nav-item">';
+                    $html .= "\n\t".$odsad.'<a href="'.(($value['Link'] === false) ? '#' : $value['Link'] ).'" ';
+                    $html .= 'class="nav-link'.(($activSubMenu === true) ? ' active' : '' ).'">';
+                    $html .= "\n\t\t".$odsad.'<i class="nav-icon '.(($value['Ikona'] === false) ? 'far fa-circle' : $value['Ikona'] ).'"></i>';
+                    $html .= "\n\t\t".$odsad.'<p>';
+                    $html .= "\n\t\t\t".$odsad.$value['Nazov'];
+                    if ($value['Doplnok'] !== false) {
+                        $html .= "\n\t\t\t".$odsad.'<span class="right '.$value['Doplnok'].'">';
+                        $html .= "\n\t\t\t\t".$odsad.$value['PopisDoplnku'];
+                        $html .= "\n\t\t\t".$odsad.'</span>';
+                    }
+                    $html .= "\n\t\t".$odsad.'</p>';
+                    $html .= "\n\t".$odsad.'</a>';
+                    $html .= "\n".$odsad.'</li>';
+                }
+            }
+        }
+        return $html;
     }
 
     public function displayLeftMenuFooter()
@@ -303,42 +376,62 @@ class Page
 <?php
     }
 
-    public function displayBubleMenu()
-    {
-?>
+    public function displayBubleMenuHeader(){
+        echo '
+                <!-- START Include - Bublinkové menu -->
+                <ol class="breadcrumb float-md-right">
+                    <li class="breadcrumb-item"><a href="/"><i class="fa fa-home" aria-hidden="true"></i><span class="sr-only">Domov</span></a></li>';
+    }
 
-                    <!-- START Include - Bublinkové menu -->
-                    <ol class="breadcrumb float-md-right">
-<?php
-    $pocetBubliniek = count($this->bubbleMenu);
-    $pocitadlo = 0;
-    echo "\t\t\t\t\t\t<li class=\"breadcrumb-item\"><a href=\"/\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i><span class=\"sr-only\">Domov</span></a></li>";
-    foreach ((array)$this->bubbleMenu as $MYbublinkoveMenu) {
-        $pocitadlo++;
-        echo "\n\t\t\t\t\t\t<li class=\"breadcrumb-item";
-        if ($pocitadlo == $pocetBubliniek) {
-            echo " active";
+    public function displayBubleMenu($vstup)
+    {
+        $this->odsadenie = 5;
+        $odsad = str_repeat("\t", $this->odsadenie );
+        $html = '';
+        $this->aktivnemenu = false;
+
+        foreach ($vstup as $key => $value) {
+            if (array_key_exists('Hlavicka', $value)) {
+                // nerob nič
+            } else {
+                if (is_array($value['SUBMENU'])) {
+                    // rekurzívna funkcia - volá sama seba pri každej ďalšej vrste Menu !!!
+                    $submenu = $this->displayBubleMenu($value['SUBMENU']);
+                    if ($this->aktivnemenu === true) {
+                        $html .= "\n".$odsad.'<li class="breadcrumb-item">';
+                        if ($value['Link'] !== false) {
+                            $html .= '<a href="'.$value['Link'].'">'.$value['Nazov'].'</a>';
+                        } else {
+                            $html .= $value['Nazov'];
+                        }
+                        $html .= '</li>';
+                        $html .= $submenu;
+                    }
+                } else {
+                    if ($value['Link'] == $this->link) {
+                        $this->aktivnemenu = true;
+                        $html .= "\n".$odsad.'<li class="breadcrumb-item active">';
+                        $html .= $value['Nazov'];
+                        $html .= '</li>';
+                    }
+                }
+            }
         }
-        echo "\">";
-        if ($MYbublinkoveMenu[0] !==''){
-            echo '<a href="' . str_replace(" ", '%20', $MYbublinkoveMenu[0]) . '">';
-            echo $MYbublinkoveMenu[1];
-            echo '</a>';
-        } else {
-            echo $MYbublinkoveMenu[1];
-        }
-        echo "</li>";
+        return $html;
     }
+
+
+    public function displayBubleMenuFooter()
+    {
     if ($this->list > 1){
-        echo "\n\t\t\t\t\t\t<li class=\"breadcrumb-item active\">List " .$this->list. "</li>";
+        echo '
+                    <li class="breadcrumb-item active">List '.$this->list.'</li>';
     }
-    echo "\n";
-?>
-                    </ol>
-                    <!-- END Include - Bublinkové menu -->
-<?php 
+        echo '
+                </ol>
+                <!-- END Include - Bublinkové menu -->';        
     }
-    
+
     public function displayContentHeader()
     {
 ?>        
@@ -380,7 +473,7 @@ class Page
         <strong>Copyright &copy; 2020-2021 <a href="#">Ing. Ondrej VRŤO, IWE</a></strong>
         All rights reserved.
         <div class="float-right d-none d-sm-inline-block">
-            <b>Version</b> 0.0.5
+            <b>Version</b> 0.0.6
         </div>
     </footer>
 <?php
@@ -445,7 +538,7 @@ class Page
         'PATH_INFO',
         'ORIG_PATH_INFO') ;
         
-        echo "\n\n". '<!--  Pre potreby vývoja tejto stránky  -->' ;
+        echo "\n\n". '<!--  LEN Pre potreby vývoja tejto stránky. Po vývoji ZMAZať !!!!!!!!!  -->' ;
 
         echo "\n\n". '<hr><footer class="main-footer pt-5"> <h3 class="text-success">Vývoj: VZORY</h3>' ;
             echo '<a href="/_vzor/index.html">audity.zoszv.adminlte/_vzor</a>';
@@ -489,49 +582,4 @@ class Page
     }
 
 
-
-
-
-/*     public function displayMenu($buttons)
-    {
-        echo "<!-- nabídka -->
-    <nav>";
-
-        while (list($name, $url) = each($buttons)) {
-            $this->displayButton(
-                $name,
-                $url,
-                !$this->isURLCurrentPage($url)
-            );
-        }
-        echo "</nav>\n";
-    }
-
-    public function isURLCurrentPage($url)
-    {
-        if (strpos($_SERVER['PHP_SELF'], $url) === false) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public function displayButton($name, $url, $active = true)
-    {
-        if ($active) { ?>
-            <div class="menuitem">
-                <a href="<?= $url ?>">
-                    <img src="s-logo.gif" alt="" height="20" width="20" />
-                    <span class="menutext"><?= $name ?></span>
-                </a>
-            </div>
-        <?php
-        } else { ?>
-            <div class="menuitem">
-                <img src="side-logo.gif">
-                <span class="menutext"><?= $name ?></span>
-            </div>
-        <?php
-        }
-    } */
 }

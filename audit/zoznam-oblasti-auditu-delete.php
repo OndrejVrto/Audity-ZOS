@@ -7,7 +7,7 @@ spl_autoload_register(function ($class_name) {
 });
 
 // založenie novej triedy na stranku
-$homepage = new Page('30_zoznam_oblast_auditu', 1);
+$homepage = new Page('/audit/zoznam-oblasti-auditu-ajax', 1);
 $uri = "/audit/zoznam-oblasti-auditu";
 
 // prepísanie hodnôt stránky ručne. Štandardne sa hodnoty načítavajú z _variables.php

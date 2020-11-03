@@ -5,7 +5,7 @@
     });
     //print_r($_POST);
     // založenie novej triedy na stranku
-    $homepage = new PageClear('index', 1);
+    $homepage = new PageClear('/signup', 1);
 
     $request_method = strtoupper($_SERVER['REQUEST_METHOD']);
 /* 
