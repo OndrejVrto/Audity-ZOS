@@ -4,6 +4,7 @@
         include_once  $_SERVER['DOCUMENT_ROOT'] . "/include/class/class." . $class_name . '.php';
     });
 
+    require $_SERVER['DOCUMENT_ROOT'] . "/include/inc.dBconnect.php";
 
     $uri = "/audit/zoznam-oblasti-auditu/";
     $list = (isset($_GET['p'])) ? $_GET['p'] : "1" ;
@@ -38,6 +39,7 @@
 
             dBzoznam2($sql, $uri);
             header("Location: $uri");
+            exit();
         }
     }
 

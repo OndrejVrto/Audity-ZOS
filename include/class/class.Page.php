@@ -1,5 +1,11 @@
 <?php
 
+    defined("TAB1") or define("TAB1", "\t");
+    defined("TAB2") or define("TAB2", "\t\t");
+    defined("TAB3") or define("TAB3", "\t\t\t");
+    defined("TAB4") or define("TAB4", "\t\t\t\t");
+    defined("TAB5") or define("TAB5", "\t\t\t\t\t");
+
 class Page
 {
     // Vlastnosti třídy Page
@@ -15,7 +21,113 @@ class Page
     protected $_nazovstranky;
     private $aktivnemenu = false;
     public $zobrazitBublinky = true;
+
+    public $stylyArray = [];
+    public $stylySpecial = '';
+    public $skriptyArray = [];
     public $skriptySpecial = '';
+
+    public function clearStyles(){
+        $this->stylyArray = null;
+    }
+    
+    public function clearScripts(){
+        $this->stylyArray = null;
+    }
+
+    public function addStyles($kniznica, $min = true)
+    {
+        $cssComment = $kniznica;
+
+        switch ($kniznica) {
+            case "Font Awesome":
+                $cssLink = '/plugins/fontawesome-free/css/all';
+                break;
+            case "Adminlte style":
+                $cssLink = '/dist/css/adminlte';
+                break;
+            case "Ionicons":
+                $cssLink = '/dist/css/ionicons/css/ionicons';
+                break;
+            case "Google Font: Source Sans Pro":
+                $cssLink = '/dist/css/www/fonts.googleapis';
+                break;
+            case "DataTables":
+                $cssLink = '/plugins/datatables/css/jquery.dataTables';
+                break;
+            case "DataTables-Bootstrap":
+                $cssComment = '';
+                $cssLink = '/plugins/datatables/css/dataTables.bootstrap4';
+                break;
+            case "DataTables-Select":
+                $cssComment = '';
+                $cssLink = '/plugins/datatables-select/css/select.bootstrap4';
+                break;
+            case "DataTables-Responsive":
+                $cssComment = '';
+                $cssLink = '/plugins/datatables-responsive/css/responsive.bootstrap4';
+                break;
+        }
+
+        $this->stylyArray[] = ($cssComment != '' ? '<!-- '.$cssComment.' -->'.PHP_EOL.TAB1 : '').'<link rel="stylesheet" href="'.$cssLink.($min ? '.min' : '').'.css">';
+    }
+    
+    public function displayStyles()
+    {
+        echo TAB1.'<!-- START - CSS štandard -->'.PHP_EOL;
+        foreach ($this->stylyArray as $key => $value)
+        {
+            echo PHP_EOL.TAB1.$value;
+        }
+        echo PHP_EOL.PHP_EOL.TAB1.'<!-- END - CSS štandard -->';
+    }
+
+    public function displayScripts()
+    {
+        echo TAB1.'<!-- START - SCRIPT štandard -->'.PHP_EOL;
+        foreach ($this->skriptyArray as $key => $value)
+        {
+            echo PHP_EOL.TAB1.$value;
+        }
+        echo PHP_EOL.PHP_EOL.TAB1.'<!-- END - SCRIPT štandard -->';
+    }
+
+    public function addScripts($kniznica, $min = true){
+        $jsComment = $kniznica;
+
+        switch ($kniznica) {
+            case "jQuery":
+                $jsLink = '/plugins/jquery/jquery';
+                break;
+            case "Bootstrap 4":
+                $jsLink = '/plugins/bootstrap/js/bootstrap.bundle';
+                break;
+            case "AdminLTE App":
+                $jsLink = '/dist/js/adminlte';
+                break;
+            case "AdminLTE for demo purposes":
+                $jsLink = '/dist/js/demo';
+                break;
+        }
+
+        $this->skriptyArray[] = ($jsComment != '' ? '<!-- '.$jsComment.' -->'.PHP_EOL.TAB1 : '').'<script src="'.$jsLink.($min ? '.min' : '').'.js"></script>';
+    
+    }
+
+    public $skripty = '
+    <!-- START - skripty štandard -->
+
+    <!-- jQuery -->
+    <script src="/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="/dist/js/adminlte.js"></script>    
+    <!-- AdminLTE for demo purposes -->
+    <script src="/dist/js/demo.js"></script>
+
+    <!-- END - skripty štandard -->    
+';
 
     public $styles = '
     <!-- START - CSS štandard -->
@@ -34,20 +146,7 @@ class Page
     <!-- END - CSS štandard -->    
 ';
 
-    public $skripty = '
-    <!-- START - skripty štandard -->
 
-    <!-- jQuery -->
-    <script src="/plugins/jquery/jquery.min.js"></script>
-    <!-- Bootstrap 4 -->
-    <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- AdminLTE App -->
-    <script src="/dist/js/adminlte.js"></script>    
-    <!-- AdminLTE for demo purposes -->
-    <script src="/dist/js/demo.js"></script>
-
-    <!-- END - skripty štandard -->    
-';
 
     // Metody třídy Page
     public function __set($name, $value)
@@ -84,6 +183,16 @@ class Page
         $this->bubbleMenu = $premenne->bublinkoveMenu;
         $this->hlavneMenu = $premenne->menuHlavne;
         $this->list = $listStranky;
+
+        $this->addStyles("Font Awesome", true);
+        $this->addStyles("Adminlte style", false);
+        $this->addStyles("Ionicons", true);
+        $this->addStyles("Google Font: Source Sans Pro", false);
+
+        $this->addScripts("jQuery", true);
+        $this->addScripts("Bootstrap 4", true);
+        $this->addScripts("AdminLTE App", false);        
+        $this->addScripts("AdminLTE for demo purposes", false);
     }
 
     public function display()
@@ -92,7 +201,11 @@ class Page
         $this->displayTitle();
         $this->displayDescription();
         $this->displayIcons();
+        
+        $this->displayStyles();
+        echo $this->stylySpecial;
 
+        echo "\n\n\n";
         echo $this->styles;
         
         $this->displayBodyHeader();
@@ -108,7 +221,7 @@ class Page
             echo $this->displayBubleMenu($this->hlavneMenu);
             $this->displayBubleMenuFooter();
         }
-       
+
         $this->displayContentHeader();
         echo $this->content;
         $this->displayContentFooter();
@@ -116,10 +229,13 @@ class Page
         $this->displayFooter();
         $this->displayBodyFooter();
         
-        echo $this->skripty;
+        $this->displayScripts();
         echo $this->skriptySpecial;
         
-        //$this->VYVOJ();
+        echo "\n\n\n";
+        echo $this->skripty;
+
+        $this->VYVOJ();
         echo "\n</body>\n</html>\n";
     }
 

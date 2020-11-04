@@ -8,26 +8,32 @@
 
     $uri = "/audit/zoznam-oblasti-auditu/";
     $list = (isset($_GET['p'])) ? $_GET['p'] : "1" ;
+    $pocet = 0;
 
     $homepage = new Page($uri , $list);
-
-    $id = mysqli_real_escape_string($conn, $_POST['delete']);
     
-    // kontrola či je záznam použitý v iných tabuľkách. Ak áno, nedá sa zmazať.
-    $sql = "SELECT 
-                (SELECT COUNT(*) FROM `31_zoznam_typ_auditu` WHERE `ID30_zoznam_oblast_auditu`= ".$id.")
-                +
-                (SELECT COUNT(*) FROM `01_certifikaty` WHERE `ID30_zoznam_oblast_auditu`= ".$id.")
-            AS Pocet;";
-    $pocetArray = dBzoznam($sql, $uri);
-    // vytiahnutie počtu z výsledku dotazu
-    $pocet = (int)$pocetArray[0]['Pocet'];
-
+    // vymazanie záznamu z databazy
+    // POZOR tento blok kodu musi byt na zaciatku
     if (isset($_POST['submit'])) {
+        $id = mysqli_real_escape_string($conn, $_POST['submit']);
         $sql = "DELETE FROM `30_zoznam_oblast_auditu` WHERE `ID30`=".$id.";";
-        dBzoznam2($sql, $uri);
-        header("Location: $uri");       
+
+        dBzoznam2($sql, $uri.'delete');
+        header("Location: $uri");   
         exit();
+    }
+
+    if (isset($_POST['delete'])) {
+        $id = mysqli_real_escape_string($conn, $_POST['delete']);
+        // kontrola či je záznam použitý v iných tabuľkách. Ak áno, nedá sa zmazať.
+        $sql = "SELECT 
+                    (SELECT COUNT(*) FROM `31_zoznam_typ_auditu` WHERE `ID30_zoznam_oblast_auditu`= ".$id.")
+                    +
+                    (SELECT COUNT(*) FROM `01_certifikaty` WHERE `ID30_zoznam_oblast_auditu`= ".$id.")
+                AS Pocet;";
+        $pocetArray = dBzoznam($sql, $uri);
+        // vytiahnutie počtu z výsledku dotazu
+        $pocet = (int)$pocetArray[0]['Pocet'];
     }
 
     if ($pocet > 0) {
@@ -52,13 +58,13 @@ ob_start();  // Začiatok definície hlavného obsahu
                 </div>
             </div>
             <div class="row justify-content-center">
-                    <a href="<?= $uri ?>" type="submit" name="vzad" class="btn btn-secondary">Späť</a>                    
-                </div>
+                <a href="<?= $uri ?>" type="submit" name="vzad" class="btn btn-secondary">Späť</a>                    
+            </div>
         </div>
     </div>
 
 <?php
-    } else {
+    } elseif ($pocet == 0) {
 
     // detaily k položke
     $sql = "SELECT * FROM 30_zoznam_oblast_auditu WHERE ID30='".$id."'; ";
@@ -80,17 +86,42 @@ ob_start();  // Začiatok definície hlavného obsahu
                             Si si istý, že chceš zmazať položku 
                             <span class="h5 text-danger"><?= htmlspecialchars($data[0]['OblastAuditovania']); ?></span>
                             ?
+                            <div class="mt-3"><u>Bližšie informácie o položke:</u></div>
+                            <p class="small-2"><?= htmlspecialchars($data[0]['Poznamka']); ?></p>
                         </p>
                     </div>
                 </div>
                 <div class="row justify-content-center">
-                        <a href="<?= $uri ?>" type="submit" name="vzad" class="btn btn-secondary mx-1">Späť</a>
-                        <button type="submit" name="submit" value="<?= htmlspecialchars($_POST['delete']); ?>" class="btn btn-outline-danger mx-1">Zmazať</button>
+                    <a href="<?= $uri ?>" type="submit" name="vzad" class="btn btn-secondary mx-1">Späť</a>
+                    <button type="submit" name="submit" value="<?= htmlspecialchars($_POST['delete']); ?>" class="btn btn-outline-danger mx-1">Zmazať</button>
                 </div>
             </form>
+
         </div>
     </div>
 
+<?php
+    } else {
+?>
+
+<div class="row justify-content-center">
+        <div class="col-12 col-sm-10 col-md-9 col-lg-7" style="max-width: 600px;">
+            <div class="card" >
+                <div class="card-header">
+                    Chyba
+                </div>
+                <div class="card-body register-card-body">
+                    <p class="text-danger">
+                        Chyba v databáze. Kontaktuj Administrátora
+                    </p>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <a href="<?= $uri ?>" type="submit" name="vzad" class="btn btn-danger">Späť</a>                    
+            </div>
+        </div>
+    </div>
+    
 <?php
     }
 

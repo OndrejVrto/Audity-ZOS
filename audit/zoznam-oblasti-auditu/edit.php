@@ -38,6 +38,7 @@
                     WHERE `ID30`=".$id.";";
             dBzoznam2($sql, $uri);
             header("Location: $uri");
+            exit();
         }
     } else {
         $id = mysqli_real_escape_string($conn, $_POST['edit']);
