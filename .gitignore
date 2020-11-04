@@ -10,6 +10,7 @@
 !include/class
 !pages
 !audit
+!audit/*
 
 !.gitignore
 !.htaccess

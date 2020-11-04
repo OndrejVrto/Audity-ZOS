@@ -1,35 +1,22 @@
 <?php
-//  print_r($_POST);
-
-// Automatické nahrávanie všetkých CLASS pri ich prvom zavolaní
-spl_autoload_register(function ($class_name) {
-    include_once  $_SERVER['DOCUMENT_ROOT'] . "/include/class/class." . $class_name . '.php';
-});
-
-// založenie novej triedy na stranku
-$homepage = new Page('/audit/zoznam-oblasti-auditu-ajax', 1);
-$uri = "/audit/zoznam-oblasti-auditu";
-
-// prepísanie hodnôt stránky ručne. Štandardne sa hodnoty načítavajú z _variables.php
-// $homepage->nadpis = 'Nadpis';
+    // Automatické nahrávanie všetkých CLASS pri ich prvom zavolaní
+    spl_autoload_register(function ($class_name) {
+        include_once  $_SERVER['DOCUMENT_ROOT'] . "/include/class/class." . $class_name . '.php';
+    });
 
 
-// inicializácia konštánt formulára v prípade volania metódou GET
-$mena_vsetkych_poli = array ('oblast-auditu', 'oblast-auditu-poznamka');
-foreach ($mena_vsetkych_poli as $key => $value) {
-    $validation_values[$value] = $validation_classes[$value] = $validation_feedback[$value] = '';
-}
+    $uri = "/audit/zoznam-oblasti-auditu/";
+    $list = (isset($_GET['p'])) ? $_GET['p'] : "1" ;
 
-$request_method = strtoupper($_SERVER['REQUEST_METHOD']);
+    $homepage = new Page($uri , $list);
 
-if ($request_method === 'GET') {
-    // spustí sa ak existuje GET, teda aj pri prvom spustení
-    // program na vyplnenie formulára údajmi (napr:dotaz do databazy cez najaký class)
-} elseif ($request_method === 'POST') {
-    // spustí sa ak existuje POST
+    // inicializácia konštánt formulára v prípade volania metódou GET
+    $mena_vsetkych_poli = array ('oblast-auditu', 'oblast-auditu-poznamka');
+    foreach ($mena_vsetkych_poli as $key => $value) {
+        $validation_values[$value] = $validation_classes[$value] = $validation_feedback[$value] = '';
+    }
+
     if (isset($_POST['submit'])) {
-        // spustí sa ak bolo stlačené tlačítko ->  name="submit"
-
         // inicializácia class Validate
         $validation = new ValidatorOblastAuditu($_POST);
 
@@ -41,25 +28,18 @@ if ($request_method === 'GET') {
 
         // if result is TRUE (1) --> save data to db  OR  reditect page
         if ($result == 1) {
+            $oblast = mysqli_real_escape_string($conn, $validation_values['oblast-auditu']);
+            $poznamka = mysqli_real_escape_string($conn, $validation_values['oblast-auditu-poznamka']);
 
-            
-            //$sql = "INSERT INTO `30_zoznam_oblast_auditu` (`OblastAuditovania`) VALUES ('" . $validation_values['oblast-auditu'] . "');";
-            
-            $sql = "UPDATE `30_zoznam_oblast_auditu` SET `OblastAuditovania`='" . $validation_values['oblast-auditu'] . "', `Poznamka`='" . $validation_values['oblast-auditu-poznamka'] . "' WHERE `ID30`=" . $_POST['submit'] . ";";
+            $sql = "INSERT INTO `30_zoznam_oblast_auditu` 
+                    (`OblastAuditovania`, `Poznamka`) 
+                    VALUES 
+                    ('".$oblast."', '".$poznamka."' );";
+
             dBzoznam2($sql, $uri);
-
             header("Location: $uri");
         }
-    } else {
-        // vyberovy dotaz na data
-        $sql = "SELECT * FROM 30_zoznam_oblast_auditu WHERE ID30='" . $_POST['edit'] . "'; ";
-        $data = dBzoznam($sql, $uri);
-        $validation_values['oblast-auditu'] = $data[0]['OblastAuditovania'];
-        $validation_values['oblast-auditu-poznamka'] = $data[0]['Poznamka'];        
-        //print_r($data);
     }
-}
-
 
 ob_start();  // Začiatok definície hlavného obsahu
 ?>
@@ -67,14 +47,14 @@ ob_start();  // Začiatok definície hlavného obsahu
 <div class="row justify-content-center">
     <div class="col-12 col-sm-10 col-md-9 col-lg-7" style="max-width: 600px;">
 
-        <form action="<?= $uri ?>-edit" method="post">
+        <form action="<?= $uri ?>novy" method="post">
             <div class="card" >
                 <div class="card-header">
-                    <?= $homepage->nadpis ?> - Vytvorenie novej položky
+                    Vytvorenie novej položky
                 </div>
                 <div class="card-body register-card-body">
 
-                <?php $meno_pola = 'oblast-auditu'; ?><!-- FORM - osobne cislo -->
+                <?php $meno_pola = 'oblast-auditu'; ?><!-- FORM - Oblasť -->
                     <div class="form-group ">
                         <label>Názov oblasti</label>
                         <div class="input-group">
@@ -89,7 +69,7 @@ ob_start();  // Začiatok definície hlavného obsahu
                         </div>
                     </div>
 
-                    <?php $meno_pola = 'oblast-auditu-poznamka'; ?><!-- FORM - osobne cislo -->
+                    <?php $meno_pola = 'oblast-auditu-poznamka'; ?><!-- FORM - Poznámka -->
                     <div class="form-group ">
                         <label>Poznámka</label>
                         <textarea class="form-control<?= $validation_classes[$meno_pola]; ?>" name="<?= $meno_pola; ?>"><?= $validation_values[$meno_pola]; ?> </textarea>
@@ -99,17 +79,14 @@ ob_start();  // Začiatok definície hlavného obsahu
                     </div>
 
                 </div>
-                <!-- /.card-body -->
                 <div class="row justify-content-center">
                     <a href="<?= $uri ?>" type="submit" name="vzad" class="btn btn-secondary mx-1">Späť</a>
-                    <button type="submit" name="submit" value="<?= htmlspecialchars($_POST['edit']) ?>" class="btn btn-primary mx-1">Uložiť</button>
+                    <button type="submit" name="submit" class="btn btn-outline-warning mx-1">Uložiť</button>
                 </div>
             </div>
-            <!-- /.card -->
         </form>
         </div>
     </div>
-    <!-- /.register-box -->
 
 <?php
 $homepage->content = ob_get_clean();  // Koniec hlavného obsahu

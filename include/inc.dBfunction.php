@@ -34,7 +34,6 @@ function dBzoznam($sql, $volaciaStranka = "/index.php")
 
 function dBzoznam2($sql, $volaciaStranka = "/index.php")
 {
-
     require 'inc.dBconnect.php';
 
     $stmt = mysqli_stmt_init($conn);
@@ -46,6 +45,4 @@ function dBzoznam2($sql, $volaciaStranka = "/index.php")
         // spustenie dotazu s parametrom
         mysqli_stmt_execute($stmt);
     }
-
-    return $data;
 }

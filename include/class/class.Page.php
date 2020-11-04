@@ -15,6 +15,7 @@ class Page
     protected $_nazovstranky;
     private $aktivnemenu = false;
     public $zobrazitBublinky = true;
+    public $skriptySpecial = '';
 
     public $styles = '
     <!-- START - CSS štandard -->
@@ -31,7 +32,7 @@ class Page
     <link rel="stylesheet" href="/dist/css/www/fonts.googleapis.css">    
 
     <!-- END - CSS štandard -->    
-    ';
+';
 
     public $skripty = '
     <!-- START - skripty štandard -->
@@ -46,7 +47,7 @@ class Page
     <script src="/dist/js/demo.js"></script>
 
     <!-- END - skripty štandard -->    
-    ';
+';
 
     // Metody třídy Page
     public function __set($name, $value)
@@ -116,8 +117,9 @@ class Page
         $this->displayBodyFooter();
         
         echo $this->skripty;
+        echo $this->skriptySpecial;
         
-        $this->VYVOJ();
+        //$this->VYVOJ();
         echo "\n</body>\n</html>\n";
     }
 
