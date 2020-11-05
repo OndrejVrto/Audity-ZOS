@@ -9,7 +9,7 @@
     $uri = "/audit/zoznam-oblasti-auditu/";
     $list = (isset($_GET['p'])) ? $_GET['p'] : "1" ;
 
-    $homepage = new Page($uri , $list);
+    $page = new Page($uri , $list);
 
     // inicializácia konštánt formulára v prípade volania metódou GET
     $mena_vsetkych_poli = array ('oblast-auditu', 'oblast-auditu-poznamka');
@@ -21,7 +21,7 @@
         // inicializácia class Validate
         $validation = new ValidatorOblastAuditu($_POST);
 
-        $validation->odsadenie = 5;  // odsadzuje HTML kod o 5 tabulátorov
+        $validation->odsadenie = 8;  // odsadzuje HTML kod o 5 tabulátorov
         $result = $validation->validateForm();  // validuje formulár - !! kľúče validovaných polí musia byť v zadefinované v triede
         $validation_values = $validation->validateFormGetValues();   // vracia hodnoty polí pre každý kľúč
         $validation_classes = $validation->validateFormGetClasses();  // vracia triedy:  is-valid / is-invalid pre každý kľúč
@@ -46,51 +46,54 @@
 ob_start();  // Začiatok definície hlavného obsahu
 ?>
 
-<div class="row justify-content-center">
-    <div class="col-12 col-sm-10 col-md-9 col-lg-7" style="max-width: 600px;">
+    <div class="row justify-content-center">
+        <div class="col-12 col-sm-10 col-md-9 col-lg-7" style="max-width: 600px;">
 
-        <form action="<?= $uri ?>novy" method="post">
-            <div class="card" >
-                <div class="card-header">
-                    Vytvorenie novej položky
-                </div>
-                <div class="card-body register-card-body">
+            <form action="<?= $uri ?>novy" method="post">
+                <div class="card" >
 
-                <?php $meno_pola = 'oblast-auditu'; ?><!-- FORM - Oblasť -->
-                    <div class="form-group ">
-                        <label>Názov oblasti</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control<?= $validation_classes[$meno_pola]; ?>" value="<?= $validation_values[$meno_pola]; ?>" name="<?= $meno_pola; ?>" placeholder="Položka">
-                            <div class="input-group-append">
-                                <div class="input-group-text">
-                                    <span class="fas fa-id-card"></span>
+                    <div class="card-header">
+                        Vytvorenie novej položky
+                    </div>
+
+                    <div class="card-body register-card-body">
+
+                        <?php $meno_pola = 'oblast-auditu'; ?><!-- FORM - Oblasť -->
+                        <div class="form-group ">
+                            <label>Názov oblasti</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control<?= $validation_classes[$meno_pola] ?>" value="<?= $validation_values[$meno_pola] ?>" name="<?= $meno_pola ?>" placeholder="Položka">
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-id-card"></span>
+                                    </div>
                                 </div>
+                                <!-- <small class="d-block w-100 mb-n2 text-muted">Poznámka k tomuto poľu</small> --><?= PHP_EOL.$validation_feedback[$meno_pola] ?>
                             </div>
-                            <!-- <small class="d-block w-100 mb-n2 text-muted">Osobné číslo zamestnanca</small> -->
-<?= $validation_feedback[$meno_pola]; ?>
                         </div>
-                    </div>
 
-                    <?php $meno_pola = 'oblast-auditu-poznamka'; ?><!-- FORM - Poznámka -->
-                    <div class="form-group ">
-                        <label>Poznámka</label>
-                        <textarea class="form-control<?= $validation_classes[$meno_pola]; ?>" name="<?= $meno_pola; ?>"><?= $validation_values[$meno_pola]; ?> </textarea>
+                        <?php $meno_pola = 'oblast-auditu-poznamka'; ?><!-- FORM - Poznámka -->
+                        <div class="form-group ">
+                            <label>Poznámka</label>
+                            <textarea class="form-control<?= $validation_classes[$meno_pola] ?>" name="<?= $meno_pola ?>"><?= $validation_values[$meno_pola] ?></textarea>
+                            <!-- <small class="d-block w-100 mb-n2 text-muted">Poznámka k tomuto poľu</small> --><?= PHP_EOL.$validation_feedback[$meno_pola] ?>
                         </div>
-                        <!-- <small class="d-block w-100 mb-n2 text-muted">Osobné číslo zamestnanca</small> -->
-<?= $validation_feedback[$meno_pola]; ?>
+
                     </div>
 
                 </div>
+
                 <div class="row justify-content-center">
-                    <a href="<?= $uri ?>" type="submit" name="vzad" class="btn btn-secondary mx-1">Späť</a>
+                    <a href="<?= $uri ?>" name="vzad" class="btn btn-secondary mx-1">Späť</a>
                     <button type="submit" name="submit" class="btn btn-outline-warning mx-1">Uložiť</button>
                 </div>
-            </div>
-        </form>
+
+            </form>
+
         </div>
     </div>
 
 <?php
-$homepage->content = ob_get_clean();  // Koniec hlavného obsahu
-$homepage->display();  // vykreslenie stranky
-?>
+$page->content = ob_get_clean();  // Koniec hlavného obsahu
+
+$page->display();  // vykreslenie stranky

@@ -5,6 +5,8 @@
     defined("TAB3") or define("TAB3", "\t\t\t");
     defined("TAB4") or define("TAB4", "\t\t\t\t");
     defined("TAB5") or define("TAB5", "\t\t\t\t\t");
+    defined("TAB6") or define("TAB6", "\t\t\t\t\t\t");
+    defined("TAB7") or define("TAB7", "\t\t\t\t\t\t\t");    
 
 class Page
 {
@@ -13,140 +15,17 @@ class Page
     public $nadpis;
     public $title;
     public $description;
-    public $bubbleMenu = array();
     public $odsadenie = 5;
     public $list = 1;
-    private $link;
     public $hlavneMenu;
-    protected $_nazovstranky;
-    private $aktivnemenu = false;
     public $zobrazitBublinky = true;
-
     public $stylyArray = [];
     public $stylySpecial = '';
     public $skriptyArray = [];
     public $skriptySpecial = '';
-
-    public function clearStyles(){
-        $this->stylyArray = null;
-    }
-    
-    public function clearScripts(){
-        $this->stylyArray = null;
-    }
-
-    public function addStyles($kniznica, $min = true)
-    {
-        $cssComment = $kniznica;
-
-        switch ($kniznica) {
-            case "Font Awesome":
-                $cssLink = '/plugins/fontawesome-free/css/all';
-                break;
-            case "Adminlte style":
-                $cssLink = '/dist/css/adminlte';
-                break;
-            case "Ionicons":
-                $cssLink = '/dist/css/ionicons/css/ionicons';
-                break;
-            case "Google Font: Source Sans Pro":
-                $cssLink = '/dist/css/www/fonts.googleapis';
-                break;
-            case "DataTables":
-                $cssLink = '/plugins/datatables/css/jquery.dataTables';
-                break;
-            case "DataTables-Bootstrap":
-                $cssComment = '';
-                $cssLink = '/plugins/datatables/css/dataTables.bootstrap4';
-                break;
-            case "DataTables-Select":
-                $cssComment = '';
-                $cssLink = '/plugins/datatables-select/css/select.bootstrap4';
-                break;
-            case "DataTables-Responsive":
-                $cssComment = '';
-                $cssLink = '/plugins/datatables-responsive/css/responsive.bootstrap4';
-                break;
-        }
-
-        $this->stylyArray[] = ($cssComment != '' ? '<!-- '.$cssComment.' -->'.PHP_EOL.TAB1 : '').'<link rel="stylesheet" href="'.$cssLink.($min ? '.min' : '').'.css">';
-    }
-    
-    public function displayStyles()
-    {
-        echo TAB1.'<!-- START - CSS štandard -->'.PHP_EOL;
-        foreach ($this->stylyArray as $key => $value)
-        {
-            echo PHP_EOL.TAB1.$value;
-        }
-        echo PHP_EOL.PHP_EOL.TAB1.'<!-- END - CSS štandard -->';
-    }
-
-    public function displayScripts()
-    {
-        echo TAB1.'<!-- START - SCRIPT štandard -->'.PHP_EOL;
-        foreach ($this->skriptyArray as $key => $value)
-        {
-            echo PHP_EOL.TAB1.$value;
-        }
-        echo PHP_EOL.PHP_EOL.TAB1.'<!-- END - SCRIPT štandard -->';
-    }
-
-    public function addScripts($kniznica, $min = true){
-        $jsComment = $kniznica;
-
-        switch ($kniznica) {
-            case "jQuery":
-                $jsLink = '/plugins/jquery/jquery';
-                break;
-            case "Bootstrap 4":
-                $jsLink = '/plugins/bootstrap/js/bootstrap.bundle';
-                break;
-            case "AdminLTE App":
-                $jsLink = '/dist/js/adminlte';
-                break;
-            case "AdminLTE for demo purposes":
-                $jsLink = '/dist/js/demo';
-                break;
-        }
-
-        $this->skriptyArray[] = ($jsComment != '' ? '<!-- '.$jsComment.' -->'.PHP_EOL.TAB1 : '').'<script src="'.$jsLink.($min ? '.min' : '').'.js"></script>';
-    
-    }
-
-    public $skripty = '
-    <!-- START - skripty štandard -->
-
-    <!-- jQuery -->
-    <script src="/plugins/jquery/jquery.min.js"></script>
-    <!-- Bootstrap 4 -->
-    <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- AdminLTE App -->
-    <script src="/dist/js/adminlte.js"></script>    
-    <!-- AdminLTE for demo purposes -->
-    <script src="/dist/js/demo.js"></script>
-
-    <!-- END - skripty štandard -->    
-';
-
-    public $styles = '
-    <!-- START - CSS štandard -->
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="/dist/css/adminlte.css">
-    <!-- Ionicons -->
-    <!-- <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> -->
-    <link rel="stylesheet" href="/dist/css/ionicons/css/ionicons.min.css">
-    <!-- Google Font: Source Sans Pro -->
-    <!-- <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet"> -->
-    <link rel="stylesheet" href="/dist/css/www/fonts.googleapis.css">    
-
-    <!-- END - CSS štandard -->    
-';
-
-
+    protected $_nazovstranky;
+    private $link;
+    private $aktivnemenu = false;
 
     // Metody třídy Page
     public function __set($name, $value)
@@ -165,7 +44,7 @@ class Page
         spl_autoload_register(function ($class_name) {
             include_once  $path . "class/class.".$class_name.'.php';
         });
-        
+
         // $conn pripojenie do databazy
         require $path . 'inc.dBconnect.php';
         require $path . 'inc.dBfunction.php';
@@ -175,24 +54,24 @@ class Page
         require $path . '_variables.php';
 
         $this->link = $link;
+        $this->list = $listStranky;
 
         $premenne = new Premenne($link);
+
         $this->title = $premenne->titulokStranky;
         $this->nadpis = $premenne->nadpisPrvejSekcie;
         $this->description = $premenne->popisStranky;
-        $this->bubbleMenu = $premenne->bublinkoveMenu;
         $this->hlavneMenu = $premenne->menuHlavne;
-        $this->list = $listStranky;
 
+        // zadefinovanie základných štýlov
         $this->addStyles("Font Awesome", true);
-        $this->addStyles("Adminlte style", false);
         $this->addStyles("Ionicons", true);
+        $this->addStyles("Adminlte style", false);
         $this->addStyles("Google Font: Source Sans Pro", false);
-
+        // zadefinovanie základných skriptov
         $this->addScripts("jQuery", true);
-        $this->addScripts("Bootstrap 4", true);
+        $this->addScripts("Bootstrap 4-bundle", true);
         $this->addScripts("AdminLTE App", false);        
-        $this->addScripts("AdminLTE for demo purposes", false);
     }
 
     public function display()
@@ -204,9 +83,6 @@ class Page
         
         $this->displayStyles();
         echo $this->stylySpecial;
-
-        echo "\n\n\n";
-        echo $this->styles;
         
         $this->displayBodyHeader();
         
@@ -231,15 +107,10 @@ class Page
         
         $this->displayScripts();
         echo $this->skriptySpecial;
-        
-        echo "\n\n\n";
-        echo $this->skripty;
 
         $this->VYVOJ();
         echo "\n</body>\n</html>\n";
     }
-
-
 
 
     public function displayBegin()
@@ -612,6 +483,133 @@ class Page
 
 <?php
     }
+
+    public function clearStyles(){
+        $this->stylyArray = [];
+    }
+    
+    public function clearScripts(){
+        $this->skriptyArray = [];
+    }
+
+    public function displayStyles()
+    {
+        echo TAB1.'<!-- START - CSS štandard -->'.PHP_EOL;
+        foreach ($this->stylyArray as $key => $value)
+        {
+            echo PHP_EOL.TAB1.$value;
+        }
+        echo PHP_EOL.PHP_EOL.TAB1.'<!-- END - CSS štandard -->'.PHP_EOL;
+    }
+
+    public function displayScripts()
+    {
+        echo TAB1.'<!-- START - SCRIPT štandard -->'.PHP_EOL;
+        foreach ($this->skriptyArray as $key => $value)
+        {
+            echo PHP_EOL.TAB1.$value;
+        }
+        echo PHP_EOL.PHP_EOL.TAB1.'<!-- END - SCRIPT štandard -->'.PHP_EOL;
+    }
+
+    public function addStyles($kniznica, $min = true)
+    {
+        $cssComment = $kniznica;
+
+        switch ($kniznica) {
+            case "Font Awesome":
+                $cssLink = '/plugins/fontawesome-free/css/all';
+                break;
+            case "Adminlte style":
+                $cssLink = '/dist/css/adminlte';
+                break;
+            case "Ionicons":
+                $cssLink = '/dist/css/ionicons/css/ionicons';
+                break;
+            case "Google Font: Source Sans Pro":
+                $cssLink = '/dist/css/www/fonts.googleapis';
+                break;
+            case "DataTables-jQuery":
+                $cssLink = '/plugins/datatables/css/jquery.dataTables';
+                break;
+            case "DataTables-Bootstrap":
+                $cssComment = '';
+                $cssLink = '/plugins/datatables/css/dataTables.bootstrap4';
+                break;
+            case "DataTables-Select":
+                $cssComment = '';
+                $cssLink = '/plugins/datatables-select/css/select.bootstrap4';
+                break;
+            case "DataTables-Responsive":
+                $cssComment = '';
+                $cssLink = '/plugins/datatables-responsive/css/responsive.bootstrap4';
+                break;
+            case "Tempusdominus Bbootstrap 4":
+                $cssLink = '/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4';
+                break;                
+            case "iCheck":
+                $cssLink = '/plugins/icheck-bootstrap/icheck-bootstrap';
+                break;                
+            case "JQVMap":
+                $cssLink = '/plugins/jqvmap/jqvmap';
+                break;                
+            case "overlayScrollbars":
+                $cssLink = '/plugins/overlayScrollbars/css/OverlayScrollbars';
+                break;                
+            case "Daterange picker":
+                $cssLink = '/plugins/daterangepicker/daterangepicker';
+            break;                
+            case "summernote":
+                $cssLink = '/plugins/summernote/summernote-bs4';
+            break;
+        }
+
+        $this->stylyArray[] = ($cssComment != '' ? '<!-- '.$cssComment.' -->'.PHP_EOL.TAB1 : '').'<link rel="stylesheet" href="'.$cssLink.($min ? '.min' : '').'.css">';
+    }
+    
+    public function addScripts($kniznica, $min = true){
+        $jsComment = $kniznica;
+
+        switch ($kniznica) {
+            case "jQuery":
+                $jsLink = '/plugins/jquery/jquery';
+                break;
+            case "Bootstrap 4-bundle":
+                $jsLink = '/plugins/bootstrap/js/bootstrap.bundle';
+                break;
+            case "AdminLTE App":
+                $jsLink = '/dist/js/adminlte';
+                break;
+            case "AdminLTE for demo purposes":
+                $jsLink = '/dist/js/demo';
+            break;
+
+            case "DataTables":
+                $jsLink = '/plugins/datatables/js/jquery.dataTables';
+            break;
+            case "DataTables-Bootstrap4":
+                $jsComment = '';
+                $jsLink = '/plugins/datatables/js/dataTables.bootstrap4';
+            break;
+            case "DataTables-Select":
+                $jsLink = '/plugins/datatables-select/js/dataTables.select';
+            break;
+            case "DataTables-Select-Bootstrap4":
+                $jsComment = '';
+                $jsLink = '/plugins/datatables-select/js/select.bootstrap4';
+            break;
+            case "DataTables-Responsive":
+                $jsLink = '/plugins/datatables-responsive/js/dataTables.responsive';
+            break;
+            case "DataTables-Responsive-Bootstrap":
+                $jsComment = '';                
+                $jsLink = '/plugins/datatables-responsive/js/responsive.bootstrap4';
+            break;
+        }
+
+        $this->skriptyArray[] = ($jsComment != '' ? '<!-- '.$jsComment.' -->'.PHP_EOL.TAB1 : '').'<script src="'.$jsLink.($min ? '.min' : '').'.js"></script>';
+    }
+
 
     protected function VYVOJ () {
 

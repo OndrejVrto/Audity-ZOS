@@ -7,8 +7,7 @@
     $uri = "/audit/zoznam-oblasti-auditu/";
     $list = (isset($_GET['p'])) ? $_GET['p'] : "1" ;
 
-    $homepage = new Page($uri , $list);
-    $homepage->zobrazitBublinky = true;
+    $page = new Page($uri , $list);
 
     // vyberovy dotaz na data
     $sql = "SELECT * FROM 30_zoznam_oblast_auditu ORDER BY LOWER(OblastAuditovania) ASC";
@@ -51,8 +50,8 @@ ob_start();  // Začiatok definície hlavného obsahu
 <?php
     $poradie = 1;
     foreach ($data as $key => $value) {
-        $id = htmlentities($value['ID30']);
-        $oblastAuditovania = htmlentities($value['OblastAuditovania']);
+        $id = htmlspecialchars($value['ID30']);
+        $oblastAuditovania = htmlspecialchars($value['OblastAuditovania']);
 ?>
                             <tr id='<?= $id ?>'>
                                 <td><?= $poradie ?>.</td>
@@ -72,9 +71,9 @@ ob_start();  // Začiatok definície hlavného obsahu
     </div>
 
 <?php
-$homepage->content = ob_get_clean();  // Koniec hlavného obsahu
+$page->content = ob_get_clean();  // Koniec hlavného obsahu
 
-ob_start();  // Začiatok definície SKRIPTov pre túto stránku
+ob_start();  // Začiatok definície Špeciálnych SKRIPTov pre túto stránku
 ?>
 
     <!-- START - skripty SPECIAL -->
@@ -136,62 +135,30 @@ ob_start();  // Začiatok definície SKRIPTov pre túto stránku
     <!-- END - skripty SPECIAL -->
 
 <?php
-$homepage->skriptySpecial = ob_get_clean();  // Koniec SKRIPTov
+$page->skriptySpecial = ob_get_clean();  // Koniec SKRIPTov
 
+// definícia CSS knizníc
+$page->clearStyles();
+$page->addStyles("Font Awesome", true);
+$page->addStyles("Ionicons", true);
+$page->addStyles("DataTables-jQuery", false);
+$page->addStyles("DataTables-Bootstrap", true);
+$page->addStyles("DataTables-Select", true);
+$page->addStyles("DataTables-Responsive", true);
+$page->addStyles("Adminlte style", false);
+$page->addStyles("Google Font: Source Sans Pro", false);
 
-ob_start();  // Začiatok definície CSS pre túto stránku 
-?>
-    <!-- Font Awesome -->
-    <link rel='stylesheet' href='/plugins/fontawesome-free/css/all.min.css'>
+// definícia Skriptov
+$page->clearScripts();
+$page->addScripts("jQuery",true);
+$page->addScripts("Bootstrap 4-bundle",true);
+$page->addScripts("DataTables",true);
+$page->addScripts("DataTables-Bootstrap4",true);
+$page->addScripts("DataTables-Select",true);
+$page->addScripts("DataTables-Select-Bootstrap4",true);
+$page->addScripts("DataTables-Responsive",true);
+$page->addScripts("DataTables-Responsive-Bootstrap",true);
+$page->addScripts("AdminLTE App",true);
 
-    <!-- Ionicons -->
-    <link rel='stylesheet' href='/dist/css/ionicons/css/ionicons.min.css'>
-
-    <!-- DataTables -->
-    <link rel='stylesheet' href='/plugins/datatables/css/jquery.dataTables.css'>
-    <link rel='stylesheet' href='/plugins/datatables/css/dataTables.bootstrap4.min.css'>
-    <link rel='stylesheet' href='/plugins/datatables-select/css/select.bootstrap4.min.css'>
-    <link rel='stylesheet' href='/plugins/datatables-responsive/css/responsive.bootstrap4.min.css'>
-
-    <!-- Theme style -->
-    <link rel='stylesheet' href='/dist/css/adminlte.css'>
-
-    <!-- Google Font: Source Sans Pro -->
-    <link rel='stylesheet' href='/dist/css/www/fonts.googleapis.css'>
-<?php
-$homepage->styles = ob_get_clean();  // Koniec definícií CSS
-
-
-ob_start();  // Začiatok definície SKRIPTov pre túto stránku
-?>
-
-    <!-- START - skripty -->
-
-    <!-- jQuery -->
-    <script src='/plugins/jquery/jquery.min.js'></script>
-    <!-- Bootstrap 4 -->
-    <script src='/plugins/bootstrap/js/bootstrap.bundle.min.js'></script>
-
-    <!-- DataTables -->
-    <!-- <script src='/plugins/datatables/jquery.dataTables.min.js'></script> -->
-    <script src='/plugins/datatables/js/jquery.dataTables.min.js'></script>
-    <script src='/plugins/datatables/js/dataTables.bootstrap4.min.js'></script>
-
-    <script src='/plugins/datatables-select/js/dataTables.select.min.js'></script>
-    <script src='/plugins/datatables-select/js/select.bootstrap4.min.js'></script>
-
-    <script src='/plugins/datatables-responsive/js/dataTables.responsive.min.js'></script>
-    <script src='/plugins/datatables-responsive/js/responsive.bootstrap4.min.js'></script>
-
-    <!-- AdminLTE App -->
-    <script src='/dist/js/adminlte.js'></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src='/dist/js/demo.js'></script>
-
-    <!-- END - skripty -->
-
-<?php
-$homepage->skripty = ob_get_clean();  // Koniec SKRIPTov
-
-$homepage->display();  // vykreslenie stranky
-?>
+// vykreslenie stranky
+$page->display();

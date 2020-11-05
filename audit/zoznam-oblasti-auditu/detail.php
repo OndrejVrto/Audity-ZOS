@@ -8,63 +8,62 @@
     $uri = "/audit/zoznam-oblasti-auditu/";
     $list = (isset($_GET['p'])) ? $_GET['p'] : "1" ;
 
-    $homepage = new Page($uri , $list);
+    $page = new Page($uri , $list);
 
-    $id = mysqli_real_escape_string($conn, $_POST['detail']);
+    (int)$id = mysqli_real_escape_string($conn, $_POST['detail']);
 
     // vyberovy dotaz na data
     $sql = "SELECT * FROM 30_zoznam_oblast_auditu WHERE ID30='".$id."'; ";
     $data = dBzoznam($sql, $uri);
-
+    
+    $oblast = htmlspecialchars($data[0]['OblastAuditovania']);
+    $poznamka = htmlspecialchars($data[0]['Poznamka']);
 ob_start();  // Začiatok definície hlavného obsahu
 ?>
 
-<div class="row justify-content-center">
-    <div class="col-12 col-sm-10 col-md-9 col-lg-7" style="max-width: 600px;">
+    <div class="row justify-content-center">
+        <div class="col-12 col-sm-10 col-md-9 col-lg-7" style="max-width: 600px;">
 
-        <form>
-        <fieldset disabled>
-            <div class="card" >
-                <div class="card-header">
-                    Detailné informácie o položke zoznamu
-                </div>
-                <div class="card-body register-card-body">
+            <form>
+            <fieldset disabled>
+                <div class="card" >
 
-                    <!-- FORM - osobne cislo -->
-                    <div class="form-group ">
-                        <label>Názov oblasti</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" value="<?= $data[0]['OblastAuditovania']; ?>" placeholder="Položka">
-                            <div class="input-group-append">
-                                <div class="input-group-text">
-                                    <span class="fas fa-id-card"></span>
+                    <div class="card-header">
+                        Detailné informácie o položke zoznamu
+                    </div>
+                    <div class="card-body register-card-body">
+
+                        <!-- FORM - Oblasť -->
+                        <div class="form-group ">
+                            <label>Názov oblasti</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" value="<?= $oblast ?>" placeholder="Položka">
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-id-card"></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- FORM - osobne cislo -->
-                    <div class="form-group ">
-                        <label>Poznámka</label>
-                        <textarea class="form-control"><?= $data[0]['Poznamka']; ?> </textarea>
+                        <!-- FORM - Poznámka -->
+                        <div class="form-group ">
+                            <label>Poznámka</label>
+                            <textarea class="form-control"><?= $poznamka ?></textarea>
                         </div>
+
                     </div>
-
                 </div>
-                <!-- /.card-body -->
+            </fieldset>
+            </form>
 
-            </div>
-            <!-- /.card -->
-        </fieldset>
-        </form>
-
+            <div class="row justify-content-center">
+                <a href="<?= $uri ?>" name="vzad" class="btn btn-secondary mx-1">Späť</a>
+            </div> 
         </div>
-        <div class="row justify-content-center">
-            <a href="<?= $uri ?>" type="submit" name="vzad" class="btn btn-secondary mx-1">Späť</a>
-        </div> 
     </div>
 
 <?php
-$homepage->content = ob_get_clean();  // Koniec hlavného obsahu
-$homepage->display();  // vykreslenie stranky
-?>
+$page->content = ob_get_clean();  // Koniec hlavného obsahu
+
+$page->display();  // vykreslenie stranky
