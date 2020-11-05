@@ -36,14 +36,18 @@ class ValidatorOblastAuditu extends Validator
 
     public function validateOblast($name)
     {
-        $value = $this->privat_data[$name];
+        $valueNEW = $this->privat_data[$name];
+        $valueOLD = $this->privat_data['valueOld'];
 
-        if ($this->is_required($value)) {
+        if ($this->is_required($valueNEW)) {
             $this->addError($name, 'Poľe nesmie byť prázdne.');
         } else {
             // kontrola či je záznam použitý v iných tabuľkách. Ak áno, nedá editovať jeho názov.
-            (int)$hodnota = mysqli_real_escape_string($this->connDb, $value);
-            $sql = "SELECT COUNT(*) AS Pocet FROM `30_zoznam_oblast_auditu` WHERE `OblastAuditovania`= '".$hodnota."';";
+            $hodnota = mysqli_real_escape_string($this->connDb, $valueNEW);
+            $hodnotaOLD = mysqli_real_escape_string($this->connDb, $valueOLD);
+
+            $sql = "SELECT COUNT(*) AS Pocet FROM `30_zoznam_oblast_auditu` WHERE `OblastAuditovania`= '".$hodnota."' AND  `OblastAuditovania` <> '".$hodnotaOLD."';";
+            
             $pocetArray = dBzoznam($sql, $this->link);
             // vytiahnutie počtu z výsledku dotazu
             $pocet = (int)$pocetArray[0]['Pocet'];

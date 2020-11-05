@@ -12,7 +12,7 @@
     $page = new Page($uri , $list);
 
     // inicializácia konštánt formulára v prípade volania metódou GET
-    $mena_vsetkych_poli = array ('oblast-auditu', 'oblast-auditu-poznamka');
+    $mena_vsetkych_poli = array ('oblast-auditu', 'oblast-auditu-poznamka', 'oblast-auditu-old');
     foreach ($mena_vsetkych_poli as $key => $value) {
         $val_values[$value] = $val_classes[$value] = $val_feedback[$value] = '';
     }
@@ -61,7 +61,8 @@
         $sql = "SELECT * FROM 30_zoznam_oblast_auditu WHERE ID30='".$id."'; ";
         $data = dBzoznam($sql, $uri);
         $val_values['oblast-auditu'] = $data[0]['OblastAuditovania'];
-        $val_values['oblast-auditu-poznamka'] = $data[0]['Poznamka'];   
+        $val_values['valueOld'] = $data[0]['OblastAuditovania'];
+        $val_values['oblast-auditu-poznamka'] = $data[0]['Poznamka'];
     }
 
     $id = htmlspecialchars($id);
@@ -80,6 +81,9 @@ ob_start();  // Začiatok definície hlavného obsahu
                     </div>
 
                     <div class="card-body register-card-body">
+
+                        <?php $pole = 'valueOld'; ?><!-- FORM - Oblasť - pôvodná hodnota - HIDDEN -->
+                        <input type="hidden" name="valueOld" value="<?= $val_values[$pole] ?>">
 
                         <?php $pole = 'oblast-auditu'; ?><!-- FORM - Oblasť -->
                         <div class="form-group ">
