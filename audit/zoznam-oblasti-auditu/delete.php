@@ -13,9 +13,10 @@
     $page = new Page($uri , $list);
     
     // vymazanie záznamu z databazy
-    // POZOR tento blok kodu musi byt na zaciatku aby ukončil skript včas
+    // POZOR tento blok kodu musi byt na zaciatku aby ukončil zvyšný skript včas
     if (isset($_POST['submit'])) {
         (int)$id = mysqli_real_escape_string($conn, $_POST['submit']);
+
         $sql = "DELETE FROM `30_zoznam_oblast_auditu` WHERE `ID30`=".$id.";";
 
         dBzoznam2($sql, $uri.'delete');
@@ -26,11 +27,13 @@
     if (isset($_POST['delete'])) {
         // kontrola či je záznam použitý v iných tabuľkách. Ak áno, nedá sa zmazať.
         (int)$id = mysqli_real_escape_string($conn, $_POST['delete']);
+
         $sql = "SELECT 
                     (SELECT COUNT(*) FROM `31_zoznam_typ_auditu` WHERE `ID30_zoznam_oblast_auditu`= ".$id.")
                     +
                     (SELECT COUNT(*) FROM `01_certifikaty` WHERE `ID30_zoznam_oblast_auditu`= ".$id.")
                 AS Pocet;";
+
         $pocetArray = dBzoznam($sql, $uri);
         // vytiahnutie počtu z výsledku dotazu
         $pocet = (int)$pocetArray[0]['Pocet'];

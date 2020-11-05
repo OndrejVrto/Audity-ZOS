@@ -7,46 +7,61 @@
 
     $uri = "/audit/zoznam-oblasti-auditu/";
     $list = (isset($_GET['p'])) ? $_GET['p'] : "1" ;
+    $pocet = 0;
 
     $page = new Page($uri , $list);
 
     // inicializácia konštánt formulára v prípade volania metódou GET
     $mena_vsetkych_poli = array ('oblast-auditu', 'oblast-auditu-poznamka');
     foreach ($mena_vsetkych_poli as $key => $value) {
-        $validation_values[$value] = $validation_classes[$value] = $validation_feedback[$value] = '';
+        $val_values[$value] = $val_classes[$value] = $val_feedback[$value] = '';
     }
 
     if (isset($_POST['submit'])) {
         // inicializácia class Validate
-        $validation = new ValidatorOblastAuditu($_POST);
+        $validation = new ValidatorOblastAuditu($_POST, $uri);
 
-        $validation->odsadenie = 8;  // odsadzuje HTML kod o 5 tabulátorov
+        $validation->odsadenie = 8;  // odsadzuje HTML kod o x tabulátorov
         $result = $validation->validateForm();  // validuje formulár - !! kľúče validovaných polí musia byť v zadefinované v triede
-        $validation_values = $validation->validateFormGetValues();   // vracia hodnoty polí pre každý kľúč
-        $validation_classes = $validation->validateFormGetClasses();  // vracia triedy:  is-valid / is-invalid pre každý kľúč
-        $validation_feedback = $validation->validateFormGetFeedback();  // vracia správy pre každý kľúč
+        $val_values = $validation->validateFormGetValues();   // vracia hodnoty polí pre každý kľúč
+        $val_classes = $validation->validateFormGetClasses();  // vracia triedy:  is-valid / is-invalid pre každý kľúč
+        $val_feedback = $validation->validateFormGetFeedback();  // vracia správy pre každý kľúč
 
         (int)$id = mysqli_real_escape_string($conn, $_POST['submit']);
 
         // if result is TRUE (1) --> save data to db  OR  reditect page
         if ($result == 1) {
-            $oblast = mysqli_real_escape_string($conn, $validation_values['oblast-auditu']);
-            $poznamka = mysqli_real_escape_string($conn, $validation_values['oblast-auditu-poznamka']);
+            $oblast = mysqli_real_escape_string($conn, $val_values['oblast-auditu']);
+            $poznamka = mysqli_real_escape_string($conn, $val_values['oblast-auditu-poznamka']);
 
             $sql = "UPDATE `30_zoznam_oblast_auditu` 
                     SET `OblastAuditovania`='".$oblast."', 
                         `Poznamka`='".$poznamka."' 
                     WHERE `ID30`=".$id.";";
+
             dBzoznam2($sql, $uri);
             header("Location: $uri");
             exit();
         }
-    } else {
+    }
+
+    if (isset($_POST['edit'])) {
+        // kontrola či je záznam použitý v iných tabuľkách. Ak áno, nedá editovať jeho názov.
         (int)$id = mysqli_real_escape_string($conn, $_POST['edit']);
+        $sql = "SELECT 
+                    (SELECT COUNT(*) FROM `31_zoznam_typ_auditu` WHERE `ID30_zoznam_oblast_auditu`= ".$id.")
+                    +
+                    (SELECT COUNT(*) FROM `01_certifikaty` WHERE `ID30_zoznam_oblast_auditu`= ".$id.")
+                AS Pocet;";
+        $pocetArray = dBzoznam($sql, $uri);
+        // vytiahnutie počtu z výsledku dotazu
+        $pocet = (int)$pocetArray[0]['Pocet'];
+
+        // načítanie dát
         $sql = "SELECT * FROM 30_zoznam_oblast_auditu WHERE ID30='".$id."'; ";
         $data = dBzoznam($sql, $uri);
-        $validation_values['oblast-auditu'] = $data[0]['OblastAuditovania'];
-        $validation_values['oblast-auditu-poznamka'] = $data[0]['Poznamka'];        
+        $val_values['oblast-auditu'] = $data[0]['OblastAuditovania'];
+        $val_values['oblast-auditu-poznamka'] = $data[0]['Poznamka'];   
     }
 
     $id = htmlspecialchars($id);
@@ -66,25 +81,26 @@ ob_start();  // Začiatok definície hlavného obsahu
 
                     <div class="card-body register-card-body">
 
-                        <?php $meno_pola = 'oblast-auditu'; ?><!-- FORM - Oblasť -->
+                        <?php $pole = 'oblast-auditu'; ?><!-- FORM - Oblasť -->
                         <div class="form-group ">
                             <label>Názov oblasti</label>
                             <div class="input-group">
-                                <input type="text" class="form-control<?= $validation_classes[$meno_pola] ?>" value="<?= $validation_values[$meno_pola] ?>" name="<?= $meno_pola ?>" placeholder="Položka">
+                                <input <?= $pocet > 0 ? 'readonly ' : '' ?>type="text" class="form-control<?= $val_classes[$pole] ?>" value="<?= $val_values[$pole] ?>" name="<?= $pole ?>" placeholder="Položka">
                                 <div class="input-group-append">
                                     <div class="input-group-text">
                                         <span class="fas fa-id-card"></span>
                                     </div>
                                 </div>
-                                <!-- <small class="d-block w-100 mb-n2 text-muted">Poznámka k tomuto poľu</small> --><?= PHP_EOL.$validation_feedback[$meno_pola] ?>
+                                <?= ($pocet > 0) ? '<small class="d-block w-100 mb-n2 text-muted">Názov nieje možné editovať, pretože sa už používa v iných tabuľkách.</small>'.PHP_EOL : '' ?>
+                                <!-- <small class="d-block w-100 mb-n2 text-muted">Poznámka k tomuto poľu</small> --><?= PHP_EOL.$val_feedback[$pole] ?>
                             </div>
                         </div>
 
-                        <?php $meno_pola = 'oblast-auditu-poznamka'; ?><!-- FORM - Poznámka -->
+                        <?php $pole = 'oblast-auditu-poznamka'; ?><!-- FORM - Poznámka -->
                         <div class="form-group ">
                             <label>Poznámka</label>
-                            <textarea class="form-control<?= $validation_classes[$meno_pola] ?>" name="<?= $meno_pola ?>"><?= $validation_values[$meno_pola] ?></textarea>
-                            <!-- <small class="d-block w-100 mb-n2 text-muted">Poznámka k tomuto poľu</small> --><?= PHP_EOL.$validation_feedback[$meno_pola] ?>
+                            <textarea class="form-control<?= $val_classes[$pole] ?>" name="<?= $pole ?>"><?= $val_values[$pole] ?></textarea>
+                            <!-- <small class="d-block w-100 mb-n2 text-muted">Poznámka k tomuto poľu</small> --><?= PHP_EOL.$val_feedback[$pole] ?>
                         </div>
 
                     </div>

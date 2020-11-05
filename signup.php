@@ -78,13 +78,8 @@
                     <div class="form-group col-md-8">
                         <label>Obrázok alebo fotka</label>
                         <div class="input-group">
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input<?= $validation_classes[$meno_pola]; ?>" id="inputFileAvatar" value="<?= $validation_values[$meno_pola]; ?>" name="<?= $meno_pola; ?>">
-                                <label class="custom-file-label text-secondary" for="inputFileAvatar" data-browse="Vložiť obrázok" value="<?= $validation_values[$meno_pola]; ?>">Vlož si obrázok avatara</label>
-                            </div>
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="button">Vyber</button>
-                            </div>
+                            <input type="file" class="custom-file-input<?= $validation_classes[$meno_pola]; ?>" id="inputFileAvatar" value="<?= $validation_values[$meno_pola]; ?>" name="<?= $meno_pola; ?>">
+                            <label class="custom-file-label text-secondary" for="inputFileAvatar" data-browse="Vložiť obrázok" value="<?= $validation_values[$meno_pola]; ?>">Vlož si obrázok avatara</label>
 <?= $validation_feedback[$meno_pola]; ?>
                         </div>
                     </div>

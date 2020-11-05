@@ -37,6 +37,7 @@ ob_start();  // Začiatok definície hlavného obsahu
 
             <div class='card'>
                 <div class='card-body p-2'>
+
                     <table class='table table-sm hover compact' id='tabulka'>
                         <thead>
 
@@ -47,6 +48,7 @@ ob_start();  // Začiatok definície hlavného obsahu
 
                         </thead>
                         <tbody>
+
 <?php
     $poradie = 1;
     foreach ($data as $key => $value) {
@@ -61,12 +63,13 @@ ob_start();  // Začiatok definície hlavného obsahu
         $poradie += 1;
     }
 ?>
+
                         </tbody>
                     </table>
+
                 </div>
-                <!-- /.card-body -->
             </div>
-            <!-- /.card -->
+
         </div>
     </div>
 
@@ -117,10 +120,11 @@ ob_start();  // Začiatok definície Špeciálnych SKRIPTov pre túto stránku
         } );
 
         $('#tabulka tbody').on('click', 'tr', function(event) {
-            event.preventDefault();
+
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selected');
-                $('#UpravaDat [id^=button]').attr('disabled', null);
+                $('#UpravaDat [id^=button]').attr({disabled: '',
+                                                 value: ''});
             } else {
                 table.$('tr.selected').removeClass('selected');
                 $(this).addClass('selected');
@@ -159,6 +163,7 @@ $page->addScripts("DataTables-Select-Bootstrap4",true);
 $page->addScripts("DataTables-Responsive",true);
 $page->addScripts("DataTables-Responsive-Bootstrap",true);
 $page->addScripts("AdminLTE App",true);
+$page->addScripts("AdminLTE for demo purposes", false);
 
 // vykreslenie stranky
 $page->display();

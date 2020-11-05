@@ -24,7 +24,7 @@ class Page
     public $skriptyArray = [];
     public $skriptySpecial = '';
     protected $_nazovstranky;
-    private $link;
+    protected $link;
     private $aktivnemenu = false;
 
     // Metody třídy Page
@@ -40,18 +40,14 @@ class Page
         header('Content-Type: text/html; charset=utf-8');
 
         $path = $_SERVER['DOCUMENT_ROOT'] . "/include/";
-        // Automatické nahrávanie všetkých CLASS pri ich prvom zavolaní
-        spl_autoload_register(function ($class_name) {
-            include_once  $path . "class/class.".$class_name.'.php';
-        });
 
         // $conn pripojenie do databazy
-        require $path . 'inc.dBconnect.php';
-        require $path . 'inc.dBfunction.php';
+        require_once $path . 'inc.dBconnect.php';
+        require_once $path . 'inc.dBfunction.php';
         // funkcie rozne 
-        require $path . 'inc.funkction.php';
+        require_once $path . 'inc.funkction.php';
         // konstanty stránok
-        require $path . '_variables.php';
+        require_once $path . '_variables.php';
 
         $this->link = $link;
         $this->list = $listStranky;
@@ -71,7 +67,9 @@ class Page
         // zadefinovanie základných skriptov
         $this->addScripts("jQuery", true);
         $this->addScripts("Bootstrap 4-bundle", true);
-        $this->addScripts("AdminLTE App", false);        
+        $this->addScripts("AdminLTE App", false);
+        $this->addScripts("AdminLTE for demo purposes", false);
+
     }
 
     public function display()
@@ -108,8 +106,8 @@ class Page
         $this->displayScripts();
         echo $this->skriptySpecial;
 
-        $this->VYVOJ();
-        echo "\n</body>\n</html>\n";
+        //$this->VYVOJ();
+        echo "\n</body>\n</html>";
     }
 
 
@@ -271,7 +269,7 @@ class Page
 
             <!-- Sidebar Menu -->
             <nav class="mt-2">
-                <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent" data-widget="treeview" role="menu" data-accordion="false">
+                <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent nav-compact" data-widget="treeview" role="menu" data-accordion="false">
                     <!-- Add icons to the links using the .nav-icon class
                         with font-awesome or any other icon font library -->
 <?php
@@ -687,10 +685,10 @@ class Page
             echo '<div class="table-responsive"> <table class="table table-sm table-borderless table-hover">' ;
             foreach ($indicesServer as $arg) {
                 if (isset($_SERVER[$arg])) {
-                    echo '<tr><td>'.$arg.'</td><td>' . $_SERVER[$arg] . '</td></tr>' ;
+                    echo '<tr><td>'.$arg.'</td><td>' . $_SERVER[$arg] . '</td></tr>'.PHP_EOL ;
                 }
                 else {
-                    echo '<tr><td>'.$arg.'</td><td>-</td></tr>' ;
+                    echo '<tr><td>'.$arg.'</td><td>-</td></tr>'.PHP_EOL ;
                 }
             }
             echo '</table> </div>';
