@@ -1,20 +1,10 @@
 <?php
-    // Automatické nahrávanie všetkých CLASS pri ich prvom zavolaní
-    spl_autoload_register(function ($class_name) {
-        include_once  $_SERVER['DOCUMENT_ROOT'] . "/include/class/class." . $class_name . '.php';
-    });
-    
-    require $_SERVER['DOCUMENT_ROOT'] . "/include/inc.dBconnect.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/include/inc.require.php";
 
-    $uri = "/vlastnosti/oblasti-auditov/zoznam";
-
-    $page = new PageZoznamDelete($uri);
-
+    $page = new PageZoznamDelete();
     $page->bodyClassExtended = 'col-12 col-sm-10 col-md-9 col-lg-7';
     $page->bodyWidthExtended = 'max-width: 600px;';
     $page->linkCisty = "/vlastnosti/oblasti-auditov/";
-
-    $pocet = 0;
 
     // vymazanie záznamu z databazy
     // POZOR tento blok kodu musi byt na zaciatku aby ukončil zvyšný skript včas
@@ -23,11 +13,13 @@
 
         $sql = "DELETE FROM `30_zoznam_oblast_auditu` WHERE `ID30`=".$id.";";
 
-        dBzoznam2($sql, $uri);
-        header("Location: $uri");   
+        dBzoznam2($sql);
+        $uri = upravLink($_SERVER['REQUEST_URI']);
+        header("Location: $uri");  
         exit();
     }
 
+    $pocet = 0;
     if (isset($_POST['delete'])) {
         // kontrola či je záznam použitý v iných tabuľkách. Ak áno, nedá sa zmazať.
         $id = (int)mysqli_real_escape_string($conn, $_POST['delete']);
@@ -38,7 +30,7 @@
                     (SELECT COUNT(*) FROM `01_certifikaty` WHERE `ID30_zoznam_oblast_auditu`= ".$id.")
                 AS Pocet;";
 
-        $pocetArray = dBzoznam($sql, $uri);
+        $pocetArray = dBzoznam($sql);
         // vytiahnutie počtu z výsledku dotazu
         $pocet = (int)$pocetArray[0]['Pocet'];
     }
@@ -68,7 +60,7 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
     
     // detaily k položke
     $sql = "SELECT * FROM 30_zoznam_oblast_auditu WHERE ID30='".$id."'; ";
-    $data = dBzoznam($sql, $uri);
+    $data = dBzoznam($sql);
     
     $id = htmlspecialchars($id);
     $oblast = htmlspecialchars($data[0]['OblastAuditovania']);

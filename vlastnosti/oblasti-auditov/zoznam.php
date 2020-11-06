@@ -1,20 +1,14 @@
 <?php
-    // Automatické nahrávanie všetkých CLASS pri ich prvom zavolaní
-    spl_autoload_register(function ($class_name) {
-        include_once  $_SERVER['DOCUMENT_ROOT'] . "/include/class/class." . $class_name . '.php';
-    });
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/include/inc.require.php";
 
-    $uri = "/vlastnosti/oblasti-auditov/zoznam";
-
-    $page = new PageZoznam($uri);
-
+    $page = new PageZoznam();
     $page->bodyClassExtended = 'col-12 col-sm-10 col-md-9 col-lg-7';
-    $page->bodyWidthExtended = 'max-width: 600px; width:100%;';
+    $page->bodyWidthExtended = 'max-width: 600px;';
     $page->linkCisty = "/vlastnosti/oblasti-auditov/";
 
     // vyberovy dotaz na data
     $sql = "SELECT * FROM 30_zoznam_oblast_auditu ORDER BY LOWER(OblastAuditovania) ASC";
-    $data = dBzoznam($sql, $uri);
+    $data = dBzoznam($sql);
 
 ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 ?>
@@ -22,7 +16,7 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
                         <thead>
 
                             <tr>
-                                <th>P.č.</th>
+                                <th style="width: 25px;" >P.č.</th>
                                 <th>Zoznam oblastí</th>
                             </tr>
 
@@ -36,8 +30,8 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
         $oblastAuditovania = htmlspecialchars($value['OblastAuditovania']);
 ?>
                             <tr id='<?= $id ?>'>
-                                <td><?= $poradie ?>.</td>
-                                <td><?= $oblastAuditovania ?></td>
+                                <td class="text-center"><?= $poradie ?>.</td>
+                                <td class="pl-3"><?= $oblastAuditovania ?></td>
                             </tr>
 <?php
         $poradie += 1;

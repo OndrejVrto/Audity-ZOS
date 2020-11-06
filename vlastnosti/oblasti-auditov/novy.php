@@ -1,14 +1,7 @@
 <?php
-    // Automatické nahrávanie všetkých CLASS pri ich prvom zavolaní
-    spl_autoload_register(function ($class_name) {
-        include_once  $_SERVER['DOCUMENT_ROOT'] . "/include/class/class." . $class_name . '.php';
-    });
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/include/inc.require.php";
 
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/include/inc.dBconnect.php";
-
-    $uri = "/vlastnosti/oblasti-auditov/zoznam";
-    $page = new PageZoznamNovy($uri);
-
+    $page = new PageZoznamNovy();
     $page->bodyClassExtended = 'col-12 col-sm-10 col-md-9 col-lg-7';
     $page->bodyWidthExtended = 'max-width: 600px;';
     $page->linkCisty = "/vlastnosti/oblasti-auditov/";
@@ -21,8 +14,7 @@
 
     if (isset($_POST['submit'])) {
         // inicializácia class Validate
-        $validation = new ValidatorOblastAuditu($_POST, $uri);
-
+        $validation = new ValidatorOblastAuditu($_POST);
         $validation->odsadenie = 8;  // odsadzuje HTML kod o 5 tabulátorov
         $result = $validation->validateForm();  // validuje formulár - !! kľúče validovaných polí musia byť v zadefinované v triede
         $val_values = $validation->validateFormGetValues();   // vracia hodnoty polí pre každý kľúč
@@ -39,7 +31,8 @@
                     VALUES 
                     ('".$oblast."', '".$poznamka."' );";
 
-            dBzoznam2($sql, $uri);
+            dBzoznam2($sql);
+            $uri = upravLink($_SERVER['REQUEST_URI']);
             header("Location: $uri");
             exit();
         }

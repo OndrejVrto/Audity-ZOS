@@ -1,19 +1,10 @@
 <?php
-    // Automatické nahrávanie všetkých CLASS pri ich prvom zavolaní
-    spl_autoload_register(function ($class_name) {
-        include_once  $_SERVER['DOCUMENT_ROOT'] . "/include/class/class." . $class_name . '.php';
-    });
-    require $_SERVER['DOCUMENT_ROOT'] . "/include/inc.dBconnect.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/include/inc.require.php";
 
-    $uri = "/vlastnosti/oblasti-auditov/zoznam";
-
-    $page = new PageZoznamEdit($uri);
-    
+    $page = new PageZoznamEdit();
     $page->bodyClassExtended = 'col-12 col-sm-10 col-md-9 col-lg-7';
     $page->bodyWidthExtended = 'max-width: 600px;';
     $page->linkCisty = "/vlastnosti/oblasti-auditov/";
-
-    $pocet = 0;
 
     // inicializácia konštánt formulára v prípade volania metódou GET
     $mena_vsetkych_poli = array ('oblast-auditu', 'oblast-auditu-poznamka', 'oblast-auditu-old');
@@ -22,9 +13,9 @@
     }
 
     if (isset($_POST['submit'])) {
+
         // inicializácia class Validate
         $validation = new ValidatorOblastAuditu($_POST, $uri);
-
         $validation->odsadenie = 8;  // odsadzuje HTML kod o x tabulátorov
         $result = $validation->validateForm();  // validuje formulár - !! kľúče validovaných polí musia byť v zadefinované v triede
         $val_values = $validation->validateFormGetValues();   // vracia hodnoty polí pre každý kľúč
@@ -43,12 +34,14 @@
                         `Poznamka`='".$poznamka."' 
                     WHERE `ID30`=".$id.";";
 
-            dBzoznam2($sql, $uri);
+            dBzoznam2($sql);
+            $uri = upravLink($_SERVER['REQUEST_URI']);
             header("Location: $uri");
             exit();
         }
     }
-
+    
+    $pocet = 0;
     if (isset($_POST['edit'])) {
         // kontrola či je záznam použitý v iných tabuľkách. Ak áno, nedá editovať jeho názov.
         $id = (int)mysqli_real_escape_string($conn, $_POST['edit']);
@@ -63,7 +56,7 @@
 
         // načítanie dát
         $sql = "SELECT * FROM 30_zoznam_oblast_auditu WHERE ID30='".$id."'; ";
-        $data = dBzoznam($sql, $uri);
+        $data = dBzoznam($sql);
         $val_values['oblast-auditu'] = $val_values['valueOld'] = $data[0]['OblastAuditovania'];
         $val_values['oblast-auditu-poznamka'] = $data[0]['Poznamka'];
     }
