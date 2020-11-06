@@ -34,11 +34,12 @@
     $page->id = htmlspecialchars($id);
     $page->pocet = $pocet;
 
+
+ob_start();  // Začiatok definície hlavného obsahu -> 5x a 6x tabulátor    
+
     if ($pocet > 0):
     // tento blok kodu sa spusti ak sa zmazavana je polozka pouzita v prepojenych tabulkach
-    // dotaz by sa nevykonal a vrátil by chybu
-
-ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
+    // dotaz na vymazanie by sa nevykonal, pretože mám v databáze nastavené cudzie kľúče
 ?>
 
                     <div class="h5 text-center">
@@ -51,7 +52,8 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 
 <?php
     elseif ($pocet <= 0) :
-        // tento blok kodu sa spusti ak sa zmazavana polozka nenachádza pouzita v prepojenych tabulkach
+    // potvrdzovací dialóg
+    // tento blok kodu sa spusti ak NIE je zmazavana polozka pouzita v iných, prepojenych, tabulkach
         
         $data = $db->query('SELECT * FROM `30_zoznam_oblast_auditu` WHERE ID30 = ?', $id)->fetchArray();
         $oblast = htmlspecialchars($data['OblastAuditovania']);
@@ -70,4 +72,5 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
     endif;
 
 $page->content = ob_get_clean();  // Koniec hlavného obsahu
+
 $page->display();  // vykreslenie stranky

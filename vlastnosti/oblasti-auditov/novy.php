@@ -14,7 +14,7 @@
         $val_classes = $validation->validateFormGetClasses();  // vracia triedy:  is-valid / is-invalid pre každý kľúč
         $val_feedback = $validation->validateFormGetFeedback();  // vracia správy pre každý kľúč
 
-        // if result is TRUE (1) --> save data to db  OR  reditect page
+        // ak validacia skonci TRUE (1) --> vlož dáta do databázy
         if ($result == 1) {
             $oblast = $val_values['oblast-auditu'];
             $poznamka = $val_values['oblast-auditu-poznamka'];

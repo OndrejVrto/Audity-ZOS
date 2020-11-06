@@ -38,3 +38,6 @@
     // pri hodnote TRUE zapne časti ktorá slúžia ako pomôcka pri vývoji tejtto stránky
     //defined("VYVOJ") or define("VYVOJ", TRUE);
     defined("VYVOJ") or define("VYVOJ", FALSE);
+
+    // Set Time Zone
+	date_default_timezone_set('Europe/Bratislava');

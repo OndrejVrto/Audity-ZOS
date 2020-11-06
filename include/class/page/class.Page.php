@@ -23,7 +23,7 @@ class Page
     public $bodyWidthExtended = ''; //premenna sa používa v odvodených triedach
     public $linkCisty; //premenna sa používa v odvodených triedach
 
-    // Metody třídy Page
+    // Metódy triedy Page
     public function __set($name, $value)
     {
         $this->$name = $value;
@@ -208,13 +208,13 @@ class Page
 
             <!-- LogIn/LogOut -->
             <li class="nav-item">
-<?php if (isset($_SESSION['userId'])) { ?>
+<?php if (isset($_SESSION['userId'])): ?>
 				<form class="" action="/include/inc.logout.php" method="post">
 					<input class="btn btn-primary" type="submit" name="logout-submit" value="LogOut">
 				</form>
-<?php } else { ?>
+<?php else: ?>
 				<a class="btn btn-danger" href="/login">Login</a>
-<?php } ?>
+<?php endif; ?>
             </li>
         </ul>
     </nav>
@@ -225,21 +225,21 @@ class Page
     public function displayLogin()
     {
 ?>
-<?php if (isset($_SESSION['userId'])) { ?>
+<?php if (isset($_SESSION['userId'])): ?>
             <div class="image">
                 <img src="/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
                 <a href="/user-detail" class="d-block">Ing. Ondrej VRŤO</a>
             </div>
-<?php } else { ?>
+<?php else: ?>
             <div class="image">
                 <img src="/dist/img/user-anonymous.png" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
                 <a href="/login" class="d-block text-warning">NEPRIHLASENÝ</a>
             </div>
-<?php } ?>
+<?php endif; ?>
 
 <?php
     }
@@ -345,10 +345,8 @@ class Page
         <!-- /.sidebar -->
     </aside>
 
-    <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
 
-        <!-- Content Header (Page header) -->
         <div class="content-header">
             <div class="container-fluid">
             <div class="row mb-2">
@@ -422,7 +420,6 @@ class Page
             </div><!-- /.row -->
             </div><!-- /.container-fluid -->
         </div>
-        <!-- /.content-header -->
 
         <!-- Main content -->
         <section class="content">
@@ -441,10 +438,10 @@ class Page
 <!-- END MAIN - Hlavný obsah stránky -->
 
         </section>
-        <!-- /.content -->
+        <!-- /Main content -->
 
     </div>
-    <!-- /.content-wrapper -->
+
 <?php 
     }
 
@@ -473,7 +470,6 @@ class Page
     <!-- /.control-sidebar -->
 
 </div>
-<!-- ./wrapper -->
 
 <?php
     }

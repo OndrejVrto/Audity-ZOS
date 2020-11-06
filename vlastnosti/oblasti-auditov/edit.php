@@ -17,7 +17,7 @@
 
         $id = (int)$_POST['submit'];
 
-        // if result is TRUE (1) --> save data to db  OR  reditect page
+        // ak validacia skonci TRUE (1) --> zktualizuj dáta v databáze
         if ($result == 1) {
             $oblast = $val_values['oblast-auditu'];
             $poznamka = $val_values['oblast-auditu-poznamka'];
