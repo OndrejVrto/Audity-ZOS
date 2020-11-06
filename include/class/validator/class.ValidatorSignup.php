@@ -1,16 +1,13 @@
 <?php
 
-// Automatické nahrávanie všetkých CLASS pri ich prvom zavolaní
-spl_autoload_register(function ($class_name) {
-    include_once $_SERVER['DOCUMENT_ROOT'] . "/include/class/class.".$class_name.'.php';
-});
-
 class ValidatorSignup extends Validator
 {
 
     public function __construct($post_data)
     {
         $this->privat_data = $post_data;
+        // prebratie pripojenia na databazu z globálnej premennej
+        $this->db =& $GLOBALS['db'];
         
         // ak nieje zaskrtnute tlacitko checkbox tak v POST metode chyba kluc aj hodnota
         // preto nastavím priamo chybu
@@ -18,12 +15,10 @@ class ValidatorSignup extends Validator
         if (isset($_FILES)) {
             $this->privat_data['signup-avatar'] = $_FILES['signup-avatar']['name'];
         }
-        
-        //print_r($this->privat_data);
-        //print_r($_FILES);
-
     }
 
+    // TODO : Dorobiť validáciu s databázy pre potrebné polia
+    
     public function validateForm()
     {
         foreach ($this->privat_data as $key => $value) {

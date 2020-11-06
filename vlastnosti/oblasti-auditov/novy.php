@@ -4,13 +4,6 @@
     $page = new PageZoznamNovy();
     $page->bodyClassExtended = 'col-12 col-sm-10 col-md-9 col-lg-7';
     $page->bodyWidthExtended = 'max-width: 600px;';
-    $page->linkCisty = "/vlastnosti/oblasti-auditov/";
-
-    // inicializácia konštánt formulára v prípade volania metódou GET
-    $mena_vsetkych_poli = array ('oblast-auditu', 'oblast-auditu-poznamka');
-    foreach ($mena_vsetkych_poli as $key => $value) {
-        $val_values[$value] = $val_classes[$value] = $val_feedback[$value] = '';
-    }
 
     if (isset($_POST['submit'])) {
         // inicializácia class Validate
@@ -27,10 +20,16 @@
             $poznamka = $val_values['oblast-auditu-poznamka'];
 
             $db->query('INSERT INTO `30_zoznam_oblast_auditu` (`OblastAuditovania`, `Poznamka`) VALUES (?,?)', $oblast, $poznamka);
-            
+
             $uri = upravLink($_SERVER['REQUEST_URI']);
             header("Location: $uri");
             exit();
+        }
+    } else {
+        // inicializácia konštánt formulára v prípade že nevráti výsledok validačná trieda
+        $mena_vsetkych_poli = array ('oblast-auditu', 'oblast-auditu-poznamka');
+        foreach ($mena_vsetkych_poli as $value) {
+            $val_values[$value] = $val_classes[$value] = $val_feedback[$value] = '';
         }
     }
 

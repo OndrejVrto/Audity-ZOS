@@ -4,11 +4,10 @@
     $page = new PageZoznamDetail();
     $page->bodyClassExtended = 'col-12 col-sm-10 col-md-9 col-lg-7';
     $page->bodyWidthExtended = 'max-width: 600px;';
-    $page->linkCisty = "/vlastnosti/oblasti-auditov/";
 
     $id = (int)$_POST['detail'];
 
-    $data = $db->query('SELECT * FROM `30_zoznam_oblast_auditu` WHERE ID30 < ?', $id)->fetchArray();
+    $data = $db->query('SELECT * FROM `30_zoznam_oblast_auditu` WHERE ID30 = ?', $id)->fetchArray();
 
     $oblast = htmlspecialchars($data['OblastAuditovania']);
     $poznamka = htmlspecialchars($data['Poznamka']);

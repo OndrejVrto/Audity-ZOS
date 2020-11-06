@@ -3,10 +3,14 @@
 class PageZoznamDetail extends Page
 {
 
+    function __construct()
+    {
+        parent::__construct();
+        $this->link = upravLink($_SERVER['REQUEST_URI']);
+    }
 
-
-    function ContentHeaderZoznam (){
-
+    function ContentHeaderZoznam ()
+    {
 ?>
     <div class="row justify-content-center">
         <div class="<?= $this->bodyClassExtended ?>" style="<?= $this->bodyWidthExtended ?>">
@@ -34,7 +38,7 @@ class PageZoznamDetail extends Page
             </form>
 
             <div class="row justify-content-center">
-                <a href="<?= $this->linkCisty ?>" name="vzad" class="btn btn-secondary mx-1">Späť</a>
+                <a href="<?= $this->linkCisty ?>zoznam" name="vzad" class="btn btn-secondary mx-1">Späť</a>
             </div>
 
         </div>

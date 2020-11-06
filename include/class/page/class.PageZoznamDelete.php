@@ -6,6 +6,12 @@ class PageZoznamDelete extends Page
     public $id;
     public $pocet;
 
+    function __construct()
+    {
+        parent::__construct();
+        $this->link = upravLink($_SERVER['REQUEST_URI']);
+    }
+
     function ContentHeaderZoznam ()
     {
         if ($this->pocet > 0) {
@@ -26,7 +32,7 @@ class PageZoznamDelete extends Page
     <div class="row justify-content-center">
         <div class="<?= $this->bodyClassExtended ?>" style="<?= $this->bodyWidthExtended ?>">
 
-            <form action="<?= $this->link ?>" method="post">
+            <form action="<?= $this->linkCisty ?>delete" method="post">
                 <div class="card" >
 
                     <div class="card-header">
@@ -45,7 +51,7 @@ class PageZoznamDelete extends Page
                 </div>
             </div>
             <div class="row justify-content-center">
-                <a href="<?= $this->linkCisty ?>" type="submit" name="vzad" class="btn btn-secondary">Späť</a>                    
+                <a href="<?= $this->linkCisty ?>zoznam" type="submit" name="vzad" class="btn btn-secondary">Späť</a>                    
             </div>
         </div>
     </div>
@@ -59,7 +65,7 @@ class PageZoznamDelete extends Page
                 </div>
 
                 <div class="row justify-content-center">
-                    <a href="<?= $this->linkCisty ?>" name="vzad" class="btn btn-secondary mx-1">Späť</a>
+                    <a href="<?= $this->linkCisty ?>zoznam" name="vzad" class="btn btn-secondary mx-1">Späť</a>
                     <button type="submit" name="submit" value="<?= $this->id ?>" class="btn btn-outline-danger mx-1">Zmazať</button>
                 </div>
 

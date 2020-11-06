@@ -45,7 +45,7 @@ class Premenne
             "/"                                     =>    "Home | Audity ŽOS Zvolen",
             "/login"                                =>    "Login | Audity ŽOS Zvolen",
             "/signup"                               =>    "Signup | Audity ŽOS Zvolen",
-            "/vlastnosti/oblasti-auditov/zoznam"   =>    "Zoznam oblastí auditovania | Audity ŽOS Zvolen",
+            "/vlastnosti/oblasti-auditov/"   =>    "Zoznam oblastí auditovania | Audity ŽOS Zvolen",
         ),    // "Titulok Stránky"
 
         // Meta značka stránky - Description -> popisuje stránku
@@ -54,7 +54,7 @@ class Premenne
             "/"                                     =>    "Audity ŽOS Zvolen - hlavná stránka",
             "/login"                                =>    "Audity ŽOS Zvolen - prihlasovanie uživateľa",
             "/signup"                               =>    "Audity ŽOS Zvolen - vytvorenie nového účtu uživateľa",
-            "/vlastnosti/oblasti-auditov/zoznam"   =>    "Audity ŽOS Zvolen - zoznam oblastí auditovania",
+            "/vlastnosti/oblasti-auditov/"   =>    "Audity ŽOS Zvolen - zoznam oblastí auditovania",
         ),    // "Popis Stránky"
 
         // Nadpisy prvej kapitoly.
@@ -63,7 +63,7 @@ class Premenne
             "/"                                     =>    "Predľad všetkých auditov",
             "/login"                                =>    false,
             "/signup"                               =>    false,
-            "/vlastnosti/oblasti-auditov/zoznam"   =>    "Zoznam oblastí auditovania",
+            "/vlastnosti/oblasti-auditov/"   =>    "Zoznam oblastí auditovania",
         ),    // "Nadpis prvej kapitoly"
     );
 
@@ -205,7 +205,7 @@ class Premenne
             "Ikona" => "fas fa-clipboard-list",
             "SUBMENU" => array(
                 array(
-                    "Link" => "/vlastnosti/oblasti-auditov/zoznam",
+                    "Link" => "/vlastnosti/oblasti-auditov/",
                     "Nazov" => "Oblasti auditov",
                     "Doplnok" => "badge badge-success",
                     "PopisDoplnku" => "Hotovo",

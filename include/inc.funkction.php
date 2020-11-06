@@ -7,7 +7,7 @@
     function upravLink($linkCely){
         $position = strripos($linkCely, "/", 0);  
         if ($position == true){
-            return substr($linkCely, 0, $position);
+            return substr($linkCely, 0, $position + 1);
         }
         else{
             return $linkCely;

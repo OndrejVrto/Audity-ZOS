@@ -4,7 +4,6 @@
     $page = new PageZoznamDelete();
     $page->bodyClassExtended = 'col-12 col-sm-10 col-md-9 col-lg-7';
     $page->bodyWidthExtended = 'max-width: 600px;';
-    $page->linkCisty = "/vlastnosti/oblasti-auditov/";
 
     // vymazanie záznamu z databazy
     // POZOR tento blok kodu musi byt na zaciatku aby ukončil zvyšný skript včas
@@ -35,7 +34,7 @@
     $page->id = htmlspecialchars($id);
     $page->pocet = $pocet;
 
-    if ($pocet > 0) {
+    if ($pocet > 0):
     // tento blok kodu sa spusti ak sa zmazavana je polozka pouzita v prepojenych tabulkach
     // dotaz by sa nevykonal a vrátil by chybu
 
@@ -51,14 +50,12 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
                     </div>
 
 <?php
-
-    } elseif ($pocet <= 0) {
-    // tento blok kodu sa spusti ak sa zmazavana polozka nenachádza pouzita v prepojenych tabulkach
-    
-    $data = $db->query('SELECT * FROM `30_zoznam_oblast_auditu` WHERE ID30 < ?', $id)->fetchArray();
-    $oblast = htmlspecialchars($data['OblastAuditovania']);
-    $poznamka = htmlspecialchars($data['Poznamka']);
-
+    elseif ($pocet <= 0) :
+        // tento blok kodu sa spusti ak sa zmazavana polozka nenachádza pouzita v prepojenych tabulkach
+        
+        $data = $db->query('SELECT * FROM `30_zoznam_oblast_auditu` WHERE ID30 = ?', $id)->fetchArray();
+        $oblast = htmlspecialchars($data['OblastAuditovania']);
+        $poznamka = htmlspecialchars($data['Poznamka']);
 ?>
 
                         <div>
@@ -70,7 +67,7 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
                         </div>
 
 <?php
-    }
-$page->content = ob_get_clean();  // Koniec hlavného obsahu
+    endif;
 
+$page->content = ob_get_clean();  // Koniec hlavného obsahu
 $page->display();  // vykreslenie stranky

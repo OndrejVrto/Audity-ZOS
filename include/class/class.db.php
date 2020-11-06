@@ -50,7 +50,7 @@ class db
             $this->query_closed = FALSE;
             $this->query_count++;
         } else {
-            $this->error('Zlyhal proces zostavenia dotazu MySQL (skontroluj syntax dotazu) - ' . $this->connection->error);
+            $this->error('Zlyhal proces zostavenia parametrického dotazu MySQL (skontroluj syntax dotazu) - ' . $this->connection->error);
         }
         return $this;
     }

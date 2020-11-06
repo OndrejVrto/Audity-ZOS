@@ -50,6 +50,7 @@ class Page
         // zadefinovanie základných štýlov
         $this->addStyles("Font Awesome", true);
         $this->addStyles("Ionicons", true);
+        $this->addStyles("iCheck", true);
         $this->addStyles("Adminlte style", false);
         $this->addStyles("Google Font: Source Sans Pro", false);
         // zadefinovanie základných skriptov
@@ -98,7 +99,7 @@ class Page
         $this->displayScripts();
         echo $this->skriptySpecial;
 
-        $this->VYVOJ();
+        (VYVOJ) ? $this->VYVOJ() : '';
         echo "\n</body>\n</html>";
     }
 

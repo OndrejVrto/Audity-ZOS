@@ -34,3 +34,7 @@
     defined("TAB5") or define("TAB5", "\t\t\t\t\t");
     defined("TAB6") or define("TAB6", "\t\t\t\t\t\t");
     defined("TAB7") or define("TAB7", "\t\t\t\t\t\t\t");
+
+    // pri hodnote TRUE zapne časti ktorá slúžia ako pomôcka pri vývoji tejtto stránky
+    //defined("VYVOJ") or define("VYVOJ", TRUE);
+    defined("VYVOJ") or define("VYVOJ", FALSE);

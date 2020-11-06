@@ -1,13 +1,15 @@
 <?php
 
-// Automatické nahrávanie všetkých CLASS pri ich prvom zavolaní
-spl_autoload_register(function ($class_name) {
-    include_once $_SERVER['DOCUMENT_ROOT'] . "/include/class/class.".$class_name.'.php';
-});
-
 class ValidatorLogin extends Validator
 {
 
+    public function __construct($post_data)
+    {
+        $this->privat_data = $post_data;
+        // prebratie pripojenia na databazu z globálnej premennej
+        $this->db =& $GLOBALS['db'];
+    }
+    
     public function validateForm()
     {
         foreach ($this->privat_data as $key => $value) {
@@ -32,7 +34,8 @@ class ValidatorLogin extends Validator
     private function validateLoginOsobneCislo($name)
     {
         $value = $this->privat_data[$name];
-
+        
+        // TODO : Dorobiť validáciu s databázy
         if ($this->is_required($value)) {
             $this->addError($name, 'Poľe nesmie byť prázdne.');
         } else if (!$this->is_alphanum($value)) {
@@ -46,11 +49,12 @@ class ValidatorLogin extends Validator
     {
         $value = trim($this->privat_data[$name]);
 
+        // TODO : Dorobiť validáciu s databázy
         if ($this->is_required($value)) {
             $this->addError($name, 'Poľe s heslom nesmie byť prázdne.');
         } else {
             $this->addSucces($name, 'Vcelku dobré heslo');
         } 
-
     }
+
 }

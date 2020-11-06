@@ -6,9 +6,9 @@ class ValidatorOblastAuditu extends Validator
 
     function __construct($post_data)
     {
-            $this->privat_data = $post_data;
-            //$this->db = new db($dbhost, $dbuser, $dbpass, $dbname);
-            $this->db =& $GLOBALS['db'];
+        $this->privat_data = $post_data;
+        // prebratie pripojenia na databazu z globálnej premennej
+        $this->db =& $GLOBALS['db'];
     }
 
     

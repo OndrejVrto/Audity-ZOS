@@ -4,13 +4,6 @@
     $page = new PageZoznamEdit();
     $page->bodyClassExtended = 'col-12 col-sm-10 col-md-9 col-lg-7';
     $page->bodyWidthExtended = 'max-width: 600px;';
-    $page->linkCisty = "/vlastnosti/oblasti-auditov/";
-
-    // inicializácia konštánt formulára v prípade volania metódou GET
-    $mena_vsetkych_poli = array ('oblast-auditu', 'oblast-auditu-poznamka', 'oblast-auditu-old');
-    foreach ($mena_vsetkych_poli as $key => $value) {
-        $val_values[$value] = $val_classes[$value] = $val_feedback[$value] = '';
-    }
 
     if (isset($_POST['submit'])) {
 
@@ -35,6 +28,12 @@
             header("Location: $uri");
             exit();
         }
+    } else {
+        // inicializácia konštánt formulára v prípade že nevráti výsledok validačná trieda
+        $mena_vsetkych_poli = array ('oblast-auditu', 'oblast-auditu-poznamka');
+        foreach ($mena_vsetkych_poli as $value) {
+            $val_values[$value] = $val_classes[$value] = $val_feedback[$value] = '';
+        }
     }
     
     $pocet = 0;
@@ -48,8 +47,9 @@
                 +
                 (SELECT COUNT(*) FROM `01_certifikaty` WHERE `ID30_zoznam_oblast_auditu` = ?)
             AS Pocet', $id, $id )->fetchArray();
-        $pocet = (int)$dataA['Pocet'];
+        $pocet = (int)$dataA['Pocet'];  // premenná $pocet sa použije v ternálnom operatore tých poli ktorým chcem nastaviť readonly hodnotu
 
+        // načítanie dát o položke
         $data = $db->query('SELECT * FROM `30_zoznam_oblast_auditu` WHERE ID30 = ?', $id)->fetchArray();
         $val_values['oblast-auditu'] = $val_values['valueOld'] = $data['OblastAuditovania'];
         $val_values['oblast-auditu-poznamka'] = $data['Poznamka'];

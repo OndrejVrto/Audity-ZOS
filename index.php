@@ -1,132 +1,14 @@
 <?php
     require_once $_SERVER['DOCUMENT_ROOT'] . "/include/inc.require.php";
     
-    // založenie novej triedy na stranku
-    $homepage = new Page('/', 1);
-    $homepage->zobrazitBublinky = true;
-    
-    // prepísanie hodnôt stránky ručne. Štandardne sa hodnoty načítavajú z _variables.php
-    // $homepage->nadpis = 'Nadpis';
+    $homepage = new Page();
 
-    // inicializácia konštánt formulára v prípade volania metódou GET
-/*     $validation_values['login-osobne-cislo'] = $validation_classes['login-osobne-cislo'] = $validation_feedback['login-osobne-cislo'] = '';
-    $validation_values['login-pasword'] = $validation_classes['login-pasword'] = $validation_feedback['login-pasword'] = ''; */
-
-    $request_method = strtoupper($_SERVER['REQUEST_METHOD']);
-
-    if ($request_method === 'GET') {
-        // spustí sa ak existuje GET, teda aj pri prvom spustení
-        // program na vyplnenie formulára údajmi (napr:dotaz do databazy cez najaký class)
-    } elseif ($request_method === 'POST') {
-        // spustí sa ak existuje POST
-        if (isset($_POST['submit'])) {
-            // spustí sa ak bolo stlačené tlačítko ->  name="submit"
-
-            // inicializácia class Validate
-/*          $validation = new ValidatorSignup($_POST);
-
-            $validation->odsadenie = 5;  // odsadzuje HTML kod o 5 tabulátorov
-            $result = $validation->validateForm();  // validuje formulár - !! kľúče validovaných polí musia byť v zadefinované v triede
-            $validation_values = $validation->validateFormGetValues();   // vracia hodnoty polí pre každý kľúč
-            $validation_classes = $validation->validateFormGetClasses();  // vracia triedy:  is-valid / is-invalid pre každý kľúč
-            $validation_feedback = $validation->validateFormGetFeedback();  // vracia správy pre každý kľúč
-
-            // if result is TRUE (1) --> save data to db  OR  reditect page
-            if ($result == 1) {
-                header("Location: /index.php");
-            } */
-        }
-    }
-
-
-
-
-    ob_start();  // Začiatok definície CSS pre túto stránku 
-?>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
-    <!-- Ionicons -->
-    <!-- <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> -->
-    <link rel="stylesheet" href="/dist/css/ionicons/css/ionicons.min.css">
-    <!-- Tempusdominus Bbootstrap 4 -->
-    <link rel="stylesheet" href="/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
-    <!-- iCheck -->
-    <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-    <!-- JQVMap -->
-    <link rel="stylesheet" href="/plugins/jqvmap/jqvmap.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="/dist/css/adminlte.css">
-    <!-- overlayScrollbars -->
-    <link rel="stylesheet" href="/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
-    <!-- Daterange picker -->
-    <link rel="stylesheet" href="/plugins/daterangepicker/daterangepicker.css">
-    <!-- summernote -->
-    <link rel="stylesheet" href="/plugins/summernote/summernote-bs4.css">
-    <!-- Google Font: Source Sans Pro -->
-    <!-- <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet"> -->
-    <link rel="stylesheet" href="/dist/css/www/fonts.googleapis.css">
-<?php
-    $homepage->styles = ob_get_clean();  // Koniec definícií CSS
-
-
-
-
-    ob_start();  // Začiatok definície SKRIPTov pre túto stránku
-?>
-    <!-- START - skripty len pre túto podstránku -->
-
-    <!-- jQuery -->
-    <script src="/plugins/jquery/jquery.min.js"></script>
-    <!-- jQuery UI 1.11.4 -->
-    <script src="/plugins/jquery-ui/jquery-ui.min.js"></script>
-    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-    <script>
-        $.widget.bridge('uibutton', $.ui.button)
-    </script>
-    <!-- Bootstrap 4 -->
-    <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- ChartJS -->
-    <script src="/plugins/chart.js/Chart.min.js"></script>
-    <!-- Sparkline -->
-    <script src="/plugins/sparklines/sparkline.js"></script>
-    <!-- JQVMap -->
-    <script src="/plugins/jqvmap/jquery.vmap.min.js"></script>
-    <script src="/plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
-    <!-- jQuery Knob Chart -->
-    <script src="/plugins/jquery-knob/jquery.knob.min.js"></script>
-    <!-- daterangepicker -->
-    <script src="/plugins/moment/moment.min.js"></script>
-    <script src="/plugins/daterangepicker/daterangepicker.js"></script>
-    <!-- Tempusdominus Bootstrap 4 -->
-    <script src="/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
-    <!-- Summernote -->
-    <script src="/plugins/summernote/summernote-bs4.min.js"></script>
-    <!-- overlayScrollbars -->
-    <script src="/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-    <!-- AdminLTE App -->
-    <script src="/dist/js/adminlte.js"></script>
-    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-    <script src="/dist/js/pages/dashboard.js"></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src="/dist/js/demo.js"></script>
-
-    <!-- END - skripty len pre túto podstránku -->
-<?php
-    $homepage->skripty = ob_get_clean();  // Koniec SKRIPTov
-
-
-
-
-
-
-
-
-    ob_start();  // Začiatok definície hlavného obsahu
+ob_start();  // Začiatok definície hlavného obsahu
 ?>
 
-        <!-- Default box -->
-        <div class="card">
+    <div class="card">
         <div class="card-body p-0">
+
             <table class="table table-striped projects">
                 <thead>
                     <tr>
@@ -317,11 +199,10 @@
                     
                 </tbody>
             </table>
+
         </div>
-        <!-- /.card-body -->
-        </div>
-        <!-- /.card -->
+    </div>
 <?php
-    $homepage->content = ob_get_clean();  // Koniec hlavného obsahu
-    $homepage->display();  // vykreslenie stranky
-?>
+$homepage->content = ob_get_clean();  // Koniec hlavného obsahu
+
+$homepage->display();  // vykreslenie stranky

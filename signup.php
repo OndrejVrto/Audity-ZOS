@@ -1,30 +1,8 @@
 <?php
-    // Automatické nahrávanie všetkých CLASS pri ich prvom zavolaní
-    spl_autoload_register(function ($class_name) {
-        include_once  $_SERVER['DOCUMENT_ROOT'] . "/include/class/class.".$class_name.'.php';
-    });
-    //print_r($_POST);
-    // založenie novej triedy na stranku
-    $homepage = new PageClear('/signup', 1);
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/include/inc.require.php";
+    
+    $page = new PageClear();
 
-    $request_method = strtoupper($_SERVER['REQUEST_METHOD']);
-/* 
-    print_r($_FILES);
-    print_r($_POST); */
-
-    if ($request_method === 'GET') {
-        // spustí sa ak existuje GET, teda aj pri prvom spustení
-
-        // inicializácia konštánt formulára v prípade volania metódou GET
-        $mena_vsetkych_poli = array ('signup-osobne-cislo', 'signup-avatar',  'signup-telefon', 'signup-titul', 'signup-meno', 'signup-priezvisko', 'signup-email', 'signup-pasword', 'signup-pasword-repeater', 'signup-checkbox');
-        foreach ($mena_vsetkych_poli as $key => $value) {
-            $validation_values[$value] = $validation_classes[$value] = $validation_feedback[$value] = '';
-        }
-
-        // program na vyplnenie formulára údajmi z databazy ak je potrebne ...
-        
-    } elseif ($request_method === 'POST') {
-        // spustí sa ak existuje POST
         if (isset($_POST['submit'])) {
             // spustí sa ak bolo stlačené tlačítko ->  name="submit"
 
@@ -33,21 +11,30 @@
 
             $validation->odsadenie = 7;  // odsadzuje HTML kod o 5 tabulátorov
             $result = $validation->validateForm();  // validuje formulár - !! kľúče validovaných polí musia byť v zadefinované v triede
-            $validation_values = $validation->validateFormGetValues();   // vracia hodnoty polí pre každý kľúč
-            $validation_classes = $validation->validateFormGetClasses();  // vracia triedy:  is-valid / is-invalid pre každý kľúč
-            $validation_feedback = $validation->validateFormGetFeedback();  // vracia správy pre každý kľúč
+            $val_values = $validation->validateFormGetValues();   // vracia hodnoty polí pre každý kľúč
+            $val_classes = $validation->validateFormGetClasses();  // vracia triedy:  is-valid / is-invalid pre každý kľúč
+            $val_feedback = $validation->validateFormGetFeedback();  // vracia správy pre každý kľúč
 
-            // if result is TRUE (1) --> save data to db  OR  reditect page
+            // ak validacia skonci TRUE (1) --> reditect page to Login
+            // TODO: rovno po zaregistrovaní ostať prihlásený a presun na index.php ?
             if ($result == 1) {
                 header("Location: /login");
+                exit();
+            }
+        } else {
+            // inicializácia konštánt formulára v prípade volania metódou GET
+            $mena_vsetkych_poli = array ('signup-osobne-cislo', 'signup-avatar',  'signup-telefon', 'signup-titul', 'signup-meno', 'signup-priezvisko', 'signup-email', 'signup-pasword', 'signup-pasword-repeater', 'signup-checkbox');
+            foreach ($mena_vsetkych_poli as $key => $value) {
+                $val_values[$value] = $val_classes[$value] = $val_feedback[$value] = '';
             }
         }
-    }
 
-    ob_start();  // Začiatok definície hlavného obsahu
+
+ob_start();  // Začiatok definície hlavného obsahu
 ?>
-    
+
 <div class="register-box" style="max-width: 950px;">
+
     <div class="register-logo">
         <a href="/"><b>Audity</b>ŽOS</a>
     </div>
@@ -56,31 +43,34 @@
         <div class="card-body register-card-body">
             <p class="login-box-msg">Registrácia nového uživateľa</p>
 
-            <form action="/signup" enctype="multipart/form-data" action="__URL__" method="POST">
-                <div class="form-row">
+            <form action="<?= $page->link ?>" enctype="multipart/form-data" method="POST">
 
-                    <?php $meno_pola = 'signup-osobne-cislo'; ?><!-- FORM - osobne cislo -->
+            <div class="form-row">
+
+                    <?php $pole = 'signup-osobne-cislo'; echo PHP_EOL; ?>
+                    <!-- FORM - osobne cislo -->
                     <div class="form-group col-md-4">
                         <label>Osobné číslo uživateľa</label>
                         <div class="input-group">
-                            <input type="text" class="form-control<?= $validation_classes[$meno_pola]; ?>" value="<?= $validation_values[$meno_pola]; ?>" name="<?= $meno_pola; ?>" placeholder="Osobné číslo">
+                            <input type="text" class="form-control<?= $val_classes[$pole]; ?>" value="<?= $val_values[$pole]; ?>" name="<?= $pole; ?>" placeholder="Osobné číslo">
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-id-card"></span>
                                 </div>
                             </div>
                             <!-- <small class="d-block w-100 mb-n2 text-muted">Osobné číslo zamestnanca</small> -->
-<?= $validation_feedback[$meno_pola]; ?>
+                            <?= $val_feedback[$pole].PHP_EOL ?>
                         </div>
                     </div>
 
-                    <?php $meno_pola = 'signup-avatar'; ?><!-- FORM - Avatar -->
+                    <?php $pole = 'signup-avatar'; echo PHP_EOL; ?>
+                    <!-- FORM - Avatar -->
                     <div class="form-group col-md-8">
                         <label>Obrázok alebo fotka</label>
                         <div class="input-group">
-                            <input type="file" class="custom-file-input<?= $validation_classes[$meno_pola]; ?>" id="inputFileAvatar" value="<?= $validation_values[$meno_pola]; ?>" name="<?= $meno_pola; ?>">
-                            <label class="custom-file-label text-secondary" for="inputFileAvatar" data-browse="Vložiť obrázok" value="<?= $validation_values[$meno_pola]; ?>">Vlož si obrázok avatara</label>
-<?= $validation_feedback[$meno_pola]; ?>
+                            <input type="file" class="custom-file-input<?= $val_classes[$pole]; ?>" id="inputFileAvatar" value="<?= $val_values[$pole]; ?>" name="<?= $pole; ?>">
+                            <label class="custom-file-label text-secondary" for="inputFileAvatar" data-browse="Vložiť obrázok" value="<?= $val_values[$pole]; ?>">Vlož si obrázok avatara</label>
+                            <?= $val_feedback[$pole].PHP_EOL ?>
                         </div>
                     </div>
 
@@ -88,78 +78,83 @@
 
                 <div class="form-row">
 
-                    <?php $meno_pola = 'signup-titul'; ?><!-- FORM - Titul -->
+                    <?php $pole = 'signup-titul'; echo PHP_EOL; ?>
+                    <!-- FORM - Titul -->
                     <div class="form-group col-md-2">        
                         <label>Titul</label>
                         <div class="input-group">
-                            <input type="text" class="form-control<?= $validation_classes[$meno_pola]; ?>" value="<?= $validation_values[$meno_pola]; ?>" name="<?= $meno_pola; ?>" placeholder="Titul">
+                            <input type="text" class="form-control<?= $val_classes[$pole]; ?>" value="<?= $val_values[$pole]; ?>" name="<?= $pole; ?>" placeholder="Titul">
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-graduation-cap"></span>
                                 </div>
                             </div>
-<?= $validation_feedback[$meno_pola]; ?>
+                            <?= $val_feedback[$pole].PHP_EOL ?>
                         </div>
                     </div>
 
-                    <?php $meno_pola = 'signup-meno'; ?><!-- FORM - Meno -->
+                    <?php $pole = 'signup-meno'; echo PHP_EOL; ?>
+                    <!-- FORM - Meno -->
                     <div class="form-group col-md-5">  
                         <label>Krstné meno</label>
                         <div class="input-group">
-                            <input type="text" class="form-control<?= $validation_classes[$meno_pola]; ?>" value="<?= $validation_values[$meno_pola]; ?>" name="<?= $meno_pola; ?>" placeholder="Meno">
+                            <input type="text" class="form-control<?= $val_classes[$pole]; ?>" value="<?= $val_values[$pole]; ?>" name="<?= $pole; ?>" placeholder="Meno">
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-user"></span>
                                 </div>
                             </div>
-<?= $validation_feedback[$meno_pola]; ?>
+                            <?= $val_feedback[$pole].PHP_EOL ?>
                         </div>
                     </div>
 
-                    <?php $meno_pola = 'signup-priezvisko'; ?><!-- FORM - Priezvisko -->
+                    <?php $pole = 'signup-priezvisko'; echo PHP_EOL; ?>
+                    <!-- FORM - Priezvisko -->
                     <div class="form-group col-md-5"> 
                         <label>Priezvisko</label>
                         <div class="input-group">
-                            <input type="text" class="form-control<?= $validation_classes[$meno_pola]; ?>" value="<?= $validation_values[$meno_pola]; ?>" name="<?= $meno_pola; ?>" placeholder="Priezvisko">
+                            <input type="text" class="form-control<?= $val_classes[$pole]; ?>" value="<?= $val_values[$pole]; ?>" name="<?= $pole; ?>" placeholder="Priezvisko">
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-user-tie"></span>
                                 </div>
                             </div>
                         </div>
-<?= $validation_feedback[$meno_pola]; ?>
+                        <?= $val_feedback[$pole].PHP_EOL ?>
                     </div>
 
                 </div>
 
                 <div class="form-row">
 
-                    <?php $meno_pola = 'signup-email'; ?><!-- FORM - E-mail -->
+                    <?php $pole = 'signup-email'; echo PHP_EOL; ?>
+                    <!-- FORM - E-mail -->
                     <div class="form-group col-md-6">
                         <label>E-mail</label>
                         <div class="input-group">
-                            <input type="text" class="form-control<?= $validation_classes[$meno_pola]; ?>" value="<?= $validation_values[$meno_pola]; ?>" name="<?= $meno_pola; ?>" placeholder="meno@zoszv.sk">
+                            <input type="text" class="form-control<?= $val_classes[$pole]; ?>" value="<?= $val_values[$pole]; ?>" name="<?= $pole; ?>" placeholder="meno@zoszv.sk">
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-envelope"></span>
                                 </div>
                             </div>
-<?= $validation_feedback[$meno_pola]; ?>
+                            <?= $val_feedback[$pole].PHP_EOL ?>
                         </div>
                     </div>
 
-                    <?php $meno_pola = 'signup-telefon'; ?><!-- FORM - telefon -->
+                    <?php $pole = 'signup-telefon'; echo PHP_EOL; ?>
+                    <!-- FORM - telefon -->
                     <div class="form-group col-md-6">
                         <label>Mobilné telefónne číslo</label>
                         <div class="input-group">
-                            <input type="text" class="form-control<?= $validation_classes[$meno_pola]; ?>" value="<?= $validation_values[$meno_pola]; ?>" name="<?= $meno_pola; ?>" placeholder="00421 915 123 456">
+                            <input type="text" class="form-control<?= $val_classes[$pole]; ?>" value="<?= $val_values[$pole]; ?>" name="<?= $pole; ?>" placeholder="00421 915 123 456">
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-mobile-alt"></span>
                                 </div>
                             </div>
                             <!-- <small class="d-block w-100 mb-n2 text-muted">Osobné číslo zamestnanca</small> -->
-<?= $validation_feedback[$meno_pola]; ?>
+                            <?= $val_feedback[$pole].PHP_EOL ?>
                         </div>
                     </div>                     
                 
@@ -167,31 +162,33 @@
 
                 <div class="form-row">
 
-                    <?php $meno_pola = 'signup-pasword'; ?><!-- FORM - Heslo -->
+                    <?php $pole = 'signup-pasword'; echo PHP_EOL; ?>
+                    <!-- FORM - Heslo -->
                     <div class="form-group col-md-6">
                         <label>Heslo</label>
                         <div class="input-group">
-                            <input type="password" class="form-control<?= $validation_classes[$meno_pola]; ?>" value="<?= $validation_values[$meno_pola]; ?>" name="<?= $meno_pola; ?>" placeholder="Heslo">
+                            <input type="password" class="form-control<?= $val_classes[$pole]; ?>" value="<?= $val_values[$pole]; ?>" name="<?= $pole; ?>" placeholder="Heslo">
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-lock"></span>
                                 </div>
                             </div>
-<?= $validation_feedback[$meno_pola]; ?>
+                            <?= $val_feedback[$pole].PHP_EOL ?>
                         </div>
                     </div>
 
-                    <?php $meno_pola = 'signup-pasword-repeater'; ?><!-- FORM - Heslo opakované -->
+                    <?php $pole = 'signup-pasword-repeater'; echo PHP_EOL;?>
+                    <!-- FORM - Heslo opakované -->
                     <div class="form-group col-md-6">
                         <label>Kontrolné heslo</label>
                         <div class="input-group">
-                            <input type="password" class="form-control<?= $validation_classes[$meno_pola]; ?>" value="<?= $validation_values[$meno_pola]; ?>" name="<?= $meno_pola; ?>" placeholder="Opakovať heslo">
+                            <input type="password" class="form-control<?= $val_classes[$pole]; ?>" value="<?= $val_values[$pole]; ?>" name="<?= $pole; ?>" placeholder="Opakovať heslo">
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-lock"></span>
                                 </div>
                             </div>
-<?= $validation_feedback[$meno_pola]; ?>
+                            <?= $val_feedback[$pole].PHP_EOL ?>
                         </div>
                     </div> 
 
@@ -199,21 +196,25 @@
                 
                 <div class="form-row mt-4">
 
-                    <?php $meno_pola = 'signup-checkbox'; ?><!-- FORM - CheckBox podmienky -->
+                    <?php $pole = 'signup-checkbox'; echo PHP_EOL;?>
+                    <!-- FORM - CheckBox podmienky -->
                     <div class="col-xl-3">
                         <div class="input-group mb-4 icheck-primary">
-                            <input type="checkbox" class="form-check-input<?= $validation_classes[$meno_pola]; ?>" value="Súhlasím s podmienkami." id="agreeTerms" name="<?= $meno_pola; ?>" <?php if (!empty($validation_values[$meno_pola])) { echo 'checked';} ?> >
+                            <input type="checkbox" class="form-check-input<?= $val_classes[$pole]; ?>" value="Súhlasím s podmienkami." id="agreeTerms" name="<?= $pole; ?>" <?php if (!empty($val_values[$pole])) { echo 'checked';} ?> >
                             <label class="" for="agreeTerms">
                                 Súhlasím s <a href="#">podmienkami</a>
                             </label>
-<?= $validation_feedback[$meno_pola]; ?>
+                            <?= $val_feedback[$pole].PHP_EOL ?>
                         </div>
                     </div>
+
 
                     <!-- FORM - Tlacitko Submit -->
                     <div class="col-xl-5">                    
                         <button name="submit" type="submit" class="btn btn-block bg-gradient-primary btn-lg">Registrovať</button>
                     </div>
+
+
                     <!-- FORM - Tlacitko Login -->                
                     <div class="col-xl-4">  
                         <a href="/login" class="btn btn-outline-secondary btn-lg btn-block mt-2 mt-xl-0">Už som zaregistrovaný</a>
@@ -224,12 +225,10 @@
             </form>
 
         </div>
-        <!-- /.form-box -->
     </div>
-    <!-- /.card -->
 </div>
-<!-- /.register-box -->
+
 <?php
-    $homepage->content = ob_get_clean();  // Koniec hlavného obsahu
-    $homepage->display();  // vykreslenie stranky
-?>
+$page->content = ob_get_clean();  // Koniec hlavného obsahu
+
+$page->display();  // vykreslenie stranky

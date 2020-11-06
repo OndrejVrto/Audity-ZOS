@@ -2,7 +2,14 @@
 
 class PageClear extends Page
 {
-
+    public $link;
+    
+    function __construct()
+    {
+        parent::__construct();
+        $this->link = $_SERVER['REQUEST_URI'];
+    }
+    
     public function display()
     {
         $this->displayBegin();
