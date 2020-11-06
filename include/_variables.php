@@ -45,8 +45,7 @@ class Premenne
             "/"                                     =>    "Home | Audity ŽOS Zvolen",
             "/login"                                =>    "Login | Audity ŽOS Zvolen",
             "/signup"                               =>    "Signup | Audity ŽOS Zvolen",
-            "/audit/zoznam-oblasti-auditu/"          =>    "Zoznam oblastí auditovania | Audity ŽOS Zvolen",
-            "/audit/zoznam-oblasti-auditu-ajax"     =>    "AJAX | Zoznam oblastí auditovania | Audity ŽOS Zvolen",
+            "/vlastnosti/oblasti-auditov/zoznam"   =>    "Zoznam oblastí auditovania | Audity ŽOS Zvolen",
         ),    // "Titulok Stránky"
 
         // Meta značka stránky - Description -> popisuje stránku
@@ -55,8 +54,7 @@ class Premenne
             "/"                                     =>    "Audity ŽOS Zvolen - hlavná stránka",
             "/login"                                =>    "Audity ŽOS Zvolen - prihlasovanie uživateľa",
             "/signup"                               =>    "Audity ŽOS Zvolen - vytvorenie nového účtu uživateľa",
-            "/audit/zoznam-oblasti-auditu/"          =>    "Audity ŽOS Zvolen - zoznam oblastí auditovania",
-            "/audit/zoznam-oblasti-auditu-ajax"     =>    "Audity ŽOS Zvolen - AJAXový zoznam",
+            "/vlastnosti/oblasti-auditov/zoznam"   =>    "Audity ŽOS Zvolen - zoznam oblastí auditovania",
         ),    // "Popis Stránky"
 
         // Nadpisy prvej kapitoly.
@@ -65,8 +63,7 @@ class Premenne
             "/"                                     =>    "Predľad všetkých auditov",
             "/login"                                =>    false,
             "/signup"                               =>    false,
-            "/audit/zoznam-oblasti-auditu/"          =>    "Zoznam oblastí auditovania",
-            "/audit/zoznam-oblasti-auditu-ajax"     =>    "Zoznam oblastí auditovania s AJAXom",
+            "/vlastnosti/oblasti-auditov/zoznam"   =>    "Zoznam oblastí auditovania",
         ),    // "Nadpis prvej kapitoly"
     );
 
@@ -208,7 +205,7 @@ class Premenne
             "Ikona" => "fas fa-clipboard-list",
             "SUBMENU" => array(
                 array(
-                    "Link" => "/audit/zoznam-oblasti-auditu/",
+                    "Link" => "/vlastnosti/oblasti-auditov/zoznam",
                     "Nazov" => "Oblasti auditov",
                     "Doplnok" => "badge badge-success",
                     "PopisDoplnku" => "Hotovo",

@@ -6,10 +6,12 @@
 
     require_once $_SERVER['DOCUMENT_ROOT'] . "/include/inc.dBconnect.php";
 
-    $uri = "/audit/zoznam-oblasti-auditu/";
-    $list = (isset($_GET['p'])) ? $_GET['p'] : "1" ;
+    $uri = "/vlastnosti/oblasti-auditov/zoznam";
+    $page = new PageZoznamNovy($uri);
 
-    $page = new Page($uri , $list);
+    $page->bodyClassExtended = 'col-12 col-sm-10 col-md-9 col-lg-7';
+    $page->bodyWidthExtended = 'max-width: 600px;';
+    $page->linkCisty = "/vlastnosti/oblasti-auditov/";
 
     // inicializácia konštánt formulára v prípade volania metódou GET
     $mena_vsetkych_poli = array ('oblast-auditu', 'oblast-auditu-poznamka');
@@ -43,22 +45,14 @@
         }
     }
 
-ob_start();  // Začiatok definície hlavného obsahu
+ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 ?>
 
-    <div class="row justify-content-center">
-        <div class="col-12 col-sm-10 col-md-9 col-lg-7" style="max-width: 600px;">
+                        <!-- FORM - Oblasť - pôvodná hodnota - HIDDEN -->
+                        <input type="hidden" name="valueOld" value="">
 
-            <form action="<?= $uri ?>novy" method="post">
-                <div class="card" >
-
-                    <div class="card-header">
-                        Vytvorenie novej položky
-                    </div>
-
-                    <div class="card-body register-card-body">
-
-                        <?php $pole = 'oblast-auditu'; ?><!-- FORM - Oblasť -->
+                        <?php $pole = 'oblast-auditu'; echo PHP_EOL; ?>
+                        <!-- FORM - Oblasť -->
                         <div class="form-group ">
                             <label>Názov oblasti</label>
                             <div class="input-group">
@@ -68,30 +62,17 @@ ob_start();  // Začiatok definície hlavného obsahu
                                         <span class="fas fa-id-card"></span>
                                     </div>
                                 </div>
-                                <!-- <small class="d-block w-100 mb-n2 text-muted">Poznámka k tomuto poľu</small> --><?= PHP_EOL.$val_feedback[$pole] ?>
+                                <?= $val_feedback[$pole].PHP_EOL ?>
                             </div>
                         </div>
 
-                        <?php $pole = 'oblast-auditu-poznamka'; ?><!-- FORM - Poznámka -->
+                        <?php $pole = 'oblast-auditu-poznamka'; echo PHP_EOL; ?>
+                        <!-- FORM - Poznámka -->
                         <div class="form-group ">
                             <label>Poznámka</label>
                             <textarea class="form-control<?= $val_classes[$pole] ?>" name="<?= $pole ?>"><?= $val_values[$pole] ?></textarea>
-                            <!-- <small class="d-block w-100 mb-n2 text-muted">Poznámka k tomuto poľu</small> --><?= PHP_EOL.$val_feedback[$pole] ?>
+                            <?= $val_feedback[$pole].PHP_EOL ?>
                         </div>
-
-                    </div>
-
-                </div>
-
-                <div class="row justify-content-center">
-                    <a href="<?= $uri ?>" name="vzad" class="btn btn-secondary mx-1">Späť</a>
-                    <button type="submit" name="submit" class="btn btn-outline-warning mx-1">Uložiť</button>
-                </div>
-
-            </form>
-
-        </div>
-    </div>
 
 <?php
 $page->content = ob_get_clean();  // Koniec hlavného obsahu

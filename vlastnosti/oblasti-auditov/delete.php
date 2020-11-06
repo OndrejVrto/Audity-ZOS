@@ -6,27 +6,31 @@
     
     require $_SERVER['DOCUMENT_ROOT'] . "/include/inc.dBconnect.php";
 
-    $uri = "/audit/zoznam-oblasti-auditu/";
-    $list = (isset($_GET['p'])) ? $_GET['p'] : "1" ;
+    $uri = "/vlastnosti/oblasti-auditov/zoznam";
+
+    $page = new PageZoznamDelete($uri);
+
+    $page->bodyClassExtended = 'col-12 col-sm-10 col-md-9 col-lg-7';
+    $page->bodyWidthExtended = 'max-width: 600px;';
+    $page->linkCisty = "/vlastnosti/oblasti-auditov/";
+
     $pocet = 0;
 
-    $page = new Page($uri , $list);
-    
     // vymazanie záznamu z databazy
     // POZOR tento blok kodu musi byt na zaciatku aby ukončil zvyšný skript včas
     if (isset($_POST['submit'])) {
-        (int)$id = mysqli_real_escape_string($conn, $_POST['submit']);
+        $id = (int)mysqli_real_escape_string($conn, $_POST['submit']);
 
         $sql = "DELETE FROM `30_zoznam_oblast_auditu` WHERE `ID30`=".$id.";";
 
-        dBzoznam2($sql, $uri.'delete');
+        dBzoznam2($sql, $uri);
         header("Location: $uri");   
         exit();
     }
 
     if (isset($_POST['delete'])) {
         // kontrola či je záznam použitý v iných tabuľkách. Ak áno, nedá sa zmazať.
-        (int)$id = mysqli_real_escape_string($conn, $_POST['delete']);
+        $id = (int)mysqli_real_escape_string($conn, $_POST['delete']);
 
         $sql = "SELECT 
                     (SELECT COUNT(*) FROM `31_zoznam_typ_auditu` WHERE `ID30_zoznam_oblast_auditu`= ".$id.")
@@ -39,20 +43,16 @@
         $pocet = (int)$pocetArray[0]['Pocet'];
     }
 
+    $page->id = htmlspecialchars($id);
+    $page->pocet = $pocet;
+
     if ($pocet > 0) {
     // tento blok kodu sa spusti ak sa zmazavana je polozka pouzita v prepojenych tabulkach
     // dotaz by sa nevykonal a vrátil by chybu
 
-    ob_start();  // Začiatok definície hlavného obsahu
+ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 ?>
 
-    <div class="row justify-content-center">
-        <div class="col-12 col-sm-10 col-md-9 col-lg-7" style="max-width: 600px;">
-            <div class="card" >
-                <div class="card-header">
-                    Upozornenie
-                </div>
-                <div class="card-body register-card-body">
                     <div class="h5 text-center">
                         Záznam nieje možné zmazať
                         <br>pretože sa používa
@@ -60,15 +60,9 @@
                         <br>
                         <br>Celkom: <strong><?= $pocet ?>x</strong>
                     </div>
-                </div>
-            </div>
-            <div class="row justify-content-center">
-                <a href="<?= $uri ?>" type="submit" name="vzad" class="btn btn-secondary">Späť</a>                    
-            </div>
-        </div>
-    </div>
 
 <?php
+
     } elseif ($pocet <= 0) {
     // tento blok kodu sa spusti ak sa zmazavana polozka nenachádza pouzita v prepojenych tabulkach
     
@@ -79,18 +73,9 @@
     $id = htmlspecialchars($id);
     $oblast = htmlspecialchars($data[0]['OblastAuditovania']);
     $poznamka = htmlspecialchars($data[0]['Poznamka']);
-ob_start();  // Začiatok definície hlavného obsahu
+
 ?>
 
-    <div class="row justify-content-center">
-        <div class="col-12 col-sm-10 col-md-9 col-lg-7" style="max-width: 600px;">
-
-            <form action="<?= $uri ?>delete" method="post">
-                <div class="card" >
-                    <div class="card-header">
-                        Zmazanie položky
-                    </div>
-                    <div class="card-body register-card-body">
                         <div>
                             Si si istý, že chceš zmazať položku 
                             <span class="h5 text-danger"><?= $oblast ?></span>
@@ -98,16 +83,6 @@ ob_start();  // Začiatok definície hlavného obsahu
                             <div class="mt-3"><u>Bližšie informácie o položke:</u></div>
                             <p class="small-2"><?= $poznamka ?></p>
                         </div>
-                    </div>
-                </div>
-                <div class="row justify-content-center">
-                    <a href="<?= $uri ?>" name="vzad" class="btn btn-secondary mx-1">Späť</a>
-                    <button type="submit" name="submit" value="<?= $id; ?>" class="btn btn-outline-danger mx-1">Zmazať</button>
-                </div>
-            </form>
-
-        </div>
-    </div>
 
 <?php
     }

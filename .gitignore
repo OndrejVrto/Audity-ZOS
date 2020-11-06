@@ -9,8 +9,9 @@
 !include
 !include/class
 !pages
-!audit
-!audit/*
+!vlastnosti
+!vlastnosti/*
+
 
 !.gitignore
 !.htaccess

@@ -26,6 +26,10 @@ class Page
     protected $_nazovstranky;
     protected $link;
     private $aktivnemenu = false;
+    
+    public $bodyClassExtended = ''; //premenna sa používa v odvodených triedach
+    public $bodyWidthExtended = ''; //premenna sa používa v odvodených triedach
+    public $linkCisty = '/'; //premenna sa používa v odvodených triedach
 
     // Metody třídy Page
     public function __set($name, $value)
@@ -33,7 +37,7 @@ class Page
         $this->$name = $value;
     }
 
-    function __construct($link, $listStranky)
+    function __construct($link)
     {
         session_start();
 
@@ -50,7 +54,7 @@ class Page
         require_once $path . '_variables.php';
 
         $this->link = $link;
-        $this->list = $listStranky;
+        $this->list = (isset($_GET['p'])) ? $_GET['p'] : "1" ;;
 
         $premenne = new Premenne($link);
 
@@ -74,6 +78,7 @@ class Page
 
     public function display()
     {
+        $this->PredvyplnenieKonstant(); // pre potreby odvodených tried
         $this->displayBegin();
         $this->displayTitle();
         $this->displayDescription();
@@ -97,7 +102,10 @@ class Page
         }
 
         $this->displayContentHeader();
+        
+        $this->ContentHeaderZoznam();
         echo $this->content;
+        $this->ContentFooterZoznam();
         $this->displayContentFooter();
         
         $this->displayFooter();
@@ -110,6 +118,9 @@ class Page
         echo "\n</body>\n</html>";
     }
 
+    protected function PredvyplnenieKonstant(){} // pre potreby odvodených tried
+    protected function ContentHeaderZoznam(){} // pre potreby odvodených tried
+    protected function ContentFooterZoznam(){} // pre potreby odvodených tried
 
     public function displayBegin()
     {

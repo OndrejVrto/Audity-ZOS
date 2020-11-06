@@ -1,70 +1,43 @@
 <?php
-    // Automatické nahrávanie všetkých CLASS pri ich prvom zavolaní
-    spl_autoload_register(function ($class_name) {
-        include_once  $_SERVER['DOCUMENT_ROOT'] . "/include/class/class." . $class_name . '.php';
-    });
 
-    $uri = "/audit/zoznam-oblasti-auditu/";
-    $list = (isset($_GET['p'])) ? $_GET['p'] : "1" ;
+class PageZoznam extends Page
+{
 
-    $page = new Page($uri , $list);
+    function ContentHeaderZoznam (){
 
-    // vyberovy dotaz na data
-    $sql = "SELECT * FROM 30_zoznam_oblast_auditu ORDER BY LOWER(OblastAuditovania) ASC";
-    $data = dBzoznam($sql, $uri);
-
-ob_start();  // Začiatok definície hlavného obsahu
 ?>
     <div class='row justify-content-center pb-3'>
         <div id="UpravaDat" class='form-inline'>
-            <form action="<?= $uri ?>novy" method="post">
+            <form action="<?= $this->linkCisty ?>novy" method="post">
                 <button type="submit" name="novy" ID='novy-zaznam' class="btn btn-warning">Pridať položku</button>
             </form>
-            <form action="<?= $uri ?>detail" method="post" class="mx-1">
+            <form action="<?= $this->linkCisty ?>detail" method="post" class="mx-1">
                 <button type="submit" name="detail" ID='button-detail' value="" class="btn btn-secondary" disabled>Detaily</button>
             </form>
-            <form action="<?= $uri ?>edit" method="post" class="mr-1">
+            <form action="<?= $this->linkCisty ?>edit" method="post" class="mr-1">
                 <button type="submit" name="edit" ID='button-edit' value="" class="btn btn-success" disabled>Editovať</button>
             </form>
-            <form action="<?= $uri ?>delete" method="post">
+            <form action="<?= $this->linkCisty ?>delete" method="post">
                 <button type="submit" name="delete" ID='button-delete' value="" class="btn btn-danger" disabled>Zmazať</button>
             </form>
         </div>
     </div>
 
-    <div class='row justify-content-center'>
-        <div class='col-12 col-sm-10 col-md-9 col-lg-7' style='max-width: 600px; width:100%;'>
+    <div class="row justify-content-center">
+        <div class="<?= $this->bodyClassExtended ?>" style="<?= $this->bodyWidthExtended ?>">
 
             <div class='card'>
                 <div class='card-body p-2'>
 
                     <table class='table table-sm hover compact' id='tabulka'>
-                        <thead>
-
-                            <tr>
-                                <th>P.č.</th>
-                                <th>Zoznam oblastí</th>
-                            </tr>
-
-                        </thead>
-                        <tbody>
 
 <?php
-    $poradie = 1;
-    foreach ($data as $key => $value) {
-        $id = htmlspecialchars($value['ID30']);
-        $oblastAuditovania = htmlspecialchars($value['OblastAuditovania']);
-?>
-                            <tr id='<?= $id ?>'>
-                                <td><?= $poradie ?>.</td>
-                                <td><?= $oblastAuditovania ?></td>
-                            </tr>
-<?php
-        $poradie += 1;
     }
+
+    function ContentFooterZoznam()
+    {
 ?>
 
-                        </tbody>
                     </table>
 
                 </div>
@@ -74,7 +47,39 @@ ob_start();  // Začiatok definície hlavného obsahu
     </div>
 
 <?php
-$page->content = ob_get_clean();  // Koniec hlavného obsahu
+    }
+
+    function PredvyplnenieKonstant(){
+        
+        parent::clearStyles();
+        parent::addStyles("Font Awesome", true);
+        parent::addStyles("Ionicons", true);
+        parent::addStyles("DataTables-jQuery", false);
+        parent::addStyles("DataTables-Bootstrap", true);
+        parent::addStyles("DataTables-Select", true);
+        parent::addStyles("DataTables-Responsive", true);
+        parent::addStyles("Adminlte style", false);
+        parent::addStyles("Google Font: Source Sans Pro", false);
+        
+        // definícia Skriptov
+        parent::clearScripts();
+        parent::addScripts("jQuery",true);
+        parent::addScripts("Bootstrap 4-bundle",true);
+        parent::addScripts("DataTables",true);
+        parent::addScripts("DataTables-Bootstrap4",true);
+        parent::addScripts("DataTables-Select",true);
+        parent::addScripts("DataTables-Select-Bootstrap4",true);
+        parent::addScripts("DataTables-Responsive",true);
+        parent::addScripts("DataTables-Responsive-Bootstrap",true);
+        parent::addScripts("AdminLTE App",true);
+        parent::addScripts("AdminLTE for demo purposes", false);
+        
+        $this->skriptySpecial = $this->ScriptyZoznam();
+
+    }
+
+    function ScriptyZoznam()
+    {
 
 ob_start();  // Začiatok definície Špeciálnych SKRIPTov pre túto stránku
 ?>
@@ -124,7 +129,7 @@ ob_start();  // Začiatok definície Špeciálnych SKRIPTov pre túto stránku
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selected');
                 $('#UpravaDat [id^=button]').attr({disabled: '',
-                                                 value: ''});
+                                                    value: ''});
             } else {
                 table.$('tr.selected').removeClass('selected');
                 $(this).addClass('selected');
@@ -137,33 +142,8 @@ ob_start();  // Začiatok definície Špeciálnych SKRIPTov pre túto stránku
     } );    
     </script>
     <!-- END - skripty SPECIAL -->
-
 <?php
-$page->skriptySpecial = ob_get_clean();  // Koniec SKRIPTov
+    return ob_get_clean();  // Koniec SKRIPTov
+    }
 
-// definícia CSS knizníc
-$page->clearStyles();
-$page->addStyles("Font Awesome", true);
-$page->addStyles("Ionicons", true);
-$page->addStyles("DataTables-jQuery", false);
-$page->addStyles("DataTables-Bootstrap", true);
-$page->addStyles("DataTables-Select", true);
-$page->addStyles("DataTables-Responsive", true);
-$page->addStyles("Adminlte style", false);
-$page->addStyles("Google Font: Source Sans Pro", false);
-
-// definícia Skriptov
-$page->clearScripts();
-$page->addScripts("jQuery",true);
-$page->addScripts("Bootstrap 4-bundle",true);
-$page->addScripts("DataTables",true);
-$page->addScripts("DataTables-Bootstrap4",true);
-$page->addScripts("DataTables-Select",true);
-$page->addScripts("DataTables-Select-Bootstrap4",true);
-$page->addScripts("DataTables-Responsive",true);
-$page->addScripts("DataTables-Responsive-Bootstrap",true);
-$page->addScripts("AdminLTE App",true);
-$page->addScripts("AdminLTE for demo purposes", false);
-
-// vykreslenie stranky
-$page->display();
+}

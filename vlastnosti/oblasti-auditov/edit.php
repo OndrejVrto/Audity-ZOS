@@ -5,11 +5,15 @@
     });
     require $_SERVER['DOCUMENT_ROOT'] . "/include/inc.dBconnect.php";
 
-    $uri = "/audit/zoznam-oblasti-auditu/";
-    $list = (isset($_GET['p'])) ? $_GET['p'] : "1" ;
-    $pocet = 0;
+    $uri = "/vlastnosti/oblasti-auditov/zoznam";
 
-    $page = new Page($uri , $list);
+    $page = new PageZoznamEdit($uri);
+    
+    $page->bodyClassExtended = 'col-12 col-sm-10 col-md-9 col-lg-7';
+    $page->bodyWidthExtended = 'max-width: 600px;';
+    $page->linkCisty = "/vlastnosti/oblasti-auditov/";
+
+    $pocet = 0;
 
     // inicializácia konštánt formulára v prípade volania metódou GET
     $mena_vsetkych_poli = array ('oblast-auditu', 'oblast-auditu-poznamka', 'oblast-auditu-old');
@@ -27,7 +31,7 @@
         $val_classes = $validation->validateFormGetClasses();  // vracia triedy:  is-valid / is-invalid pre každý kľúč
         $val_feedback = $validation->validateFormGetFeedback();  // vracia správy pre každý kľúč
 
-        (int)$id = mysqli_real_escape_string($conn, $_POST['submit']);
+        $id = (int)mysqli_real_escape_string($conn, $_POST['submit']);
 
         // if result is TRUE (1) --> save data to db  OR  reditect page
         if ($result == 1) {
@@ -47,7 +51,7 @@
 
     if (isset($_POST['edit'])) {
         // kontrola či je záznam použitý v iných tabuľkách. Ak áno, nedá editovať jeho názov.
-        (int)$id = mysqli_real_escape_string($conn, $_POST['edit']);
+        $id = (int)mysqli_real_escape_string($conn, $_POST['edit']);
         $sql = "SELECT 
                     (SELECT COUNT(*) FROM `31_zoznam_typ_auditu` WHERE `ID30_zoznam_oblast_auditu`= ".$id.")
                     +
@@ -60,32 +64,21 @@
         // načítanie dát
         $sql = "SELECT * FROM 30_zoznam_oblast_auditu WHERE ID30='".$id."'; ";
         $data = dBzoznam($sql, $uri);
-        $val_values['oblast-auditu'] = $data[0]['OblastAuditovania'];
-        $val_values['valueOld'] = $data[0]['OblastAuditovania'];
+        $val_values['oblast-auditu'] = $val_values['valueOld'] = $data[0]['OblastAuditovania'];
         $val_values['oblast-auditu-poznamka'] = $data[0]['Poznamka'];
     }
 
-    $id = htmlspecialchars($id);
+    $page->id = htmlspecialchars($id);
 
-ob_start();  // Začiatok definície hlavného obsahu
+ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 ?>
 
-    <div class="row justify-content-center">
-        <div class="col-12 col-sm-10 col-md-9 col-lg-7" style="max-width: 600px;">
-
-            <form action="<?= $uri ?>edit" method="post">
-                <div class="card" >
-
-                    <div class="card-header">
-                        Editácia položky
-                    </div>
-
-                    <div class="card-body register-card-body">
-
-                        <?php $pole = 'valueOld'; ?><!-- FORM - Oblasť - pôvodná hodnota - HIDDEN -->
+                        <?php $pole = 'valueOld'; echo PHP_EOL; ?>
+                        <!-- FORM - Oblasť - pôvodná hodnota - HIDDEN -->
                         <input type="hidden" name="valueOld" value="<?= $val_values[$pole] ?>">
 
-                        <?php $pole = 'oblast-auditu'; ?><!-- FORM - Oblasť -->
+                        <?php $pole = 'oblast-auditu'; echo PHP_EOL; ?>
+                        <!-- FORM - Oblasť -->
                         <div class="form-group ">
                             <label>Názov oblasti</label>
                             <div class="input-group">
@@ -96,30 +89,17 @@ ob_start();  // Začiatok definície hlavného obsahu
                                     </div>
                                 </div>
                                 <?= ($pocet > 0) ? '<small class="d-block w-100 mb-n2 text-muted">Názov nieje možné editovať, pretože sa už používa v iných tabuľkách.</small>'.PHP_EOL : '' ?>
-                                <!-- <small class="d-block w-100 mb-n2 text-muted">Poznámka k tomuto poľu</small> --><?= PHP_EOL.$val_feedback[$pole] ?>
+                                <?= $val_feedback[$pole].PHP_EOL ?>
                             </div>
                         </div>
 
-                        <?php $pole = 'oblast-auditu-poznamka'; ?><!-- FORM - Poznámka -->
+                        <?php $pole = 'oblast-auditu-poznamka'; echo PHP_EOL; ?>
+                        <!-- FORM - Poznámka -->
                         <div class="form-group ">
                             <label>Poznámka</label>
                             <textarea class="form-control<?= $val_classes[$pole] ?>" name="<?= $pole ?>"><?= $val_values[$pole] ?></textarea>
-                            <!-- <small class="d-block w-100 mb-n2 text-muted">Poznámka k tomuto poľu</small> --><?= PHP_EOL.$val_feedback[$pole] ?>
+                            <?= $val_feedback[$pole].PHP_EOL ?>
                         </div>
-
-                    </div>
-
-                </div>
-                
-                <div class="row justify-content-center">
-                    <a href="<?= $uri ?>" name="vzad" class="btn btn-secondary mx-1">Späť</a>
-                    <button type="submit" name="submit" value="<?= $id ?>" class="btn btn-outline-success mx-1">Uložiť</button>
-                </div>
-
-            </form>
-
-        </div>
-    </div>
 
 <?php
     $page->content = ob_get_clean();  // Koniec hlavného obsahu
