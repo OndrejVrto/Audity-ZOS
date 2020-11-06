@@ -1,6 +1,7 @@
 <?php
 
-class db {
+class db
+{
 
     protected $connection;
     protected $query;
@@ -12,7 +13,7 @@ class db {
     {
         $this->connection = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
         if ($this->connection->connect_error) {
-            $this->error('Failed to connect to MySQL - ' . $this->connection->connect_error);
+            $this->error('Zlyhalo pripojenie k databáze Audity (MySQL): - ' . $this->connection->connect_error);
         }
         $this->connection->set_charset($charset);
     }
@@ -44,12 +45,12 @@ class db {
             }
             $this->query->execute();
             if ($this->query->errno) {
-                $this->error('Unable to process MySQL query (check your params) - ' . $this->query->error);
+                $this->error('Zlyhal proces vykonania dotazu MySQL (skontroluj svoje parametre) - ' . $this->query->error);
             }
             $this->query_closed = FALSE;
             $this->query_count++;
         } else {
-            $this->error('Unable to prepare MySQL statement (check your syntax) - ' . $this->connection->error);
+            $this->error('Zlyhal proces zostavenia dotazu MySQL (skontroluj syntax dotazu) - ' . $this->connection->error);
         }
         return $this;
     }

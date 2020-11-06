@@ -7,8 +7,7 @@
     $page->linkCisty = "/vlastnosti/oblasti-auditov/";
 
     // vyberovy dotaz na data
-    $sql = "SELECT * FROM 30_zoznam_oblast_auditu ORDER BY LOWER(OblastAuditovania) ASC";
-    $data = dBzoznam($sql);
+    $data = $db->query('SELECT * FROM 30_zoznam_oblast_auditu ORDER BY LOWER(OblastAuditovania) ASC')->fetchAll();
 
 ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 ?>

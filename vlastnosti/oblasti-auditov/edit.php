@@ -15,26 +15,22 @@
     if (isset($_POST['submit'])) {
 
         // inicializácia class Validate
-        $validation = new ValidatorOblastAuditu($_POST, $uri);
+        $validation = new ValidatorOblastAuditu($_POST);
         $validation->odsadenie = 8;  // odsadzuje HTML kod o x tabulátorov
         $result = $validation->validateForm();  // validuje formulár - !! kľúče validovaných polí musia byť v zadefinované v triede
         $val_values = $validation->validateFormGetValues();   // vracia hodnoty polí pre každý kľúč
         $val_classes = $validation->validateFormGetClasses();  // vracia triedy:  is-valid / is-invalid pre každý kľúč
         $val_feedback = $validation->validateFormGetFeedback();  // vracia správy pre každý kľúč
 
-        $id = (int)mysqli_real_escape_string($conn, $_POST['submit']);
+        $id = (int)$_POST['submit'];
 
         // if result is TRUE (1) --> save data to db  OR  reditect page
         if ($result == 1) {
-            $oblast = mysqli_real_escape_string($conn, $val_values['oblast-auditu']);
-            $poznamka = mysqli_real_escape_string($conn, $val_values['oblast-auditu-poznamka']);
+            $oblast = $val_values['oblast-auditu'];
+            $poznamka = $val_values['oblast-auditu-poznamka'];
 
-            $sql = "UPDATE `30_zoznam_oblast_auditu` 
-                    SET `OblastAuditovania`='".$oblast."', 
-                        `Poznamka`='".$poznamka."' 
-                    WHERE `ID30`=".$id.";";
+            $db->query('UPDATE `30_zoznam_oblast_auditu` SET `OblastAuditovania` = ?, `Poznamka` = ? WHERE `ID30` = ?', $oblast, $poznamka, $id);
 
-            dBzoznam2($sql);
             $uri = upravLink($_SERVER['REQUEST_URI']);
             header("Location: $uri");
             exit();
@@ -44,21 +40,19 @@
     $pocet = 0;
     if (isset($_POST['edit'])) {
         // kontrola či je záznam použitý v iných tabuľkách. Ak áno, nedá editovať jeho názov.
-        $id = (int)mysqli_real_escape_string($conn, $_POST['edit']);
-        $sql = "SELECT 
-                    (SELECT COUNT(*) FROM `31_zoznam_typ_auditu` WHERE `ID30_zoznam_oblast_auditu`= ".$id.")
-                    +
-                    (SELECT COUNT(*) FROM `01_certifikaty` WHERE `ID30_zoznam_oblast_auditu`= ".$id.")
-                AS Pocet;";
-        $pocetArray = dBzoznam($sql, $uri);
-        // vytiahnutie počtu z výsledku dotazu
-        $pocet = (int)$pocetArray[0]['Pocet'];
+        $id = (int)$_POST['edit'];
 
-        // načítanie dát
-        $sql = "SELECT * FROM 30_zoznam_oblast_auditu WHERE ID30='".$id."'; ";
-        $data = dBzoznam($sql);
-        $val_values['oblast-auditu'] = $val_values['valueOld'] = $data[0]['OblastAuditovania'];
-        $val_values['oblast-auditu-poznamka'] = $data[0]['Poznamka'];
+        $dataA = $db->query(
+            'SELECT 
+                (SELECT COUNT(*) FROM `31_zoznam_typ_auditu` WHERE `ID30_zoznam_oblast_auditu` = ?)
+                +
+                (SELECT COUNT(*) FROM `01_certifikaty` WHERE `ID30_zoznam_oblast_auditu` = ?)
+            AS Pocet', $id, $id )->fetchArray();
+        $pocet = (int)$dataA['Pocet'];
+
+        $data = $db->query('SELECT * FROM `30_zoznam_oblast_auditu` WHERE ID30 = ?', $id)->fetchArray();
+        $val_values['oblast-auditu'] = $val_values['valueOld'] = $data['OblastAuditovania'];
+        $val_values['oblast-auditu-poznamka'] = $data['Poznamka'];
     }
 
     $page->id = htmlspecialchars($id);

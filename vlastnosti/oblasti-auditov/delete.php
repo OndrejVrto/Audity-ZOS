@@ -9,11 +9,10 @@
     // vymazanie záznamu z databazy
     // POZOR tento blok kodu musi byt na zaciatku aby ukončil zvyšný skript včas
     if (isset($_POST['submit'])) {
-        $id = (int)mysqli_real_escape_string($conn, $_POST['submit']);
+        $id = (int)$_POST['submit'];
 
-        $sql = "DELETE FROM `30_zoznam_oblast_auditu` WHERE `ID30`=".$id.";";
-
-        dBzoznam2($sql);
+        $db->query('DELETE FROM `30_zoznam_oblast_auditu` WHERE `ID30` = ?', $id);
+        
         $uri = upravLink($_SERVER['REQUEST_URI']);
         header("Location: $uri");  
         exit();
@@ -22,17 +21,15 @@
     $pocet = 0;
     if (isset($_POST['delete'])) {
         // kontrola či je záznam použitý v iných tabuľkách. Ak áno, nedá sa zmazať.
-        $id = (int)mysqli_real_escape_string($conn, $_POST['delete']);
+        $id = (int)$_POST['delete'];
 
-        $sql = "SELECT 
-                    (SELECT COUNT(*) FROM `31_zoznam_typ_auditu` WHERE `ID30_zoznam_oblast_auditu`= ".$id.")
-                    +
-                    (SELECT COUNT(*) FROM `01_certifikaty` WHERE `ID30_zoznam_oblast_auditu`= ".$id.")
-                AS Pocet;";
-
-        $pocetArray = dBzoznam($sql);
-        // vytiahnutie počtu z výsledku dotazu
-        $pocet = (int)$pocetArray[0]['Pocet'];
+        $data = $db->query(
+            'SELECT 
+                (SELECT COUNT(*) FROM `31_zoznam_typ_auditu` WHERE `ID30_zoznam_oblast_auditu` = ?)
+                +
+                (SELECT COUNT(*) FROM `01_certifikaty` WHERE `ID30_zoznam_oblast_auditu` = ?)
+            AS Pocet', $id, $id )->fetchArray();
+        $pocet = (int)$data['Pocet'];
     }
 
     $page->id = htmlspecialchars($id);
@@ -58,13 +55,9 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
     } elseif ($pocet <= 0) {
     // tento blok kodu sa spusti ak sa zmazavana polozka nenachádza pouzita v prepojenych tabulkach
     
-    // detaily k položke
-    $sql = "SELECT * FROM 30_zoznam_oblast_auditu WHERE ID30='".$id."'; ";
-    $data = dBzoznam($sql);
-    
-    $id = htmlspecialchars($id);
-    $oblast = htmlspecialchars($data[0]['OblastAuditovania']);
-    $poznamka = htmlspecialchars($data[0]['Poznamka']);
+    $data = $db->query('SELECT * FROM `30_zoznam_oblast_auditu` WHERE ID30 < ?', $id)->fetchArray();
+    $oblast = htmlspecialchars($data['OblastAuditovania']);
+    $poznamka = htmlspecialchars($data['Poznamka']);
 
 ?>
 

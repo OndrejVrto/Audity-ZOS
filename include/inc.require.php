@@ -18,13 +18,13 @@
     });
 
     // zoznam vložených súborov do každej stránky
-    // $conn pripojenie do databazy
-    require_once $pathInclude . 'inc.dBconnect.php';
-    require_once $pathInclude . 'inc.dBfunction.php';
-    // funkcie rozne 
-    require_once $pathInclude . 'inc.funkction.php';
-    // konstanty stránok
+
+    // Konštanty stránok
     require_once $pathInclude . '_variables.php';
+    // Vytvorenie triedy "db" na pripojenie do databázy
+    require_once $pathInclude . 'inc.dBconnect.php';
+    // Globálne funkcie
+    require_once $pathInclude . 'inc.funkction.php';
 
     // derfinície Konštant
     defined("TAB1") or define("TAB1", "\t");

@@ -6,14 +6,12 @@
     $page->bodyWidthExtended = 'max-width: 600px;';
     $page->linkCisty = "/vlastnosti/oblasti-auditov/";
 
-    $id = (int)mysqli_real_escape_string($conn, $_POST['detail']);
+    $id = (int)$_POST['detail'];
 
-    // vyberovy dotaz na data
-    $sql = "SELECT * FROM 30_zoznam_oblast_auditu WHERE ID30='".$id."'; ";
-    $data = dBzoznam($sql);
-    
-    $oblast = htmlspecialchars($data[0]['OblastAuditovania']);
-    $poznamka = htmlspecialchars($data[0]['Poznamka']);
+    $data = $db->query('SELECT * FROM `30_zoznam_oblast_auditu` WHERE ID30 < ?', $id)->fetchArray();
+
+    $oblast = htmlspecialchars($data['OblastAuditovania']);
+    $poznamka = htmlspecialchars($data['Poznamka']);
 
 ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 ?>

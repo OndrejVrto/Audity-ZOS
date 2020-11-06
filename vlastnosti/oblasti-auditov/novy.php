@@ -23,15 +23,11 @@
 
         // if result is TRUE (1) --> save data to db  OR  reditect page
         if ($result == 1) {
-            $oblast = mysqli_real_escape_string($conn, $val_values['oblast-auditu']);
-            $poznamka = mysqli_real_escape_string($conn, $val_values['oblast-auditu-poznamka']);
+            $oblast = $val_values['oblast-auditu'];
+            $poznamka = $val_values['oblast-auditu-poznamka'];
 
-            $sql = "INSERT INTO `30_zoznam_oblast_auditu` 
-                    (`OblastAuditovania`, `Poznamka`) 
-                    VALUES 
-                    ('".$oblast."', '".$poznamka."' );";
-
-            dBzoznam2($sql);
+            $db->query('INSERT INTO `30_zoznam_oblast_auditu` (`OblastAuditovania`, `Poznamka`) VALUES (?,?)', $oblast, $poznamka);
+            
             $uri = upravLink($_SERVER['REQUEST_URI']);
             header("Location: $uri");
             exit();
