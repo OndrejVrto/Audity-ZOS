@@ -63,7 +63,7 @@ ob_start();  // Začiatok definície hlavného obsahu
                         </td>
                         <td class="project_progress">
                             <div class="progress progress-sm">
-                                <div class="progress-bar bg-red" role="progressbar" aria-volumenow="34" aria-volumemin="0" aria-volumemax="100" style="width: 34%">
+                                <div class="progress-bar bg-red" role="progressbar" style="width: 34%">
                                 </div>
                             </div>
                             <small>
@@ -117,7 +117,7 @@ ob_start();  // Začiatok definície hlavného obsahu
                         </td>
                         <td class="project_progress">
                             <div class="progress progress-sm">
-                                <div class="progress-bar bg-orange" role="progressbar" aria-volumenow="84" aria-volumemin="0" aria-volumemax="100" style="width: 84%">
+                                <div class="progress-bar bg-orange" role="progressbar" style="width: 84%">
                                 </div>
                             </div>
                             <small>
@@ -168,7 +168,7 @@ ob_start();  // Začiatok definície hlavného obsahu
                         </td>
                         <td class="project_progress">
                             <div class="progress progress-sm">
-                                <div class="progress-bar bg-green" role="progressbar" aria-volumenow="100" aria-volumemin="0" aria-volumemax="100" style="width: 100%">
+                                <div class="progress-bar bg-green" role="progressbar" style="width: 100%">
                                 </div>
                             </div>
                             <small>

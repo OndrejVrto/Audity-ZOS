@@ -14,4 +14,10 @@
         }
     }
 
-    
+    // funkcia pre debugging
+    // vypíše do konzoly prehliadača obsah premennej
+    function console_log( $data ){
+        echo '<script>';
+        echo 'console.log('. json_encode( $data ) .')';
+        echo '</script>';
+    }

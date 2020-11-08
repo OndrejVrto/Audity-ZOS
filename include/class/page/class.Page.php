@@ -40,7 +40,7 @@ class Page
                 
         $this->list = (isset($_GET['p'])) ? $_GET['p'] : "1" ;;
 
-        $premenne = new Premenne($this->linkCisty);
+        $premenne = new Premenne($this->link);
 
         $this->title = $premenne->titulokStranky;
         $this->nadpis = $premenne->nadpisPrvejSekcie;
@@ -422,7 +422,7 @@ class Page
         </div>
 
         <!-- Main content -->
-        <section class="content">
+        <div class="content">
 
 <!-- START MAIN - Hlavný obsah stránky -->
 <!-- =============================================================================================================================== -->
@@ -437,7 +437,7 @@ class Page
 <!-- ============================================================================================================================== -->
 <!-- END MAIN - Hlavný obsah stránky -->
 
-        </section>
+        </div>
         <!-- /Main content -->
 
     </div>
@@ -517,7 +517,7 @@ class Page
                 $cssLink = '/dist/css/ionicons/css/ionicons';
                 break;
             case "Google Font: Source Sans Pro":
-                $cssLink = '/dist/css/www/fonts.googleapis';
+                $cssLink = '/dist/css/fonts.googleapis.SourceSansPro/fonts.googleapis';
                 break;
             case "DataTables-jQuery":
                 $cssLink = '/plugins/datatables/css/jquery.dataTables';

@@ -6,7 +6,17 @@ class PageZoznamNovy extends Page
     function __construct()
     {
         parent::__construct();
-        $this->link = upravLink($_SERVER['REQUEST_URI']);
+
+        // prepisujem premennú $link ktorá sa polužíva pri generovaní menu, bublemenu a aj v konštantach
+        // aby sa stránka zobrazovala rovnako
+        $this->link = $this->linkCisty."zoznam";
+        
+        $premenne = new Premenne($this->link);
+
+        $this->title = $premenne->titulokStranky;
+        $this->nadpis = $premenne->nadpisPrvejSekcie;
+        $this->description = $premenne->popisStranky;
+        $this->hlavneMenu = $premenne->menuHlavne;        
     }
 
     function ContentHeaderZoznam (){

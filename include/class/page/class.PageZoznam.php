@@ -2,12 +2,6 @@
 
 class PageZoznam extends Page
 {
-    
-    function __construct()
-    {
-        parent::__construct();
-        $this->link = upravLink($_SERVER['REQUEST_URI']);
-    }
 
     function ContentHeaderZoznam (){
 
