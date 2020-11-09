@@ -212,7 +212,7 @@ class Page
             <li class="nav-item">
 <?php if (isset($_SESSION['userId'])): ?>
 				<form class="" action="/include/inc.logout.php" method="post">
-					<input class="btn btn-primary" type="submit" name="logout-submit" value="LogOut">
+					<input class="btn btn-warning" type="submit" name="logout-submit" value="LogOut">
 				</form>
 <?php else: ?>
 				<a class="btn btn-danger" href="/login">Login</a>
@@ -232,7 +232,7 @@ class Page
                 <img src="/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="/user-detail" class="d-block">Ing. Ondrej VRŤO</a>
+                <a href="/user-detail" class="d-block text-warning">Ing. Ondrej VRŤO</a>
             </div>
 <?php else: ?>
             <div class="image">

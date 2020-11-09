@@ -15,13 +15,12 @@ class ValidatorLogin extends Validator
                 case 'login-osobne-cislo': {
                     $user = $formars['login-osobne-cislo'];
                     $password = $formars['login-pasword'];
-                    $data = $db->query('SELECT * FROM `42_users` WHERE `uidUsers` = ?', $user )->fetchArray();
-
-                    if ( empty($data) ) {
+                    $row = $db->query('SELECT * FROM `42_users` WHERE `uidUsers` = ?', $user )->fetchArray();
+                    if ( empty($row) ) {
                         $error_hash['login-osobne-cislo']="Uživateľ s týmto menom nieje zaregistrovaný.";
                         $vysledok = false;
                     } else {
-                        $pwdCheck = password_verify($password, $data['pwdUsers']);
+                        $pwdCheck = password_verify($password, $row['pwdUsers']);
                         if ($pwdCheck === false) {
                             $error_hash['login-pasword']="Zadali ste nesprávne heslo pre uživateľa " . $this->PurifiText($user);
                             $vysledok = false;
@@ -32,8 +31,8 @@ class ValidatorLogin extends Validator
 
                 case 'signup-osobne-cislo': {
                     $user = $formars['signup-osobne-cislo'];
-                    $data = $db->query('SELECT * FROM `42_users` WHERE `uidUsers` = ?', $user )->fetchArray();
-                    if ( ! empty($data) ) {
+                    $row = $db->query('SELECT * FROM `42_users` WHERE `uidUsers` = ?', $user )->fetchArray();
+                    if ( ! empty($row) ) {
                         $error_hash['signup-osobne-cislo']="Uživateľ s týmto osobným číslom už je zaregistrovaný.";
                         $vysledok = false;
                     } 

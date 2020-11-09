@@ -14,6 +14,10 @@
 
         // ak validacia skonci TRUE (1) --> reditect page to Index
         if ($v->validateForm()) {
+            $user = $_POST['login-osobne-cislo'];
+            $row = $db->query('SELECT * FROM `42_users` WHERE `uidUsers` = ?', $user )->fetchArray();
+            $_SESSION['userId'] = $row['ID42'];
+            $_SESSION['userUid'] = $row['uidUsers'];
             header("Location: /");
             exit();
         }
