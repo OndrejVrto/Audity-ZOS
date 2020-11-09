@@ -1,178 +1,582 @@
-<?php
+<?PHP
+/*
+-------------------------------------------------------------------------
+    PHP Form Validator (formvalidator.php)
+            Version 1.1
+    This program is free software published under the
+    terms of the GNU Lesser General Public License.
 
-class Validator 
-{
-
-    protected $privat_data;
+    This program is distributed in the hope that it will
+    be useful - WITHOUT ANY WARRANTY; without even the
+    implied warranty of MERCHANTABILITY or FITNESS FOR A
+    PARTICULAR PURPOSE.
+        
+    For updates, please visit:
+    http://www.html-form-guide.com/php-form/php-form-validation.html
     
-    protected $privat_values;
-    protected $privat_classes;
-    protected $privat_errors;
-    protected $privat_succes = 1;    
-    protected $privat_feedback;
-    public $odsadenie = 5;
+    Questions & comments please send to info@html-form-guide.com
+-------------------------------------------------------------------------  
+*/
+
+/*
+-------------------------------------------------------------------------
+Pre potreby mojej aplikácie upravil, doplnil a preložil: Ondrej Vrťo
+-------------------------------------------------------------------------  
+*/
 
 
-    public function __construct($post_data)
+/**
+ * Carries information about each of the form validations
+ */
+class ValidatorObj
+{
+    var $variable_name;
+    var $validator_string;
+    var $error_string;
+}
+
+/**
+ * Base class for custom validation objects
+ **/
+class CustomValidator
+{
+    function DoValidate(&$formars, &$error_hash)
     {
-        $this->privat_data = $post_data;
+        return true;
     }
+}
 
-    public function __set($name, $value)
+/** Default error messages*/
+define("E_VAL_REQUIRED_VALUE", "Zadajte hodnotu pre %s");
+define("E_VAL_MAXLEN_EXCEEDED", "Bola prekročená maximálna dĺžka pre %s");
+define("E_VAL_MINLEN_CHECK_FAILED", "Zadajte vstup s dĺžkou väčšou ako %d pre %s");
+define("E_VAL_ALNUM_CHECK_FAILED", "Zadajte alfanumerický vstup pre %s");
+define("E_VAL_ALNUM_S_CHECK_FAILED", "Zadajte alfanumerický vstup pre %s");
+define("E_VAL_NUM_CHECK_FAILED", "Zadajte číselný vstup pre %s");
+define("E_VAL_ALPHA_CHECK_FAILED", "Zadajte abecedný vstup pre %s");
+define("E_VAL_ALPHA_S_CHECK_FAILED", "Zadajte abecedný vstup pre %s");
+define("E_VAL_EMAIL_CHECK_FAILED", "Zadajte platnú e-mailovú adresu");
+define("E_VAL_LESSTHAN_CHECK_FAILED", "Zadajte hodnotu menšiu ako %f pre %s");
+define("E_VAL_GREATERTHAN_CHECK_FAILED", "Zadajte hodnotu menšiu ako %f pre %s");
+define("E_VAL_REGEXP_CHECK_FAILED", "Zadajte platný vstup pre %s");
+define("E_VAL_DONTSEL_CHECK_FAILED", "Pre %s bola vybratá nesprávna možnosť");
+define("E_VAL_SHOULD_SEL_CHECK_FAILED", "Vybratá možnosť %s by mala byť rovnaká ako %s");
+define("E_VAL_SELMIN_CHECK_FAILED", "Vyberte minimálne %d možnosti pre %s");
+define("E_VAL_SELONE_CHECK_FAILED", "Vyberte možnosť pre %s");
+define("E_VAL_EQELMNT_CHECK_FAILED", "Hodnota %s by mala byť rovnaká ako hodnota %s");
+define("E_VAL_NEELMNT_CHECK_FAILED", "Hodnota %s by nemala byť rovnaká ako hodnota %s");
+
+
+
+/**
+ * FormValidator: The main class that does all the form validations
+ **/
+class Validator
+{
+    private $validator_array = [];
+    private $error_hash = [];
+    public $custom_validators = [];
+    public $form_variables = [];
+
+    public function __construct()
     {
-        $this->$name = $value;
-    }
-
-    public function validateForm()
-    {
-        foreach ($this->privat_data as $key => $value) {
-
-            $this->addValue($key, $value);
-
-        }
-        return $this->privat_succes;
-    }
-
-    public function validateFormGetValues()
-    {
-        return $this->privat_values;
-    }
-
-    public function validateFormGetClasses(){
-        return $this->privat_classes;
-    }
-
-    public function validateFormGetFeedback(){
-        return $this->privat_feedback;
-    }
-
-
-    // NEVEREJNE funkcie
-
-    // funkcie na priradovanie hodnôt do polí
-    protected function addValue($key, $val)
-    {
-        $this->privat_values[$key] = $this->purify($val);
-    }
-
-    protected function addClass($key, $bool)
-    {
-        if ($bool){
-            $this->privat_classes[$key] = ' is-valid';
+        if (strcmp($_SERVER['REQUEST_METHOD'], 'POST') == 0) {
+            $this->form_variables = $_POST;
         } else {
-            $this->privat_classes[$key] = ' is-invalid';
+            $this->form_variables = $_GET;
         }
     }
 
-    protected function addError($key, $val)
+    public function getVAL($MenoPola)
     {
-        $this->privat_errors[$key][] = $this->purify($val);
-        $this->addClass($key, FALSE);
-        $this->addFeedback($key, FALSE);
-        $this->privat_succes = 0;
+        if (!array_key_exists($MenoPola, $this->form_variables)) {
+            return null;
+        } else {
+            return htmlspecialchars($this->form_variables[$MenoPola], ENT_HTML5, 'UTF-8');
+        };
     }
-
-    protected function addSucces($key, $val)
+    
+    public function getCLS($MenoPola)
     {
-        $this->privat_errors[$key][] = $this->purify($val);
-        $this->addClass($key, TRUE);
-        $this->addFeedback($key, TRUE);
-    }
-
-    protected function addFeedback($key, $bool)
-    {
-        $countErrors = count($this->privat_errors[$key]);
-        $odsad = str_repeat("\t", $this->odsadenie );
-
-        if ($countErrors == 1) {
-            $list = $this->privat_errors[$key][0];
-        } elseif ($countErrors > 1) {
-            $list = '<ul class="list-unstyled">';
-            foreach ($this->privat_errors[$key] as $kluc => $value) {
-                $list .= "\n\t\t".$odsad. '<li>'. $value .'</li>';
+        if (array_key_exists($MenoPola, $this->error_hash)) {
+            return ' is-invalid';
+        } elseif (array_key_exists($MenoPola, $this->form_variables)) {
+            foreach($this->validator_array as $obj) {
+                if ($obj->variable_name == $MenoPola) {
+                    return ' is-valid';
+                    break;
+                }
             }
-            $list .= "\n\t".$odsad.'</ul>';
-        }
-
-        $this->privat_feedback[$key] = $odsad.'<div class="mb-n2 d-block '.($bool ? 'valid' : 'invalid').'-feedback">'."\n\t".$odsad.$list."\n".$odsad.'</div>'."\n";
-    }
-    // fynkcia čistí text pre výstup do HTML
-    protected function purify($string){
-        return htmlspecialchars($string, ENT_HTML5, 'UTF-8');
+        } else {
+            return null;
+        };
     }
 
-    // Validacne funkcie hodnôt
+    public function getMSG($MenoPola)
+    {
+        if (array_key_exists($MenoPola, $this->error_hash)) {
+            return '<div class="mb-n2 d-block invalid-feedback">'.$this->error_hash[$MenoPola].'</div>';
+        } else {
+            return null;
+        };
+    }
 
-    //  Kontrola či je vyplnená hodnota
-    protected static function is_required($value){
-        if(empty(trim($value))) return true;
+    function AddCustomValidator(&$customv)
+    {
+        array_push($this->custom_validators, $customv);
     }
-    //  Kontrola či hodnota celé číslo
-    protected static function is_int($value){
-        if(filter_var(trim($value), FILTER_VALIDATE_INT)) return true;
+
+    function addValidation($variable, $validator, $error)
+    {
+        $validator_obj = new ValidatorObj();
+        $validator_obj->variable_name = $variable;
+        $validator_obj->validator_string = $validator;
+        $validator_obj->error_string = $error;
+        array_push($this->validator_array, $validator_obj);
     }
-    //  Kontrola či hodnota číslo
-    protected static function is_float($value){
-        if(filter_var(trim($value), FILTER_VALIDATE_FLOAT)) return true;
+
+    function GetAllErrors()
+    {
+        return $this->error_hash;
     }
-    //  Kontrola či hodnota zložená len s písmen
-    protected static function is_alpha($value){
-        if(filter_var(trim($value), FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => "/^[a-zA-Z]+$/")))) return true;
-        //if(!preg_match('/^([a-zA-Z])+$/i', $value)) return true;  // iná verzia
+
+    function GetvalArr()
+    {
+        return $this->validator_array;
     }
-    //  Kontrola či hodnota zložená s písmen a číslic
-    protected static function is_alphanum($value){
-        if(filter_var(trim($value), FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => "/^[a-zA-Z0-9]+$/")))) return true;
-        //if(!preg_match('/^([a-zA-Z0-9])+$/i', $value)) return true;  // iná verzia
-    }
-    //  Kontrola či hodnota zložená z číslic
-    protected static function is_numeric($value){
-        if(!preg_match('/^[\-+]?[0-9]*\.?[0-9]+$/', trim($value))) return true;
-    }    
-    //  Kontrola či hodnota url adresa v správnom formáte
-    protected static function is_url($value){
-        if(filter_var(trim($value), FILTER_VALIDATE_URL)) return true;
-        // if(!preg_match('/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/', $value)) return true;  // iná verzia
-    }
-    //  Kontrola či hodnota uri adresa v správnom formáte
-    protected static function is_uri($value){
-        if(filter_var(trim($value), FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => "/^[A-Za-z0-9-\/_]+$/")))) return true;
-    }
-    //  Kontrola či hodnota TRUE alebo FALSE
-    protected static function is_bool($value){
-        if(is_bool(filter_var(trim($value), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE))) return true;
-    }
-    //  Kontrola či hodnota v správnom formáte: e-mail
-    protected static function is_email($value){
-        if(filter_var(trim($value), FILTER_VALIDATE_EMAIL)) return true;
-    }
-    //  Kontrola či sú hodnoty rovnaké
-    protected static function is_match($value, $valuematch){
-        if(trim($value) != trim($valuematch)) return true;
-    }
-    //  Kontrola či je hodnota dlkšia ako maximálna hodnota
-    protected static function is_maxLength($value, $maximum){
-        if(strlen(trim($value)) > $maximum) return true;
-    }
-    //  Kontrola či je hodnota kratšia ako minimálna hodnota
-    protected static function is_minLength($value, $minimum){
-        if(strlen(trim($value)) < $minimum) return true;
-    }
-    //  Kontrola či je hodnota dlhá ako nastavená hodnota
-    protected static function is_exactLength($value, $len){
-        if(strlen(trim($value)) != $len) return true;
-    }
-    //  Kontrola či je hodnota váčšia ako druhá hodnota - platí pre čísla
-    protected static function is_lessThan($valueA, $valueB){
-        if (is_numeric(trim($valueA)) && is_numeric(trim($valueB))) {
-            if(trim($valueA) >= trim($valueB)) return true;
+
+
+
+    function ValidateForm()
+    {
+        $vysledok = true;
+
+        $error_string = "";
+        $error_to_display = "";
+
+        if (count($this->custom_validators) > 0) {
+            foreach ($this->custom_validators as $custom_val) {
+                if (false == $custom_val->DoValidate($this->form_variables, $this->error_hash)) {
+                    $vysledok = false;
+                }
+            }
         }
+        
+        foreach ($this->validator_array as $val_obj) {
+            if (!$this->ValidateObject($val_obj, $this->form_variables, $error_string)) {
+                $vysledok = false;
+                $this->error_hash[$val_obj->variable_name] = $error_string;
+            }
+        }        
+        return $vysledok;
     }
-    //  Kontrola či je hodnota menšia ako druhá hodnota - platí pre čísla
-    protected static function is_greaterThan($valueA, $valueB){
-        if (is_numeric(trim($valueA)) && is_numeric(trim($valueB))) {
-            if(trim($valueA) <= trim($valueB)) return true;
+
+
+    function ValidateObject($validatorobj, $formvariables, &$error_string)
+    {
+        $vysledok = true;
+
+        $splitted = explode("=", $validatorobj->validator_string);
+        $command = $splitted[0];
+        $command_value = '';
+
+        if (isset($splitted[1]) && strlen($splitted[1]) > 0) {
+            $command_value = $splitted[1];
         }
+
+        $default_error_message = "";
+
+        $input_value = "";
+
+        if (isset($formvariables[$validatorobj->variable_name])) {
+            $input_value = $formvariables[$validatorobj->variable_name];
+        }
+
+        $vysledok = $this->ValidateCommand(
+            $command,
+            $command_value,
+            $input_value,
+            $default_error_message,
+            $validatorobj->variable_name,
+            $formvariables
+        );
+
+
+        if (false == $vysledok) {
+            if (
+                isset($validatorobj->error_string) &&
+                strlen($validatorobj->error_string) > 0
+            ) {
+                $error_string = $validatorobj->error_string;
+            } else {
+                $error_string = $default_error_message;
+            }
+        } //if
+        return $vysledok;
     }
+
+    public function PurifiText($vstup){
+        return htmlspecialchars($vstup, ENT_HTML5, 'UTF-8');
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    function validate_req($input_value, &$default_error_message, $variable_name)
+    {
+        $vysledok = true;
+        if (
+            !isset($input_value) ||
+            strlen($input_value) <= 0
+        ) {
+            $vysledok = false;
+            $default_error_message = sprintf(E_VAL_REQUIRED_VALUE, $variable_name);
+        }
+        return $vysledok;
+    }
+
+    function validate_maxlen($input_value, $max_len, $variable_name, &$default_error_message)
+    {
+        $vysledok = true;
+        if (isset($input_value)) {
+            $input_length = strlen($input_value);
+            if ($input_length > $max_len) {
+                $vysledok = false;
+                $default_error_message = sprintf(E_VAL_MAXLEN_EXCEEDED, $variable_name);
+            }
+        }
+        return $vysledok;
+    }
+
+    function validate_minlen($input_value, $min_len, $variable_name, &$default_error_message)
+    {
+        $vysledok = true;
+        if (isset($input_value)) {
+            $input_length = strlen($input_value);
+            if ($input_length < $min_len) {
+                $vysledok = false;
+                $default_error_message = sprintf(E_VAL_MINLEN_CHECK_FAILED, $min_len, $variable_name);
+            }
+        }
+        return $vysledok;
+    }
+
+    function test_datatype($input_value, $reg_exp)
+    {
+        if (preg_match($reg_exp, $input_value)) {
+            return false;
+        }
+        return true;
+    }
+
+    function validate_email($email)
+    {
+        //return preg_match("^[_\.0-9a-zA-Z-]+@([0-9a-zA-Z][0-9a-zA-Z-]+\.)+[a-zA-Z]{2,6}$", $email);
+        return filter_var($email, FILTER_VALIDATE_EMAIL);
+    }
+
+    function validate_for_numeric_input($input_value, &$validation_success)
+    {
+
+        $more_validations = true;
+        $validation_success = true;
+        if (strlen($input_value) > 0) {
+
+            if (false == is_numeric($input_value)) {
+                $validation_success = false;
+                $more_validations = false;
+            }
+        } else {
+            $more_validations = false;
+        }
+        return $more_validations;
+    }
+
+    function validate_lessthan(
+        $command_value,
+        $input_value,
+        $variable_name,
+        &$default_error_message
+    ) {
+        $vysledok = true;
+        if (false == $this->validate_for_numeric_input(
+            $input_value,
+            $vysledok
+        )) {
+            return $vysledok;
+        }
+        if ($vysledok) {
+            $lessthan = doubleval($command_value);
+            $float_inputval = doubleval($input_value);
+            if ($float_inputval >= $lessthan) {
+                $default_error_message = sprintf(
+                    E_VAL_LESSTHAN_CHECK_FAILED,
+                    $lessthan,
+                    $variable_name
+                );
+                $vysledok = false;
+            } //if
+        }
+        return $vysledok;
+    }
+
+    function validate_greaterthan($command_value, $input_value, $variable_name, &$default_error_message)
+    {
+        $vysledok = true;
+        if (false == $this->validate_for_numeric_input($input_value, $vysledok)) {
+            return $vysledok;
+        }
+        if ($vysledok) {
+            $greaterthan = doubleval($command_value);
+            $float_inputval = doubleval($input_value);
+            if ($float_inputval <= $greaterthan) {
+                $default_error_message = sprintf(
+                    E_VAL_GREATERTHAN_CHECK_FAILED,
+                    $greaterthan,
+                    $variable_name
+                );
+                $vysledok = false;
+            } //if
+        }
+        return $vysledok;
+    }
+
+    function validate_select($input_value, $command_value, &$default_error_message, $variable_name)
+    {
+        $vysledok = false;
+        if (is_array($input_value)) {
+            foreach ($input_value as $value) {
+                if ($value == $command_value) {
+                    $vysledok = true;
+                    break;
+                }
+            }
+        } else {
+            if ($command_value == $input_value) {
+                $vysledok = true;
+            }
+        }
+        if (false == $vysledok) {
+            $default_error_message = sprintf(E_VAL_SHOULD_SEL_CHECK_FAILED, $command_value, $variable_name);
+        }
+        return $vysledok;
+    }
+
+    function validate_dontselect($input_value, $command_value, &$default_error_message, $variable_name)
+    {
+        $vysledok = true;
+        if (is_array($input_value)) {
+            foreach ($input_value as $value) {
+                if ($value == $command_value) {
+                    $vysledok = false;
+                    $default_error_message = sprintf(E_VAL_DONTSEL_CHECK_FAILED, $variable_name);
+                    break;
+                }
+            }
+        } else {
+            if ($command_value == $input_value) {
+                $vysledok = false;
+                $default_error_message = sprintf(E_VAL_DONTSEL_CHECK_FAILED, $variable_name);
+            }
+        }
+        return $vysledok;
+    }
+
+
+
+    function ValidateCommand($command, $command_value, $input_value, &$default_error_message, $variable_name, $formvariables)
+    {
+        $vysledok = true;
+        switch ($command) {
+            case 'req': {
+                    $vysledok = $this->validate_req($input_value, $default_error_message, $variable_name);
+                    break;
+                }
+
+            case 'maxlen': {
+                    $max_len = intval($command_value);
+                    $vysledok = $this->validate_maxlen(
+                        $input_value,
+                        $max_len,
+                        $variable_name,
+                        $default_error_message
+                    );
+                    break;
+                }
+
+            case 'minlen': {
+                    $min_len = intval($command_value);
+                    $vysledok = $this->validate_minlen(
+                        $input_value,
+                        $min_len,
+                        $variable_name,
+                        $default_error_message
+                    );
+                    break;
+                }
+
+            case 'alnum': {
+                    $vysledok = $this->test_datatype($input_value, "[^A-Za-z0-9]");
+                    if (false == $vysledok) {
+                        $default_error_message = sprintf(E_VAL_ALNUM_CHECK_FAILED, $variable_name);
+                    }
+                    break;
+                }
+
+            case 'alnum_s': {
+                    $vysledok = $this->test_datatype($input_value, "[^A-Za-z0-9 ]");
+                    if (false == $vysledok) {
+                        $default_error_message = sprintf(E_VAL_ALNUM_S_CHECK_FAILED, $variable_name);
+                    }
+                    break;
+                }
+
+            case 'num':
+            case 'numeric': {
+                    $vysledok = $this->test_datatype($input_value, "[^0-9]");
+                    if (false == $vysledok) {
+                        $default_error_message = sprintf(E_VAL_NUM_CHECK_FAILED, $variable_name);
+                    }
+                    break;
+                }
+
+            case 'alpha': {
+                    $vysledok = $this->test_datatype($input_value, "[^A-Za-z]");
+                    if (false == $vysledok) {
+                        $default_error_message = sprintf(E_VAL_ALPHA_CHECK_FAILED, $variable_name);
+                    }
+                    break;
+                }
+            case 'alpha_s': {
+                    $vysledok = $this->test_datatype($input_value, "[^A-Za-z ]");
+                    if (false == $vysledok) {
+                        $default_error_message = sprintf(E_VAL_ALPHA_S_CHECK_FAILED, $variable_name);
+                    }
+                    break;
+                }
+            case 'email': {
+                    if (isset($input_value) && strlen($input_value) > 0) {
+                        $vysledok = $this->validate_email($input_value);
+                        if (false == $vysledok) {
+                            $default_error_message = E_VAL_EMAIL_CHECK_FAILED;
+                        }
+                    }
+                    break;
+                }
+            case "lt":
+            case "lessthan": {
+                    $vysledok = $this->validate_lessthan(
+                        $command_value,
+                        $input_value,
+                        $variable_name,
+                        $default_error_message
+                    );
+                    break;
+                }
+            case "gt":
+            case "greaterthan": {
+                    $vysledok = $this->validate_greaterthan(
+                        $command_value,
+                        $input_value,
+                        $variable_name,
+                        $default_error_message
+                    );
+                    break;
+                }
+
+            case "regexp": {
+                    if (isset($input_value) && strlen($input_value) > 0) {
+                        if (!preg_match("$command_value", $input_value)) {
+                            $vysledok = false;
+                            $default_error_message = sprintf(E_VAL_REGEXP_CHECK_FAILED, $variable_name);
+                        }
+                    }
+                    break;
+                }
+            case "dontselect":
+            case "dontselectchk":
+            case "dontselectradio": {
+                    $vysledok = $this->validate_dontselect(
+                        $input_value,
+                        $command_value,
+                        $default_error_message,
+                        $variable_name
+                    );
+                    break;
+                } //case
+
+            case "shouldselchk":
+            case "selectradio": {
+                    $vysledok = $this->validate_select(
+                        $input_value,
+                        $command_value,
+                        $default_error_message,
+                        $variable_name
+                    );
+                    break;
+                } //case
+            case "selmin": {
+                    $min_count = intval($command_value);
+
+                    if (isset($input_value)) {
+                        if ($min_count > 1) {
+                            $vysledok = (count($input_value) >= $min_count) ? true : false;
+                        } else {
+                            $vysledok = true;
+                        }
+                    } else {
+                        $vysledok = false;
+                        $default_error_message = sprintf(E_VAL_SELMIN_CHECK_FAILED, $min_count, $variable_name);
+                    }
+
+                    break;
+                } //case
+            case "selone": {
+                    if (
+                        false == isset($input_value) ||
+                        strlen($input_value) <= 0
+                    ) {
+                        $vysledok = false;
+                        $default_error_message = sprintf(E_VAL_SELONE_CHECK_FAILED, $variable_name);
+                    }
+                    break;
+                }
+            case "eqelmnt": {
+
+                    if (
+                        isset($formvariables[$command_value]) &&
+                        strcmp($input_value, $formvariables[$command_value]) == 0
+                    ) {
+                        $vysledok = true;
+                    } else {
+                        $vysledok = false;
+                        $default_error_message = sprintf(E_VAL_EQELMNT_CHECK_FAILED, $variable_name, $command_value);
+                    }
+                    break;
+                }
+            case "neelmnt": {
+                    if (
+                        isset($formvariables[$command_value]) &&
+                        strcmp($input_value, $formvariables[$command_value]) != 0
+                    ) {
+                        $vysledok = true;
+                    } else {
+                        $vysledok = false;
+                        $default_error_message = sprintf(E_VAL_NEELMNT_CHECK_FAILED, $variable_name, $command_value);
+                    }
+                    break;
+                }
+        } //switch
+        return $vysledok;
+    } //validdate command
+
 
 }

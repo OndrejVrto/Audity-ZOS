@@ -5,40 +5,33 @@
     $page->bodyClassExtended = 'col-12 col-sm-10 col-md-9 col-lg-7';
     $page->bodyWidthExtended = 'max-width: 600px;';
 
+    $v = new Validator();
+
     if (isset($_POST['submit'])) {
 
-        // inicializácia class Validate
-        $validation = new ValidatorOblastAuditu($_POST);
-        $validation->odsadenie = 8;  // odsadzuje HTML kod o x tabulátorov
-        $result = $validation->validateForm();  // validuje formulár - !! kľúče validovaných polí musia byť v zadefinované v triede
-        $val_values = $validation->validateFormGetValues();   // vracia hodnoty polí pre každý kľúč
-        $val_classes = $validation->validateFormGetClasses();  // vracia triedy:  is-valid / is-invalid pre každý kľúč
-        $val_feedback = $validation->validateFormGetFeedback();  // vracia správy pre každý kľúč
+        // validačné podmienky jednotlivých polí
+        $v->addValidation("oblast-auditu","minlen=3","Trochu krátky názov. Použi aspoň 3 znaky.");
+        $v->addValidation("oblast-auditu","req","Prosím vyplň toto pole.");
+        $custom_validator = new ValidatorZoznamy();
+        $v->AddCustomValidator($custom_validator);
 
         $id = (int)$_POST['submit'];
 
         // ak validacia skonci TRUE (1) --> zktualizuj dáta v databáze
-        if ($result == 1) {
-            $oblast = $val_values['oblast-auditu'];
-            $poznamka = $val_values['oblast-auditu-poznamka'];
+        if ($v->validateForm()) {
+            $oblast = $_POST['oblast-auditu'];
+            $poznamka = $_POST['oblast-auditu-poznamka'];
 
             $db->query('UPDATE `30_zoznam_oblast_auditu` SET `OblastAuditovania` = ?, `Poznamka` = ? WHERE `ID30` = ?', $oblast, $poznamka, $id);
 
-            $uri = upravLink($_SERVER['REQUEST_URI']);
-            header("Location: $uri");
+            header("Location: $page->linkZoznam");
             exit();
-        }
-    } else {
-        // inicializácia konštánt formulára v prípade že nevráti výsledok validačná trieda
-        $mena_vsetkych_poli = array ('oblast-auditu', 'oblast-auditu-poznamka');
-        foreach ($mena_vsetkych_poli as $value) {
-            $val_values[$value] = $val_classes[$value] = $val_feedback[$value] = '';
         }
     }
     
     $pocet = 0;
     if (isset($_POST['edit'])) {
-        // kontrola či je záznam použitý v iných tabuľkách. Ak áno, nedá editovať jeho názov.
+        // kontrola či je záznam použitý v iných tabuľkách. Ak áno, nedá sa editovať jeho názov.
         $id = (int)$_POST['edit'];
 
         $dataA = $db->query(
@@ -51,8 +44,9 @@
 
         // načítanie dát o položke
         $data = $db->query('SELECT * FROM `30_zoznam_oblast_auditu` WHERE ID30 = ?', $id)->fetchArray();
-        $val_values['oblast-auditu'] = $val_values['valueOld'] = $data['OblastAuditovania'];
-        $val_values['oblast-auditu-poznamka'] = $data['Poznamka'];
+        $v->form_variables['oblast-auditu'] = $v->form_variables['valueOld'] = $data['OblastAuditovania'];
+        $v->form_variables['oblast-auditu-poznamka'] = $data['Poznamka'];
+
     }
 
     $page->id = htmlspecialchars($id);
@@ -62,21 +56,21 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 
                         <?php $pole = 'valueOld'; echo PHP_EOL; ?>
                         <!-- FORM - Oblasť - pôvodná hodnota - HIDDEN -->
-                        <input type="hidden" name="valueOld" value="<?= $val_values[$pole] ?>">
+                        <input type="hidden" name="valueOld" value="<?= $v->getVAL($pole) ?>">
 
                         <?php $pole = 'oblast-auditu'; echo PHP_EOL; ?>
                         <!-- FORM - Oblasť -->
                         <div class="form-group ">
                             <label>Názov oblasti</label>
                             <div class="input-group">
-                                <input <?= $pocet > 0 ? 'readonly ' : '' ?>type="text" class="form-control<?= $val_classes[$pole] ?>" value="<?= $val_values[$pole] ?>" name="<?= $pole ?>" placeholder="Položka">
+                                <input <?= $pocet > 0 ? 'readonly ' : '' ?>type="text" class="form-control<?= $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="<?= $pole ?>" placeholder="Položka">
                                 <div class="input-group-append">
                                     <div class="input-group-text">
                                         <span class="fas fa-id-card"></span>
                                     </div>
                                 </div>
                                 <?= ($pocet > 0) ? '<small class="d-block w-100 mb-n2 text-muted">Názov nieje možné editovať, pretože sa už používa v iných tabuľkách.</small>'.PHP_EOL : '' ?>
-                                <?= $val_feedback[$pole].PHP_EOL ?>
+                                <?= $v->getMSG($pole) . PHP_EOL ?>
                             </div>
                         </div>
 
@@ -84,8 +78,8 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
                         <!-- FORM - Poznámka -->
                         <div class="form-group ">
                             <label>Poznámka</label>
-                            <textarea class="form-control<?= $val_classes[$pole] ?>" name="<?= $pole ?>"><?= $val_values[$pole] ?></textarea>
-                            <?= $val_feedback[$pole].PHP_EOL ?>
+                            <textarea class="form-control<?= $v->getCLS($pole) ?>" name="<?= $pole ?>"><?= $v->getVAL($pole) ?></textarea>
+                            <?= $v->getMSG($pole) . PHP_EOL ?>
                         </div>
 
 <?php

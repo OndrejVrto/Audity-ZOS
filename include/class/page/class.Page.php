@@ -22,6 +22,7 @@ class Page
     public $bodyClassExtended = ''; //premenna sa používa v odvodených triedach
     public $bodyWidthExtended = ''; //premenna sa používa v odvodených triedach
     public $linkCisty; //premenna sa používa v odvodených triedach
+    public $linkZoznam; //premenna sa používa v odvodených triedach
 
     // Metódy triedy Page
     public function __set($name, $value)
@@ -37,7 +38,8 @@ class Page
 
         $this->link = $_SERVER['REQUEST_URI'];
         $this->linkCisty = upravLink($this->link);
-                
+        $this->linkZoznam = $this->linkCisty . "zoznam";
+
         $this->list = (isset($_GET['p'])) ? $_GET['p'] : "1" ;;
 
         $premenne = new Premenne($this->link);
@@ -309,7 +311,7 @@ class Page
                     $html .= "\n\t".$odsad.'</ul>';
 
                 } else {
-                    if ($value['Link'] == $this->link) {
+                    if ($value['Link'] == $this->link || $value['Link'] == $this->linkZoznam) {
                         $this->aktivnemenu = true;
                         $activSubMenu = true;
                     } else {
@@ -389,7 +391,7 @@ class Page
                         $html .= $submenu;
                     }
                 } else {
-                    if ($value['Link'] == $this->link) {
+                    if ($value['Link'] == $this->link || $value['Link'] == $this->linkZoznam) {
                         $this->aktivnemenu = true;
                         $html .= "\n".$odsad.'<li class="breadcrumb-item active">';
                         $html .= $value['Nazov'];

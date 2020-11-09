@@ -6,12 +6,8 @@ class PageZoznamDetail extends Page
     function __construct()
     {
         parent::__construct();
-        
-        // prepisujem premennú $link ktorá sa polužíva pri generovaní menu, bublemenu a aj v konštantach
-        // aby sa stránka zobrazovala rovnako
-        $this->link = $this->linkCisty."zoznam";
 
-        $premenne = new Premenne($this->link);
+        $premenne = new Premenne($this->linkZoznam);
 
         $this->title = $premenne->titulokStranky;
         $this->nadpis = $premenne->nadpisPrvejSekcie;
@@ -48,7 +44,7 @@ class PageZoznamDetail extends Page
             </form>
 
             <div class="row justify-content-center">
-                <a href="<?= $this->linkCisty ?>zoznam" name="vzad" class="btn btn-secondary mx-1">Späť</a>
+                <a href="<?= $this->linkZoznam ?>" name="vzad" class="btn btn-secondary mx-1">Späť</a>
             </div>
 
         </div>

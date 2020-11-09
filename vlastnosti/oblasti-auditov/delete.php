@@ -12,8 +12,7 @@
 
         $db->query('DELETE FROM `30_zoznam_oblast_auditu` WHERE `ID30` = ?', $id);
         
-        $uri = upravLink($_SERVER['REQUEST_URI']);
-        header("Location: $uri");  
+        header("Location: $page->linkZoznam");  
         exit();
     }
 
@@ -56,6 +55,7 @@ ob_start();  // Začiatok definície hlavného obsahu -> 5x a 6x tabulátor
     // tento blok kodu sa spusti ak NIE je zmazavana polozka pouzita v iných, prepojenych, tabulkach
         
         $data = $db->query('SELECT * FROM `30_zoznam_oblast_auditu` WHERE ID30 = ?', $id)->fetchArray();
+
         $oblast = htmlspecialchars($data['OblastAuditovania']);
         $poznamka = htmlspecialchars($data['Poznamka']);
 ?>
@@ -65,7 +65,7 @@ ob_start();  // Začiatok definície hlavného obsahu -> 5x a 6x tabulátor
                             <span class="h5 text-danger"><?= $oblast ?></span>
                             ?
                             <div class="mt-3"><u>Bližšie informácie o položke:</u></div>
-                            <p class="small-2"><?= $poznamka ?></p>
+                            <p class="pl-4"><strong>Poznámka:</strong> <?= $poznamka ?></p>
                         </div>
 
 <?php

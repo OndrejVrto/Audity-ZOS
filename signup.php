@@ -3,31 +3,23 @@
     
     $page = new PageClear();
 
-        if (isset($_POST['submit'])) {
-            // spustí sa ak bolo stlačené tlačítko ->  name="submit"
+    $v = new Validator();
 
-            // inicializácia class Validate
-            $validation = new ValidatorSignup($_POST);
+    if (isset($_POST['submit'])) {
 
-            $validation->odsadenie = 7;  // odsadzuje HTML kod o 5 tabulátorov
-            $result = $validation->validateForm();  // validuje formulár - !! kľúče validovaných polí musia byť v zadefinované v triede
-            $val_values = $validation->validateFormGetValues();   // vracia hodnoty polí pre každý kľúč
-            $val_classes = $validation->validateFormGetClasses();  // vracia triedy:  is-valid / is-invalid pre každý kľúč
-            $val_feedback = $validation->validateFormGetFeedback();  // vracia správy pre každý kľúč
+        // validačné podmienky jednotlivých polí
+        $v->addValidation("signup-osobne-cislo","req","Prosím vyplň svoje osobné číslo zamestnanca.");
+        $custom_validator = new ValidatorLogin();
+        $v->AddCustomValidator($custom_validator);
 
-            // ak validacia skonci TRUE (1) --> reditect page to Login
-            // TODO: rovno po zaregistrovaní ostať prihlásený a presun na index.php ?
-            if ($result == 1) {
-                header("Location: /login");
-                exit();
-            }
-        } else {
-            // inicializácia konštánt formulára v prípade volania metódou GET
-            $mena_vsetkych_poli = array ('signup-osobne-cislo', 'signup-avatar',  'signup-telefon', 'signup-titul', 'signup-meno', 'signup-priezvisko', 'signup-email', 'signup-pasword', 'signup-pasword-repeater', 'signup-checkbox');
-            foreach ($mena_vsetkych_poli as $key => $value) {
-                $val_values[$value] = $val_classes[$value] = $val_feedback[$value] = '';
-            }
+        // ak validacia skonci TRUE (1) --> reditect page to Index
+        if ($v->validateForm()) {
+
+            
+            header("Location: /login");
+            exit();
         }
+    }
 
 
 ob_start();  // Začiatok definície hlavného obsahu
@@ -52,14 +44,14 @@ ob_start();  // Začiatok definície hlavného obsahu
                     <div class="form-group col-md-4">
                         <label>Osobné číslo uživateľa</label>
                         <div class="input-group">
-                            <input type="text" class="form-control<?= $val_classes[$pole]; ?>" value="<?= $val_values[$pole]; ?>" name="<?= $pole; ?>" placeholder="Osobné číslo">
+                            <input type="text" class="form-control<?= $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="<?= $pole; ?>" placeholder="Osobné číslo">
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-id-card"></span>
                                 </div>
                             </div>
                             <!-- <small class="d-block w-100 mb-n2 text-muted">Osobné číslo zamestnanca</small> -->
-                            <?= $val_feedback[$pole].PHP_EOL ?>
+                            <?= $v->getMSG($pole) . PHP_EOL ?>
                         </div>
                     </div>
 
@@ -68,9 +60,9 @@ ob_start();  // Začiatok definície hlavného obsahu
                     <div class="form-group col-md-8">
                         <label>Obrázok alebo fotka</label>
                         <div class="input-group">
-                            <input type="file" class="custom-file-input<?= $val_classes[$pole]; ?>" id="inputFileAvatar" value="<?= $val_values[$pole]; ?>" name="<?= $pole; ?>">
-                            <label class="custom-file-label text-secondary" for="inputFileAvatar" data-browse="Vložiť obrázok" value="<?= $val_values[$pole]; ?>">Vlož si obrázok avatara</label>
-                            <?= $val_feedback[$pole].PHP_EOL ?>
+                            <input type="file" class="custom-file-input<?= $v->getCLS($pole) ?>" id="inputFileAvatar" value="<?= $v->getVAL($pole) ?>" name="<?= $pole; ?>">
+                            <label class="custom-file-label text-secondary" for="inputFileAvatar" data-browse="Vložiť obrázok" value="<?= $v->getVAL($pole) ?>">Vlož si obrázok avatara</label>
+                            <?= $v->getMSG($pole) . PHP_EOL ?>
                         </div>
                     </div>
 
@@ -83,13 +75,13 @@ ob_start();  // Začiatok definície hlavného obsahu
                     <div class="form-group col-md-2">        
                         <label>Titul</label>
                         <div class="input-group">
-                            <input type="text" class="form-control<?= $val_classes[$pole]; ?>" value="<?= $val_values[$pole]; ?>" name="<?= $pole; ?>" placeholder="Titul">
+                            <input type="text" class="form-control<?= $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="<?= $pole; ?>" placeholder="Titul">
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-graduation-cap"></span>
                                 </div>
                             </div>
-                            <?= $val_feedback[$pole].PHP_EOL ?>
+                            <?= $v->getMSG($pole) . PHP_EOL ?>
                         </div>
                     </div>
 
@@ -98,13 +90,13 @@ ob_start();  // Začiatok definície hlavného obsahu
                     <div class="form-group col-md-5">  
                         <label>Krstné meno</label>
                         <div class="input-group">
-                            <input type="text" class="form-control<?= $val_classes[$pole]; ?>" value="<?= $val_values[$pole]; ?>" name="<?= $pole; ?>" placeholder="Meno">
+                            <input type="text" class="form-control<?= $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="<?= $pole; ?>" placeholder="Meno">
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-user"></span>
                                 </div>
                             </div>
-                            <?= $val_feedback[$pole].PHP_EOL ?>
+                            <?= $v->getMSG($pole) . PHP_EOL ?>
                         </div>
                     </div>
 
@@ -113,14 +105,14 @@ ob_start();  // Začiatok definície hlavného obsahu
                     <div class="form-group col-md-5"> 
                         <label>Priezvisko</label>
                         <div class="input-group">
-                            <input type="text" class="form-control<?= $val_classes[$pole]; ?>" value="<?= $val_values[$pole]; ?>" name="<?= $pole; ?>" placeholder="Priezvisko">
+                            <input type="text" class="form-control<?= $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="<?= $pole; ?>" placeholder="Priezvisko">
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-user-tie"></span>
                                 </div>
                             </div>
                         </div>
-                        <?= $val_feedback[$pole].PHP_EOL ?>
+                        <?= $v->getMSG($pole) . PHP_EOL ?>
                     </div>
 
                 </div>
@@ -132,13 +124,13 @@ ob_start();  // Začiatok definície hlavného obsahu
                     <div class="form-group col-md-6">
                         <label>E-mail</label>
                         <div class="input-group">
-                            <input type="text" class="form-control<?= $val_classes[$pole]; ?>" value="<?= $val_values[$pole]; ?>" name="<?= $pole; ?>" placeholder="meno@zoszv.sk">
+                            <input type="text" class="form-control<?= $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="<?= $pole; ?>" placeholder="meno@zoszv.sk">
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-envelope"></span>
                                 </div>
                             </div>
-                            <?= $val_feedback[$pole].PHP_EOL ?>
+                            <?= $v->getMSG($pole) . PHP_EOL ?>
                         </div>
                     </div>
 
@@ -147,14 +139,14 @@ ob_start();  // Začiatok definície hlavného obsahu
                     <div class="form-group col-md-6">
                         <label>Mobilné telefónne číslo</label>
                         <div class="input-group">
-                            <input type="text" class="form-control<?= $val_classes[$pole]; ?>" value="<?= $val_values[$pole]; ?>" name="<?= $pole; ?>" placeholder="00421 915 123 456">
+                            <input type="text" class="form-control<?= $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="<?= $pole; ?>" placeholder="00421 915 123 456">
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-mobile-alt"></span>
                                 </div>
                             </div>
                             <!-- <small class="d-block w-100 mb-n2 text-muted">Osobné číslo zamestnanca</small> -->
-                            <?= $val_feedback[$pole].PHP_EOL ?>
+                            <?= $v->getMSG($pole) . PHP_EOL ?>
                         </div>
                     </div>                     
                 
@@ -167,13 +159,13 @@ ob_start();  // Začiatok definície hlavného obsahu
                     <div class="form-group col-md-6">
                         <label>Heslo</label>
                         <div class="input-group">
-                            <input type="password" class="form-control<?= $val_classes[$pole]; ?>" value="<?= $val_values[$pole]; ?>" name="<?= $pole; ?>" placeholder="Heslo">
+                            <input type="password" class="form-control<?= $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="<?= $pole; ?>" placeholder="Heslo">
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-lock"></span>
                                 </div>
                             </div>
-                            <?= $val_feedback[$pole].PHP_EOL ?>
+                            <?= $v->getMSG($pole) . PHP_EOL ?>
                         </div>
                     </div>
 
@@ -182,13 +174,13 @@ ob_start();  // Začiatok definície hlavného obsahu
                     <div class="form-group col-md-6">
                         <label>Kontrolné heslo</label>
                         <div class="input-group">
-                            <input type="password" class="form-control<?= $val_classes[$pole]; ?>" value="<?= $val_values[$pole]; ?>" name="<?= $pole; ?>" placeholder="Opakovať heslo">
+                            <input type="password" class="form-control<?= $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="<?= $pole; ?>" placeholder="Opakovať heslo">
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-lock"></span>
                                 </div>
                             </div>
-                            <?= $val_feedback[$pole].PHP_EOL ?>
+                            <?= $v->getMSG($pole) . PHP_EOL ?>
                         </div>
                     </div> 
 
@@ -200,11 +192,11 @@ ob_start();  // Začiatok definície hlavného obsahu
                     <!-- FORM - CheckBox podmienky -->
                     <div class="col-xl-3">
                         <div class="input-group mb-4 icheck-primary">
-                            <input type="checkbox" class="form-check-input<?= $val_classes[$pole]; ?>" value="Súhlasím s podmienkami." id="agreeTerms" name="<?= $pole; ?>" <?php if (!empty($val_values[$pole])) { echo 'checked';} ?> >
+                            <input type="checkbox" class="form-check-input<?= $v->getCLS($pole) ?>" value="Súhlasím s podmienkami." id="agreeTerms" name="<?= $pole; ?>" <?php if (!empty($val_values[$pole])) { echo 'checked';} ?> >
                             <label class="" for="agreeTerms">
                                 Súhlasím s <a href="#">podmienkami</a>
                             </label>
-                            <?= $val_feedback[$pole].PHP_EOL ?>
+                            <?= $v->getMSG($pole) . PHP_EOL ?>
                         </div>
                     </div>
 

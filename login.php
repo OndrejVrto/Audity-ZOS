@@ -3,26 +3,19 @@
     
     $page = new PageClear();
 
+    $v = new Validator();
+
     if (isset($_POST['submit'])) {
 
-        // inicializácia class Validate
-        $validation = new ValidatorLogin($_POST);
-        $validation->odsadenie = 5;  // odsadzuje HTML kod o 5 tabulátorov
-        $result = $validation->validateForm();  // validuje formulár - !! kľúče validovaných polí musia byť v zadefinované v triede
-        $val_values = $validation->validateFormGetValues();   // vracia hodnoty polí pre každý kľúč
-        $val_classes = $validation->validateFormGetClasses();  // vracia triedy:  is-valid / is-invalid pre každý kľúč
-        $val_feedback = $validation->validateFormGetFeedback();  // vracia správy pre každý kľúč
+        // validačné podmienky jednotlivých polí
+        $v->addValidation("login-osobne-cislo","req","Prosím vyplň svoje osobné číslo zamestnanca.");
+        $custom_validator = new ValidatorLogin();
+        $v->AddCustomValidator($custom_validator);
 
         // ak validacia skonci TRUE (1) --> reditect page to Index
-        if ($result == 1) {
+        if ($v->validateForm()) {
             header("Location: /");
             exit();
-        }
-    } else {
-        // inicializácia konštánt formulára v prípade volania metódou GET
-        $mena_vsetkych_poli = array ('login-osobne-cislo', 'login-pasword');
-        foreach ($mena_vsetkych_poli as $key => $value) {
-            $val_values[$value] = $val_classes[$value] = $val_feedback[$value] = '';
         }
     }
 
@@ -45,25 +38,25 @@ ob_start();  // Začiatok definície hlavného obsahu
                 <?php $pole = 'login-osobne-cislo'; echo PHP_EOL; ?>
                 <!-- FORM - osobne cislo -->
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control<?= $val_classes[$pole] ?>" value="<?= $val_values[$pole] ?>" name="login-osobne-cislo" placeholder="Osobné číslo">
+                    <input type="text" class="form-control<?= $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="login-osobne-cislo" placeholder="Osobné číslo">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-id-card"></span>
                         </div>
                     </div>
-                    <?= $val_feedback[$pole].PHP_EOL ?>
+                    <?= $v->getMSG($pole) . PHP_EOL ?>
                 </div>
 
                 <?php $pole = 'login-pasword'; echo PHP_EOL; ?>
                 <!-- FORM - Pasword -->
                 <div class="input-group mb-3">
-                    <input type="password" class="form-control<?= $val_classes[$pole] ?>" value="<?= $val_values[$pole] ?>" name="login-pasword" placeholder="Heslo">
+                    <input type="password" class="form-control<?= $v->getCLS($pole) ?>" value="" name="login-pasword" placeholder="Heslo">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-key"></span>
                         </div>
                     </div>
-                    <?= $val_feedback[$pole].PHP_EOL ?>
+                    <?= $v->getMSG($pole) . PHP_EOL ?>
                 </div>
 
                 <div class="row">

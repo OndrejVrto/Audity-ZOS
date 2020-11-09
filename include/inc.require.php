@@ -1,4 +1,18 @@
 <?php
+    // pri hodnote TRUE zapne časti ktorá slúžia ako pomôcka pri vývoji tejto stránky + zobrazovanie chýb
+    defined("VYVOJ") or define("VYVOJ", TRUE);
+    //defined("VYVOJ") or define("VYVOJ", FALSE);
+
+    if (VYVOJ) {
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL & ~E_NOTICE);
+    } else {
+        ini_set('display_errors', 0);
+        ini_set('display_startup_errors', 0);
+        error_reporting(0);
+    }
+
     // globálne premenné
     $pathInclude = $_SERVER['DOCUMENT_ROOT'] . "/include/";
 
@@ -34,10 +48,6 @@
     defined("TAB5") or define("TAB5", "\t\t\t\t\t");
     defined("TAB6") or define("TAB6", "\t\t\t\t\t\t");
     defined("TAB7") or define("TAB7", "\t\t\t\t\t\t\t");
-
-    // pri hodnote TRUE zapne časti ktorá slúžia ako pomôcka pri vývoji tejtto stránky
-    //defined("VYVOJ") or define("VYVOJ", TRUE);
-    defined("VYVOJ") or define("VYVOJ", FALSE);
 
     // Set Time Zone
 	date_default_timezone_set('Europe/Bratislava');

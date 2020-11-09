@@ -3,58 +3,46 @@
 class ValidatorLogin extends Validator
 {
 
-    public function __construct($post_data)
+    function DoValidate(&$formars, &$error_hash)
     {
-        $this->privat_data = $post_data;
+        $vysledok = true;
         // prebratie pripojenia na databazu z globálnej premennej
-        $this->db =& $GLOBALS['db'];
-    }
-    
-    public function validateForm()
-    {
-        foreach ($this->privat_data as $key => $value) {
+        $db =& $GLOBALS['db'];
+        foreach (array_keys($formars) as $value) {
 
-            $this->addValue($key, $value);
-            
-            switch ($key) {
-                case "login-osobne-cislo":
-                    $this->validateLoginOsobneCislo($key);
+            switch ($value) {
+                
+                case 'login-osobne-cislo': {
+                    $user = $formars['login-osobne-cislo'];
+                    $password = $formars['login-pasword'];
+                    $data = $db->query('SELECT * FROM `42_users` WHERE `uidUsers` = ?', $user )->fetchArray();
+
+                    if ( empty($data) ) {
+                        $error_hash['login-osobne-cislo']="Uživateľ s týmto menom nieje zaregistrovaný.";
+                        $vysledok = false;
+                    } else {
+                        $pwdCheck = password_verify($password, $data['pwdUsers']);
+                        if ($pwdCheck === false) {
+                            $error_hash['login-pasword']="Zadali ste nesprávne heslo pre uživateľa " . $this->PurifiText($user);
+                            $vysledok = false;
+                        }
+                    }
                     break;
-                case "login-pasword":
-                    $this->validateLoginPasword($key);
+                }
+
+                case 'signup-osobne-cislo': {
+                    $user = $formars['signup-osobne-cislo'];
+                    $data = $db->query('SELECT * FROM `42_users` WHERE `uidUsers` = ?', $user )->fetchArray();
+                    if ( ! empty($data) ) {
+                        $error_hash['signup-osobne-cislo']="Uživateľ s týmto osobným číslom už je zaregistrovaný.";
+                        $vysledok = false;
+                    } 
                     break;
+                }
+
+
             }
         }
-        return $this->privat_succes;
+        return $vysledok;
     }
-
-
-    // Validacne funkcie
-
-    private function validateLoginOsobneCislo($name)
-    {
-        $value = $this->privat_data[$name];
-        
-        // TODO : Dorobiť validáciu s databázy
-        if ($this->is_required($value)) {
-            $this->addError($name, 'Poľe nesmie byť prázdne.');
-        } else if (!$this->is_alphanum($value)) {
-            $this->addError($name, 'Osobné číslo môže byť zložené len s číslic a písmen.');
-        } else {
-            $this->addSucces($name, 'Správna hodnota. Super.');
-        }
-    }
-
-    private function validateLoginPasword($name)
-    {
-        $value = trim($this->privat_data[$name]);
-
-        // TODO : Dorobiť validáciu s databázy
-        if ($this->is_required($value)) {
-            $this->addError($name, 'Poľe s heslom nesmie byť prázdne.');
-        } else {
-            $this->addSucces($name, 'Vcelku dobré heslo');
-        } 
-    }
-
 }
