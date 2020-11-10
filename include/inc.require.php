@@ -50,4 +50,19 @@
     defined("TAB7") or define("TAB7", "\t\t\t\t\t\t\t");
 
     // Set Time Zone
-	date_default_timezone_set('Europe/Bratislava');
+    date_default_timezone_set('Europe/Bratislava');
+    
+    // zapnutie session
+    session_start();
+
+    // automaticke odhlásenie po 30 minútach bez obnovenia stránok (30min*60s = 1800 sekúnd)
+    if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 1800)) {
+        // last request was more than 30 minutes ago
+        session_unset();     // unset $_SESSION variable for the run-time 
+        session_destroy();   // destroy session data in storage
+        $odhlasenie = true;
+    }
+    // resetnutie času pre automaticke odhlásenie po 30 minútach pre prihláseného uživateľa
+    if (isset($_SESSION['userId'])) {
+        $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
+    }

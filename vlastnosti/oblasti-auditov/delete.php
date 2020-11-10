@@ -8,8 +8,10 @@
     // vymazanie záznamu z databazy
     // POZOR tento blok kodu musi byt na zaciatku aby ukončil zvyšný skript včas
     if (isset($_POST['submit'])) {
+        $user = $_SESSION['userName'];
         $id = (int)$_POST['submit'];
-
+        
+        $db->query('UPDATE `30_zoznam_oblast_auditu` SET `KtoVykonalZmenu` = ? WHERE `ID30` = ?', $user, $id);
         $db->query('DELETE FROM `30_zoznam_oblast_auditu` WHERE `ID30` = ?', $id);
         
         header("Location: $page->linkZoznam");  

@@ -17,10 +17,12 @@
 
         // ak validacia skonci TRUE --> vlož dáta do databázy
         if ($v->validateForm()) {
+            $user = $_SESSION['userName'];
             $oblast = $_POST['oblast-auditu'];
             $poznamka = $_POST['oblast-auditu-poznamka'];
 
-            $db->query('INSERT INTO `30_zoznam_oblast_auditu` (`OblastAuditovania`, `Poznamka`) VALUES (?,?)', $oblast, $poznamka);
+            $db->query('INSERT INTO `30_zoznam_oblast_auditu` (`OblastAuditovania`, `Poznamka`, `KtoVykonalZmenu`) 
+                        VALUES (?,?,?)', $oblast, $poznamka, $user);
 
             header("Location: $page->linkZoznam");
             exit();

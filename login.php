@@ -14,12 +14,21 @@
 
         // ak validacia skonci TRUE (1) --> reditect page to Index
         if ($v->validateForm()) {
+            session_regenerate_id(); // ochrana pred útokom Session Fixation (tip č. 825 z knihy 1001 tipu a triku pro PHP)
+            
             $user = $_POST['login-osobne-cislo'];
-            $row = $db->query('SELECT * FROM `42_users` WHERE `uidUsers` = ?', $user )->fetchArray();
-            $_SESSION['userId'] = $row['ID42'];
-            $_SESSION['userUid'] = $row['uidUsers'];
+            $row = $db->query('SELECT * FROM `50_sys_users` WHERE `OsobneCislo` = ?', $user )->fetchArray();
+            $userID = $row['ID50'];
+            // logovanie prihlásenia
+            $db->query('INSERT INTO `60_log_prihlasenie` (`ID50_sys_users`, `DatumCas`) VALUES (?, now() )', $userID);
+
+            $_SESSION['userId'] = $userID;
+            $_SESSION['userNameShort'] = (isset($row['Titul']) ? $row['Titul']." " : "" ) . $row['Meno'] . " " . $row['Priezvisko'];
+            $_SESSION['userName'] = "[" . $row['OsobneCislo'] . "] " . $_SESSION['userNameShort'];
+            $_SESSION['Admin'] = $row['JeAdmin'];
+            
             header("Location: /");
-            exit();
+            exit;
         }
     }
 
@@ -82,6 +91,7 @@ ob_start();  // Začiatok definície hlavného obsahu
 
             <p class="mb-1">
                 <a href="/signup" class="btn btn-outline-secondary d-block mt-3">Zaregistrovať nový účet</a>
+                <a href="#" class="d-block text-center mt-2 text-muted">Zabudol som heslo</a>
             </p>
         </div>
 

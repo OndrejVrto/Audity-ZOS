@@ -32,7 +32,6 @@ class Page
 
     function __construct()
     {
-        session_start();
 
         header('Content-Type: text/html; charset=utf-8');
 
@@ -100,7 +99,10 @@ class Page
         
         $this->displayScripts();
         echo $this->skriptySpecial;
-
+        // vypíše upozornenie 
+        if ($GLOBALS['odhlasenie']) {
+            echo '<script>alert("Bohužiaľ ste boli neaktívny viac ako 30 minút." + "\n\n" + "Prihláste sa znovu.");</script>';
+        }
         (VYVOJ) ? $this->VYVOJ() : '';
         echo "\n</body>\n</html>";
     }
@@ -232,7 +234,7 @@ class Page
                 <img src="/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="/user-detail" class="d-block text-warning">Ing. Ondrej VRŤO</a>
+                <a href="/user-detail" class="d-block text-warning"><?= htmlspecialchars($_SESSION['userNameShort']) ?></a>
             </div>
 <?php else: ?>
             <div class="image">
