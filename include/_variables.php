@@ -47,6 +47,8 @@ class Premenne
             "/signup"                               =>    "Signup | Audity ŽOS Zvolen",
             "/vlastnosti/oblasti-auditov/zoznam"    =>    "Zoznam oblastí auditovania | Audity ŽOS Zvolen",
             "/vlastnosti/typ-auditu/zoznam"         =>    "Typ auditu | Audity ŽOS Zvolen",
+            "/sprava/zoznam-pracovnikov-zos"        =>    "Zoznam pracovníkov ŽOS Zvolen | Audity ŽOS Zvolen",
+            
         ),    // "Titulok Stránky"
 
         // Meta značka stránky - Description -> popisuje stránku
@@ -56,7 +58,8 @@ class Premenne
             "/login"                                =>    "Audity ŽOS Zvolen - prihlasovanie uživateľa",
             "/signup"                               =>    "Audity ŽOS Zvolen - vytvorenie nového účtu uživateľa",
             "/vlastnosti/oblasti-auditov/zoznam"    =>    "Audity ŽOS Zvolen - zoznam oblastí auditovania",
-            "/vlastnosti/typ-auditu/zoznam"         =>    "Audity ŽOS Zvolen - zoznam typov auditov a odkaz na referrenčný dokument",            
+            "/vlastnosti/typ-auditu/zoznam"         =>    "Audity ŽOS Zvolen - zoznam typov auditov a odkaz na referrenčný dokument",
+            "/sprava/zoznam-pracovnikov-zos"        =>    "Audity ŽOS Zvolen - aktuálny zoznam zamestnancov z dochádzkového systému",
         ),    // "Popis Stránky"
 
         // Nadpisy prvej kapitoly.
@@ -67,6 +70,7 @@ class Premenne
             "/signup"                               =>    false,
             "/vlastnosti/oblasti-auditov/zoznam"    =>    "Zoznam oblastí auditovania",
             "/vlastnosti/typ-auditu/zoznam"         =>    "Typy auditov",
+            "/sprava/zoznam-pracovnikov-zos"        =>    "Aktuálny zoznam zamestnancov ŽOS Zvolen",
         ),    // "Nadpis prvej kapitoly"
     );
 
@@ -281,11 +285,11 @@ class Premenne
                     "SUBMENU" => false,
                 ),
                 array(
-                    "Link" => false,
-                    "Nazov" => "Zoznam pracovníkov ŽOS",
-                    "Doplnok" => false,
-                    "PopisDoplnku" => false,
-                    "Ikona" => "far fa-circle",
+                    "Link" => "/sprava/zoznam-pracovnikov-zos",
+                    "Nazov" => "Zamestnanci ŽOS",
+                    "Doplnok" => "badge badge-success",
+                    "PopisDoplnku" => "Hotovo",
+                    "Ikona" => "far fa-check-circle text-success",
                     "SUBMENU" => false,
                 ),
             ),

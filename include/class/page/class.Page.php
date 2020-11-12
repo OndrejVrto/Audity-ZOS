@@ -11,6 +11,7 @@ class Page
     public $list = 1;
     public $hlavneMenu;
     public $zobrazitBublinky = true;
+    public $zobrazitTlacitka = true;
     public $stylyArray = [];
     public $stylySpecial = '';
     public $skriptyArray = [];
@@ -88,7 +89,9 @@ class Page
         }
 
         $this->displayContentHeader();
-        
+        if ($this->zobrazitTlacitka) {
+            $this->ContentHeaderZoznamTlacitka();
+        }
         $this->ContentHeaderZoznam();
         echo $this->content;
         $this->ContentFooterZoznam();
@@ -109,6 +112,7 @@ class Page
 
     protected function PredvyplnenieKonstant(){} // pre potreby odvodených tried
     protected function ContentHeaderZoznam(){} // pre potreby odvodených tried
+    protected function ContentHeaderZoznamTlacitka(){} // pre potreby odvodených tried
     protected function ContentFooterZoznam(){} // pre potreby odvodených tried
 
     public function displayBegin()
@@ -653,6 +657,10 @@ class Page
         echo "\n\n". '<hr><footer class="main-footer pt-5"> <h3 class="text-success">Vývoj: VZORY</h3>' ;
             echo '<a href="/_vzor/index.html">audity.zoszv.adminlte/_vzor</a>';
         echo '</footer>' ;
+        
+        echo "\n\n". '<footer class="main-footer"> <h3 class="text-success">Vývoj: php Info</h3>' ;
+            echo '<a href="/phpinfo">PHPinfo()</a>';
+        echo '</footer>' ;  
 
         echo "\n\n". '<footer class="main-footer"> <h3 class="text-warning">Vývoj: $_GET</h3>' ;
             print_r($_GET);
@@ -689,6 +697,7 @@ class Page
             }
             echo '</table> </div>';
         echo "</footer>\n\n";
+
     }
 
 

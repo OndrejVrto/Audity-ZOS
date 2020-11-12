@@ -3,7 +3,7 @@
 class PageZoznam extends Page
 {
 
-    function ContentHeaderZoznam (){
+    function ContentHeaderZoznamTlacitka (){
 
 ?>
     <div class='row justify-content-center pb-3'>
@@ -22,6 +22,12 @@ class PageZoznam extends Page
             </form>
         </div>
     </div>
+<?php
+    }
+
+    function ContentHeaderZoznam (){
+
+?>
 
     <div class="row justify-content-center">
         <div class="<?= $this->bodyClassExtended ?>" style="<?= $this->bodyWidthExtended ?>">
@@ -29,7 +35,7 @@ class PageZoznam extends Page
             <div class='card'>
                 <div class='card-body p-2'>
 
-                    <table class='table table-sm hover compact' id='tabulka'>
+                    <table class='table table-sm hover compact' width="100%" id='tabulka'>
 
 <?php
     }
@@ -74,7 +80,7 @@ class PageZoznam extends Page
         parent::addScripts("AdminLTE App",true);
         parent::addScripts("AdminLTE for demo purposes", false);
         
-        $this->skriptySpecial = $this->ScriptyZoznam();
+        $this->skriptySpecial = $this->ScriptyZoznam() . $this->skriptySpecial;
 
     }
 
