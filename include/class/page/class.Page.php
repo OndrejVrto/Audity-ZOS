@@ -358,10 +358,10 @@ class Page
         <div class="content-header">
             <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-md-6 order-2 order-md-1">
+                <div class="col-md-8 order-2 order-md-1">
                 <h1 class="m-0 text-dark"><?php echo $this->nadpis; ?></h1>
                 </div><!-- /.col -->
-                <div class="col-md-6 order-1 order-md-2">
+                <div class="col-md-4 order-1 order-md-2">
 <?php
     }
 

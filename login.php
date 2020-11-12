@@ -22,7 +22,7 @@
             // logovanie prihlásenia
             $db->query('INSERT INTO `60_log_prihlasenie` (`ID50_sys_users`, `DatumCas`) VALUES (?, now() )', $userID);
 
-            $_SESSION['userId'] = $userID;
+            $_SESSION['userId'] = $row['OsobneCislo'];
             $_SESSION['userNameShort'] = (isset($row['Titul']) ? $row['Titul']." " : "" ) . $row['Meno'] . " " . $row['Priezvisko'];
             $_SESSION['userName'] = "[" . $row['OsobneCislo'] . "] " . $_SESSION['userNameShort'];
             $_SESSION['Admin'] = $row['JeAdmin'];

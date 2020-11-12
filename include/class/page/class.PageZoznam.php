@@ -108,7 +108,7 @@ ob_start();  // Začiatok definície Špeciálnych SKRIPTov pre túto stránku
                 sLengthMenu:     "Zobraz _MENU_ záznamov",
                 sLoadingRecords: "Načítavam...",
                 sProcessing:     "Spracúvam...",
-                sSearch:         "Hľadať:",
+                sSearch:         "Hľadať v tabuľke:",
                 sZeroRecord:    "Nenašli sa žiadne vyhovujúce záznamy",
                 oPaginate: {
                     sFirst:    "Prvá",
