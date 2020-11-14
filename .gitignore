@@ -10,6 +10,8 @@
 !include/*
 !classes
 !classes/*
+!classes/Page/*
+!classes/Validator/*
 !sprava
 !sprava/*
 !vlastnosti
