@@ -1,5 +1,7 @@
 <?php
 
+namespace Page;
+
 class Page
 {
     // Vlastnosti třídy Page
@@ -37,12 +39,12 @@ class Page
         header('Content-Type: text/html; charset=utf-8');
 
         $this->link = $_SERVER['REQUEST_URI'];
-        $this->linkCisty = upravLink($this->link);
+        $this->linkCisty = $this->upravLink($this->link);
         $this->linkZoznam = $this->linkCisty . "zoznam";
 
         $this->list = (isset($_GET['p'])) ? $_GET['p'] : "1" ;;
 
-        $premenne = new Premenne($this->link);
+        $premenne = new \Premenne($this->link);
 
         $this->title = $premenne->titulokStranky;
         $this->nadpis = $premenne->nadpisPrvejSekcie;
@@ -700,5 +702,17 @@ class Page
 
     }
 
+    // funkcia  upravLink  vymaže posledný podadresár z cesty
+    // sample:  $uri = upravLink($_SERVER['REQUEST_URI']);
+    // sample:  /test/prvy/druhy -> /test/prvy
+    private function upravLink($linkCely){
+        $position = strripos($linkCely, "/", 0);  
+        if ($position == true){
+            return substr($linkCely, 0, $position + 1);
+        }
+        else{
+            return $linkCely;
+        }
+    }
 
 }

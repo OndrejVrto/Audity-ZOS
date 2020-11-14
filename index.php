@@ -1,7 +1,7 @@
 <?php
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/include/inc.require.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
     
-    $homepage = new Page();
+    $homepage = new \Page\Page();
 
 ob_start();  // Začiatok definície hlavného obsahu
 ?>

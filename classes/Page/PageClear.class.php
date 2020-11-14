@@ -1,6 +1,8 @@
 <?php
 
-class PageClear extends Page
+namespace Page;
+
+class PageClear extends \Page\Page
 {
     public $link;
     

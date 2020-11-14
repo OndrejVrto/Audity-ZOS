@@ -1,13 +1,18 @@
 <?php
 
-class ValidatorLogin extends Validator
+namespace Validator;
+
+class Login extends \Validator\Validator
 {
 
     function DoValidate(&$formars, &$error_hash)
     {
         $vysledok = true;
+
         // prebratie pripojenia na databazu z globálnej premennej
-        $db =& $GLOBALS['db'];
+        // $db =& $GLOBALS['db'];
+        global $db;
+
         foreach (array_keys($formars) as $value) {
 
             switch ($value) {

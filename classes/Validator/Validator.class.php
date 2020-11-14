@@ -24,6 +24,7 @@ Pre potreby mojej aplikácie upravil, doplnil a preložil: Ondrej Vrťo
 -------------------------------------------------------------------------  
 */
 
+namespace Validator;
 
 /**
  * Carries information about each of the form validations
@@ -271,7 +272,7 @@ class Validator
 
     function test_datatype($input_value, $reg_exp)
     {
-        if (preg_match($reg_exp, $input_value)) {
+        if (!preg_match($reg_exp, trim($input_value))) {
             return false;
         }
         return true;
@@ -441,7 +442,7 @@ class Validator
 
             case 'num':
             case 'numeric': {
-                    $vysledok = $this->test_datatype($input_value, "[^0-9]");
+                    $vysledok = $this->test_datatype($input_value, "/^([0-9]+)$/");
                     if (false == $vysledok) {
                         $default_error_message = sprintf(E_VAL_NUM_CHECK_FAILED, $variable_name);
                     }

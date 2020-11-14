@@ -13,28 +13,16 @@
         error_reporting(0);
     }
 
-    // globálne premenné
-    $pathInclude = $_SERVER['DOCUMENT_ROOT'] . "/include/";
-
     // funkcia na automaticke registrovanie tried
     // prehľadá adresáre uvedené v poli
     spl_autoload_register ( function ($class) {
-        $sources = array(
-            "/class/class.$class.php",
-            "/class/page/class.$class.php", 
-            "/class/validator/class.$class.php",
-        );
-        foreach ($sources as $source) {
-            if (file_exists( $GLOBALS["pathInclude"].$source )) {
-                require_once $GLOBALS["pathInclude"].$source;
-            } 
-        } 
-    });
+        include_once $_SERVER['DOCUMENT_ROOT'] . "/classes/" . str_replace("\\", "/", $class).".class.php";
+    });    
+
+    // globálne premenné
+    $pathInclude = $_SERVER['DOCUMENT_ROOT'] . "/include/";
 
     // zoznam vložených súborov do každej stránky
-
-    // Konštanty stránok
-    require_once $pathInclude . '_variables.php';
     // Vytvorenie triedy "db" na pripojenie do databázy
     require_once $pathInclude . 'inc.dBconnect.php';
     // Globálne funkcie
@@ -48,6 +36,9 @@
     defined("TAB5") or define("TAB5", "\t\t\t\t\t");
     defined("TAB6") or define("TAB6", "\t\t\t\t\t\t");
     defined("TAB7") or define("TAB7", "\t\t\t\t\t\t\t");
+    defined("TAB8") or define("TAB8", "\t\t\t\t\t\t\t\t");
+    defined("TAB9") or define("TAB9", "\t\t\t\t\t\t\t\t\t");
+    defined("TAB10") or define("TAB10", "\t\t\t\t\t\t\t\t\t\t");
 
     // Set Time Zone
     date_default_timezone_set('Europe/Bratislava');

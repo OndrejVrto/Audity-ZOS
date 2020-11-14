@@ -8,12 +8,12 @@
 
 !include
 !include/*
-!include/class
-!include/class/*
-!pages
+!classes
+!classes/*
+!sprava
+!sprava/*
 !vlastnosti
 !vlastnosti/*
-
 
 !.gitignore
 !.htaccess

@@ -1,6 +1,8 @@
 <?php
 
-class ValidatorZoznamy extends Validator
+namespace Validator;
+
+class Zoznam extends \Validator\Validator
 {
 
     function DoValidate(&$formars, &$error_hash)

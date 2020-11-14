@@ -1,7 +1,7 @@
 <?php
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/include/inc.require.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
 
-    $page = new PageZoznamDelete();
+    $page = new \Page\Zoznam\Delete();
     $page->bodyClassExtended = 'col-12 col-sm-10 col-md-9 col-lg-7';
     $page->bodyWidthExtended = 'max-width: 600px;';
 

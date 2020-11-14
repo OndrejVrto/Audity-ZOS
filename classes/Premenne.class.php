@@ -72,7 +72,7 @@ class Premenne
             "/signup"                               =>    false,
             "/user-detail"                          =>    "Detaily o užívateľovi",
             "/vlastnosti/oblasti-auditov/zoznam"    =>    "Zoznam oblastí auditovania",
-            "/vlastnosti/typ-auditu/zoznam"         =>    "Typy auditov",
+            "/vlastnosti/typ-auditu/zoznam"         =>    "Typ auditu",
             "/sprava/zoznam-pracovnikov-zos"        =>    "Aktuálny zoznam zamestnancov ŽOS Zvolen",
         ),    // "Nadpis prvej kapitoly"
     );

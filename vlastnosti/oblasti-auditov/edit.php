@@ -1,18 +1,18 @@
 <?php
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/include/inc.require.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
 
-    $page = new PageZoznamEdit();
+    $page = new \Page\Zoznam\Edit();
     $page->bodyClassExtended = 'col-12 col-sm-10 col-md-9 col-lg-7';
     $page->bodyWidthExtended = 'max-width: 600px;';
 
-    $v = new Validator();
+    $v = new \Validator\Validator();
 
     if (isset($_POST['submit'])) {
 
         // validačné podmienky jednotlivých polí
         $v->addValidation("oblast-auditu","minlen=3","Trochu krátky názov. Použi aspoň 3 znaky.");
         $v->addValidation("oblast-auditu","req","Prosím vyplň toto pole.");
-        $custom_validator = new ValidatorZoznamy();
+        $custom_validator = new \Validator\Zoznam();
         $v->AddCustomValidator($custom_validator);
 
         $id = (int)$_POST['submit'];

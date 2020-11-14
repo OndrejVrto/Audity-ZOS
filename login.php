@@ -1,15 +1,15 @@
 <?php
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/include/inc.require.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
     
-    $page = new PageClear();
+    $page = new \Page\PageClear();
 
-    $v = new Validator();
+    $v = new \Validator\Validator();
 
     if (isset($_POST['submit'])) {
 
         // validačné podmienky jednotlivých polí
         $v->addValidation("login-osobne-cislo","req","Prosím vyplň svoje osobné číslo zamestnanca.");
-        $custom_validator = new ValidatorLogin();
+        $custom_validator = new \Validator\Login();
         $v->AddCustomValidator($custom_validator);
 
         // ak validacia skonci TRUE (1) --> reditect page to Index
