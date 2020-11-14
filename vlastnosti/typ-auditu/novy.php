@@ -14,9 +14,11 @@
         $v->addValidation("typ-auditu--norma","req","Nejaký názov je nutné uviesť");
         $v->addValidation("typ-auditu--oblast","req","Prosím vyber niektorú hodnotu so zoznamu.");
 
-        $v->addValidation("typ-auditu--rok","num","Musí byť uvedené 4-miestne číslo v rozsahu 1900-2100");
-        
-        
+
+        $v->addValidation("typ-auditu--rok","lessthan=2200","Rok menší ako 2200");
+        $v->addValidation("typ-auditu--rok","greaterthan=1900","Rok väčší ako 1900");
+        $v->addValidation("typ-auditu--rok","regexp=/^([0-9]{4}+)$/","Musí byť uvedené 4 ciferné číslo");
+
         // $custom_validator = new \Validator\Zoznam();
         // $v->AddCustomValidator($custom_validator);
 
@@ -139,7 +141,11 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
                                 </div>
                             </div>
 
-                            <?php $pole = 'typ-auditu--farba'; echo PHP_EOL; ?>
+                            <?php $pole = 'typ-auditu--farba'; 
+                                // konvertuje farbu v hex zápise do RGB
+                                list($r, $g, $b) = sscanf($v->getVAL($pole), "#%02x%02x%02x");
+                                echo PHP_EOL;
+                            ?>
                             <!-- FORM - Typ auditu - farba -->
                             <div class="col-xl-3">
                                 <div class="form-group">
@@ -147,7 +153,7 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
                                     <div class="input-group my-colorpicker2">
                                         <input type="text" class="form-control<?=  $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="<?= $pole ?>">
                                         <div class="input-group-append">
-                                            <span class="input-group-text"><i class="fas fa-square"></i></span>
+                                            <span class="input-group-text"><i class="fas fa-square" style="color: rgb(<?= $r ?>, <?= $g ?>, <?= $b ?>);"></i></span>
                                         </div>
                                         <?= $v->getMSG($pole) . PHP_EOL ?>                                        
                                     </div>
