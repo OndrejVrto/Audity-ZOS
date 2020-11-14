@@ -10,7 +10,22 @@ class Delete extends \Page\Page
 
     function __construct()
     {
+
+        if ( !isset($_SESSION['Admin']) && !$_SESSION['Admin'] == 1 ){
+            // ak je uživateľ neprihlásený, alebo nieje v roli admin ukončí nahrávanie triedy a tým zobrazí prázdnu stránku
+            header('HTTP/1.0 401 Unauthorized');
+            header("Location: /errorpages/401.php");
+            exit();
+        }
+
         parent::__construct();
+        
+        if ( !isset($_POST['delete'])) {
+            if ( !isset($_POST['submit'])) {
+                header("Location: $this->linkZoznam");
+                exit;                
+            }
+        }
 
         $premenne = new \Premenne($this->linkZoznam);
 

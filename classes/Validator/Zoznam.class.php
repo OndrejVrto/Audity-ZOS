@@ -29,6 +29,22 @@ class Zoznam extends \Validator\Validator
                     }
                     break;
                 }
+                case 'typ-auditu--skratka': {
+
+                    $valueNEW = $formars['typ-auditu--skratka'];
+                    $valueOLD = $formars['valueOld'];
+            
+                    // kontrola či záznam už existuje v tabuľke. Ak áno, nedá sa vytvoriť.
+                    $data = $db->query('SELECT COUNT(*) AS Pocet FROM `31_zoznam_typ_auditu` WHERE `Skratka`= ? AND  `Skratka` <> ?', $valueNEW, $valueOLD )->fetchArray();
+            
+                    $pocet = (int)$data['Pocet'];
+                    
+                    if ($pocet > 0) {
+                        $error_hash['typ-auditu--skratka']="Hodnota sa už v zozname nachadza.";
+                        $vysledok = false;
+                    }
+                    break;
+                }
 
 /*                 case 'oblast-auditu-poznamka': {
 

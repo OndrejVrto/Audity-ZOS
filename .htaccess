@@ -1,8 +1,11 @@
 # stranka s chybovym hlasenim pre chybu 404 - not found
-ErrorDocument 404 /404.php
+ErrorDocument 404 /errorpages/404.php
+
+# stranka neautorizovaný vstup
+ErrorDocument 401 /errorpages/401.php
 
 # stranka s chybovym hlasenim pre chybu 500 - server error
-ErrorDocument 500 /500.php
+ErrorDocument 500 /errorpages/500.php
 
 # pravidlá presmerovania pre chybovku
 RewriteRule ^chyba/ 404.php [QSA,L]

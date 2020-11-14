@@ -9,6 +9,11 @@ class Detail extends \Page\Page
     {
         parent::__construct();
 
+        if ( ! isset($_POST['detail']) ) {
+            header("Location: $this->linkZoznam");
+            exit;
+        }
+
         $premenne = new \Premenne($this->linkZoznam);
 
         $this->title = $premenne->titulokStranky;
@@ -46,7 +51,7 @@ class Detail extends \Page\Page
             </form>
 
             <div class="row justify-content-center">
-                <a href="<?= $this->linkZoznam ?>" name="vzad" class="btn btn-secondary mx-1">Späť</a>
+                <a href="<?= $this->linkZoznam ?>" name="vzad" class="btn btn-warning mx-1">Späť</a>
             </div>
 
         </div>

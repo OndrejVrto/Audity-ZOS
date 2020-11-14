@@ -10,29 +10,44 @@
     if (isset($_POST['submit'])) {
         
         // validačné podmienky jednotlivých polí
-        // $v->addValidation("oblast-auditu","minlen=3","Trochu krátky názov. Použi aspoň 3 znaky.");
-        $v->addValidation("typ-auditu--norma","req","Nejaký názov je nutné uviesť");
+        $v->addValidation("typ-auditu--nazov","minlen=5","Trochu krátky názov. Použi aspoň 5 znakov.");
+        $v->addValidation("typ-auditu--nazov","req","Nejaký názov je nutné uviesť.");
+
+        $v->addValidation("typ-auditu--rok","lessthan=2200","Rok menší ako 2200.");
+        $v->addValidation("typ-auditu--rok","greaterthan=1900","Rok väčší ako 1900.");
+        $v->addValidation("typ-auditu--rok","regexp=/^([0-9]{4}+)$/","Musí byť uvedené 4 ciferné číslo.");
+
+        $v->addValidation("typ-auditu--skratka","regexp=/^[0-9a-zA-Z]{1,12}$/","Maximálne 12 znakov. Len písmená bez diakritiky a číslice.");
+        $v->addValidation("typ-auditu--skratka","req","Skratka sa používa často. Niečo krátke vymysli.");
+
         $v->addValidation("typ-auditu--oblast","req","Prosím vyber niektorú hodnotu so zoznamu.");
 
-
-        $v->addValidation("typ-auditu--rok","lessthan=2200","Rok menší ako 2200");
-        $v->addValidation("typ-auditu--rok","greaterthan=1900","Rok väčší ako 1900");
-        $v->addValidation("typ-auditu--rok","regexp=/^([0-9]{4}+)$/","Musí byť uvedené 4 ciferné číslo");
-
-        // $custom_validator = new \Validator\Zoznam();
-        // $v->AddCustomValidator($custom_validator);
+        $custom_validator = new \Validator\Zoznam();
+        $v->AddCustomValidator($custom_validator);
 
         // ak validacia skonci TRUE --> vlož dáta do databázy
         if ($v->validateForm()) {
-            // $user = $_SESSION['userName'];
-            // $oblast = $_POST['oblast-auditu'];
-            // $poznamka = $_POST['oblast-auditu-poznamka'];
+            $user = $_SESSION['userName'];
+            
+            $oblast     = $_POST['typ-auditu--oblast'];
+            $nazov      = $_POST['typ-auditu--nazov'];
+            $rok        = $_POST['typ-auditu--rok'];
+            $skratka    = $_POST['typ-auditu--skratka'];
+            $farba      = $_POST['typ-auditu--farba'];
+            $referencny = $_POST['typ-auditu--ReferencnyDokument'];
+            if ($_POST['typ-auditu--checkbox']) { $checkbox = 1; } else { $checkbox = 0; } ;
+            $poznamka   = $_POST['typ-auditu--poznamka'];
+            //print_r($_POST);
+            $db->query('INSERT INTO `31_zoznam_typ_auditu` 
+                        (`ID30_zoznam_oblast_auditu`, `Nazov_Norma`, `RokVydaniaNormy`,
+                        `Skratka`, `Farba`, `ReferencnyDokument`,
+                        `PovinnostMatPlatny`, `Poznamka`, `KtoVykonalZmenu`)
+                        VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)', 
+                        $oblast, $nazov, $rok,
+                        $skratka, $farba, $referencny,
+                        $checkbox, $poznamka, $user);
 
-            // $db->query('INSERT INTO `30_zoznam_oblast_auditu` (`OblastAuditovania`, `Poznamka`, `KtoVykonalZmenu`) 
-            //             VALUES (?,?,?)', $oblast, $poznamka, $user);
-
-            //header("Location: $page->linkZoznam");
-            print_r($_POST);
+            header("Location: $page->linkZoznam");
             exit();
         }
     }
@@ -45,7 +60,7 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 
                         <div class="row">
 
-                            <?php $pole = 'typ-auditu--norma'; echo PHP_EOL; ?>
+                            <?php $pole = 'typ-auditu--nazov'; echo PHP_EOL; ?>
                             <!-- FORM - Typ auditu - názov typu auditu alebo názov normy -->
                             <div class="col-xl-6">
                                 <div class="form-group ">
@@ -54,7 +69,7 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
                                         <input type="text" class="form-control<?=  $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="<?= $pole ?>">
                                         <div class="input-group-append">
                                             <div class="input-group-text">
-                                                <span class="fas fa-id-card"></span>
+                                                <span class="fas fa-book"></span>
                                             </div>
                                         </div>
                                         <?= $v->getMSG($pole) . PHP_EOL ?>
@@ -71,7 +86,7 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
                                         <input type="text" class="form-control<?=  $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="<?= $pole ?>">
                                         <div class="input-group-append">
                                             <div class="input-group-text">
-                                                <span class="fas fa-id-card"></span>
+                                                <span class="fas fa-birthday-cake"></span>
                                             </div>
                                         </div>
                                         <?= $v->getMSG($pole) . PHP_EOL ?>
@@ -88,7 +103,7 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
                                         <input type="text" class="form-control<?=  $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="<?= $pole ?>">
                                         <div class="input-group-append">
                                             <div class="input-group-text">
-                                                <span class="fas fa-id-card"></span>
+                                                <span class="fas fa-sort-amount-down"></span>
                                             </div>
                                         </div>
                                         <?= $v->getMSG($pole) . PHP_EOL ?>
@@ -105,7 +120,7 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
                             <div class="col-xl-4">
                                 <div class="form-group ">                            
                                     <label for="<?= $pole ?>">Typ auditu</label>
-                                    <select class="form-control<?=  $v->getCLS($pole) ?>" name="<?= $pole ?>" required>
+                                    <select class="form-control<?=  $v->getCLS($pole) ?>" name="<?= $pole ?>" style="background-position: right 2rem center;" required>
                                         <option selected disabled></option><?php
 
                                         $data = $db->query('SELECT ID30, OblastAuditovania FROM `30_zoznam_oblast_auditu` ORDER BY LOWER(`OblastAuditovania`) ASC')->fetchAll();
@@ -133,7 +148,7 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
                                         <input type="text" class="form-control<?=  $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="<?= $pole ?>">
                                         <div class="input-group-append">
                                             <div class="input-group-text">
-                                                <span class="fas fa-id-card"></span>
+                                                <span class="fas fa-file-prescription"></span>
                                             </div>
                                         </div>
                                         <?= $v->getMSG($pole) . PHP_EOL ?>
@@ -153,7 +168,7 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
                                     <div class="input-group my-colorpicker2">
                                         <input type="text" class="form-control<?=  $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="<?= $pole ?>">
                                         <div class="input-group-append">
-                                            <span class="input-group-text"><i class="fas fa-square" style="color: rgb(<?= $r ?>, <?= $g ?>, <?= $b ?>);"></i></span>
+                                            <span class="input-group-text"><i class="fas fa-square-full" style="color: rgb(<?= $r ?>, <?= $g ?>, <?= $b ?>);"></i></span>
                                         </div>
                                         <?= $v->getMSG($pole) . PHP_EOL ?>                                        
                                     </div>
@@ -168,7 +183,7 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
                             <!-- FORM - Typ auditu - Checkbox  -->
                             <div class="col-xl-12">
                                 <div class="icheck-primary">
-                                    <input type="checkbox" id="<?= $pole ?>">
+                                    <input type="checkbox" id="<?= $pole ?>" name="<?= $pole ?>" <?php if ($v->getVAL($pole)){ echo ' checked';} ?>>
                                     <label for="<?= $pole ?>">
                                         Audit musí byť udržiavaný !
                                     </label>

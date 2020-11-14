@@ -93,7 +93,7 @@ class Validator
         if (!array_key_exists($MenoPola, $this->form_variables)) {
             return null;
         } else {
-            return htmlspecialchars($this->form_variables[$MenoPola], ENT_HTML5, 'UTF-8');
+            return htmlspecialchars(trim($this->form_variables[$MenoPola]), ENT_HTML5, 'UTF-8');
         };
     }
     

@@ -41,7 +41,8 @@ class Premenne
 
         // Meta značka stránky - TITLE -> Zobrazuje sa ako názov okna.
         "Titulok Stránky" => array(
-            "/404"                                  =>    "Chybová stránka 404 | Audity ŽOS Zvolen",
+            "/errorpages/404"                       =>    "Chybová stránka 404 | Audity ŽOS Zvolen",
+            "/errorpages/401"                       =>    "Chybová stránka 401 | Audity ŽOS Zvolen",
             "/"                                     =>    "Home | Audity ŽOS Zvolen",
             "/login"                                =>    "Login | Audity ŽOS Zvolen",
             "/signup"                               =>    "Signup | Audity ŽOS Zvolen",
@@ -54,7 +55,8 @@ class Premenne
 
         // Meta značka stránky - Description -> popisuje stránku
         "Popis Stránky" => array(
-            "/404"                                  =>    "Audity ŽOS Zvolen - chyba 404 - odkaz neexistuje",
+            "/errorpages/404"                       =>    "Audity ŽOS Zvolen - chyba 404 - odkaz na stránku neexistuje",
+            "/errorpages/401"                       =>    "Audity ŽOS Zvolen - Chyba 401 - Neautorizovaný vstup",            
             "/"                                     =>    "Audity ŽOS Zvolen - hlavná stránka",
             "/login"                                =>    "Audity ŽOS Zvolen - prihlasovanie uživateľa",
             "/user-detail"                          =>    "Audity ŽOS Zvolen - detialy o prihlásenom užívateľovi",
@@ -66,7 +68,8 @@ class Premenne
 
         // Nadpisy prvej kapitoly.
         "Nadpis" => array(
-            "/404"                                  =>    "Chybová stránka 404",
+            "/errorpages/404"                       =>    "Chybová stránka 404",
+            "/errorpages/401"                       =>    "Chybová stránka 401",
             "/"                                     =>    "Predľad všetkých auditov",
             "/login"                                =>    false,
             "/signup"                               =>    false,

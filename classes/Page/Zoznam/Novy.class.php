@@ -7,6 +7,14 @@ class Novy extends \Page\Page
 
     function __construct()
     {
+
+        if ( !isset($_SESSION['Admin']) && !$_SESSION['Admin'] == 1 ){
+            // ak je uživateľ neprihlásený, alebo nieje v roli admin ukončí nahrávanie triedy a tým zobrazí prázdnu stránku
+            header('HTTP/1.0 401 Unauthorized');
+            header("Location: /errorpages/401.php");
+            exit();
+        }
+        
         parent::__construct();
 
         $premenne = new \Premenne($this->linkZoznam);
@@ -45,7 +53,7 @@ class Novy extends \Page\Page
 
                 <div class="row justify-content-center">
                     <a href="<?= $this->linkZoznam ?>" name="vzad" class="btn btn-secondary mx-1">Späť</a>
-                    <button type="submit" name="submit" class="btn btn-outline-warning mx-1">Uložiť</button>
+                    <button type="submit" name="submit" class="btn btn-outline-primary mx-1">Uložiť</button>
                 </div>
 
             </form>

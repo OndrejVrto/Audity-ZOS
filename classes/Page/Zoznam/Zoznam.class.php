@@ -5,23 +5,30 @@ namespace Page\Zoznam;
 class Zoznam extends \Page\Page
 {
 
+    public $pagination = false;
+    public $info = false;
+
     function ContentHeaderZoznamTlacitka (){
 
 ?>
     <div class='row justify-content-center pb-3'>
         <div id="UpravaDat" class='form-inline'>
+<?php if ( isset($_SESSION['Admin']) && $_SESSION['Admin'] == 1 ){ ?>
             <form action="<?= $this->linkCisty ?>novy" method="post">
-                <button type="submit" name="novy" ID='novy-zaznam' class="btn btn-warning">Pridať položku</button>
+                <button type="submit" name="novy" ID='novy-zaznam' class="btn btn-primary">Pridať položku</button>
             </form>
+<?php } ?>
             <form action="<?= $this->linkCisty ?>detail" method="post" class="mx-1">
-                <button type="submit" name="detail" ID='button-detail' value="" class="btn btn-secondary" disabled>Detaily</button>
+                <button type="submit" name="detail" ID='button-detail' value="" class="btn btn-warning" disabled>Detaily</button>
             </form>
+<?php if ( isset($_SESSION['Admin']) && $_SESSION['Admin'] == 1 ){ ?>
             <form action="<?= $this->linkCisty ?>edit" method="post" class="mr-1">
                 <button type="submit" name="edit" ID='button-edit' value="" class="btn btn-success" disabled>Editovať</button>
             </form>
             <form action="<?= $this->linkCisty ?>delete" method="post">
                 <button type="submit" name="delete" ID='button-delete' value="" class="btn btn-danger" disabled>Zmazať</button>
             </form>
+<?php } ?>
         </div>
     </div>
 <?php
@@ -98,8 +105,8 @@ ob_start();  // Začiatok definície Špeciálnych SKRIPTov pre túto stránku
         var table = $('#tabulka').DataTable({
             responsive: true,
             select: 'single',
-            paging: false,
-            info: false,
+            paging: <?php if ($this->pagination) { echo 'true'; } else { echo 'false'; } ?>,
+            info: <?php if ($this->info) { echo 'true'; } else { echo 'false'; } ?>,
             language: {
                 sEmptyTable:     "Nie sú k dispozícii žiadne dáta",
                 sInfo:           "Záznamy _START_ až _END_ z celkom _TOTAL_",
@@ -111,12 +118,12 @@ ob_start();  // Začiatok definície Špeciálnych SKRIPTov pre túto stránku
                 sLoadingRecords: "Načítavam...",
                 sProcessing:     "Spracúvam...",
                 sSearch:         "Hľadať v tabuľke:",
-                sZeroRecord:    "Nenašli sa žiadne vyhovujúce záznamy",
+                sZeroRecord:     "Nenašli sa žiadne vyhovujúce záznamy",
                 oPaginate: {
-                    sFirst:    "Prvá",
-                    sLast:     "Posledná",
-                    sNext:     "Nasledujúca",
-                    sPrevious: "Predchádzajúca"
+                    sFirst:      "Prvá",
+                    sLast:       "Posledná",
+                    sNext:       "Nasledujúca",
+                    sPrevious:   "Predchádzajúca"
                 },
                 oAria: {
                     sSortAscending:  ": aktivujte na zoradenie stĺpca vzostupne",
