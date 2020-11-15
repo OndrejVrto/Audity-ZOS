@@ -7,18 +7,16 @@
 
     $id = (int)$_POST['detail'];
 
-    $data = $db->query('SELECT * FROM `31_zoznam_typ_auditu` WHERE ID31 = ?', $id)->fetchArray();
+    $data = $db->query('SELECT * FROM `31_zoznam_typ_auditu`, `30_zoznam_oblast_auditu` WHERE ID30_zoznam_oblast_auditu = ID30 AND ID31 = ?', $id)->fetchArray();
     
     $nazov      = htmlspecialchars($data['Nazov_Norma']);
+    $oblast     = htmlspecialchars($data['OblastAuditovania']);
     $rok        = htmlspecialchars($data['RokVydaniaNormy']);
     $skratka    = htmlspecialchars($data['Skratka']);
     $farba      = htmlspecialchars($data['Farba']);
     $referencny = htmlspecialchars($data['ReferencnyDokument']);
     $checkbox   = htmlspecialchars($data['PovinnostMatPlatny']); 
     $poznamka   = htmlspecialchars($data['Poznamka']);
-
-    $dataOblast = $db->query('SELECT OblastAuditovania FROM `30_zoznam_oblast_auditu` WHERE ID30 = ?', $data['ID30_zoznam_oblast_auditu'])->fetchArray();
-    $oblast     = htmlspecialchars($dataOblast['OblastAuditovania']);
 
 ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 ?>

@@ -6,8 +6,8 @@
     $page->bodyWidthExtended = 'max-width: 600px;';
 
     // vyberovy dotaz na data
-    $data = $db->query('SELECT * FROM 30_zoznam_oblast_auditu ORDER BY LOWER(OblastAuditovania) ASC')->fetchAll();
-
+    //$data = $db->query('SELECT * FROM 30_zoznam_oblast_auditu ORDER BY LOWER(OblastAuditovania) ASC')->fetchAll();  // zotriedene vysledky
+    $data = $db->query('SELECT * FROM 30_zoznam_oblast_auditu')->fetchAll();
 
 ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 ?>

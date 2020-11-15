@@ -16,6 +16,11 @@ class Novy extends \Page\Page
         }
         
         parent::__construct();
+        
+        if ( ! isset($_POST['novy']) ) {
+            header("Location: $this->linkZoznam");
+            exit;
+        }
 
         $premenne = new \Premenne($this->linkZoznam);
 

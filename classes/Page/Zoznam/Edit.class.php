@@ -44,7 +44,7 @@ class Edit extends \Page\Page
                 <div class="card" >
 
                     <div class="card-header">
-                        Vytvorenie novej položky
+                        Editácia položky
                     </div>
 
                     <div class="card-body register-card-body">

@@ -3,10 +3,10 @@
 
     $page = new \Page\Zoznam\Zoznam();
     $page->bodyClassExtended = 'col-12 col-sm-10 col-md-9 col-lg-7';
-    $page->bodyWidthExtended = 'max-width: 1100px;';
+    $page->bodyWidthExtended = 'max-width: 900px;';
 
     // vyberovy dotaz na data
-    $data = $db->query('SELECT * FROM `31_zoznam_typ_auditu`, `30_zoznam_oblast_auditu` WHERE ID30_zoznam_oblast_auditu = ID30 ORDER BY LOWER(`Nazov_Norma`) ASC')->fetchAll();
+    $data = $db->query('SELECT * FROM `31_zoznam_typ_auditu`, `30_zoznam_oblast_auditu` WHERE ID30_zoznam_oblast_auditu = ID30')->fetchAll();
 
 
 ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
@@ -47,7 +47,7 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
                                 <td class="pl-3"><?= $rok ?></td>
                                 <td class="pl-3"><?= $skratka ?></td>
                                 <td class="pl-3"><?= $oblast ?></td>
-                                <td class="pl-3"><?= $farba ?><i class="fas fa-square-full ml-3" style="color: rgb(<?= $r ?>, <?= $g ?>, <?= $b ?>);"></i></td>
+                                <td class="pl-3"><i class="fas fa-square-full mr-3" style="color: rgb(<?= $r ?>, <?= $g ?>, <?= $b ?>);"></i><?= $farba ?></td>
                             </tr>
 <?php
         $poradie += 1;

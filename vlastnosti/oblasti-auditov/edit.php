@@ -19,10 +19,13 @@
 
         // ak validacia skonci TRUE (1) --> zktualizuj dáta v databáze
         if ($v->validateForm()) {
+            $user = $_SESSION['userName'];
             $oblast = $_POST['oblast-auditu'];
             $poznamka = $_POST['oblast-auditu-poznamka'];
 
-            $db->query('UPDATE `30_zoznam_oblast_auditu` SET `OblastAuditovania` = ?, `Poznamka` = ? WHERE `ID30` = ?', $oblast, $poznamka, $id);
+            $db->query('UPDATE `30_zoznam_oblast_auditu` 
+                        SET `OblastAuditovania` = ?, `Poznamka` = ? , `KtoVykonalZmenu` = ? 
+                        WHERE `ID30` = ?', $oblast, $poznamka, $user, $id);
 
             header("Location: $page->linkZoznam");
             exit();
@@ -53,6 +56,9 @@
 
 ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 ?>
+                        <div class="row mb-3">
+                            <?= ($pocet > 0) ? '<p class="w-100 text-center text-danger h5">Niektoré polia položky nie je možné editovať,<br> pretože sa položka používa v prepojených tabuľkách.</p>'.PHP_EOL : '' ?>  
+                        </div>
 
                         <?php $pole = 'valueOld'; echo PHP_EOL; ?>
                         <!-- FORM - Oblasť - pôvodná hodnota - HIDDEN -->
@@ -69,7 +75,6 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
                                         <span class="fas fa-id-card"></span>
                                     </div>
                                 </div>
-                                <?= ($pocet > 0) ? '<small class="d-block w-100 mb-n2 text-muted">Názov nieje možné editovať, pretože sa už používa v iných tabuľkách.</small>'.PHP_EOL : '' ?>
                                 <?= $v->getMSG($pole) . PHP_EOL ?>
                             </div>
                         </div>
