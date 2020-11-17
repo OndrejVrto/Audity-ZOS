@@ -652,7 +652,9 @@ class Page
         'PHP_AUTH_PW',
         'AUTH_TYPE',
         'PATH_INFO',
-        'ORIG_PATH_INFO') ;
+        'ORIG_PATH_INFO',
+        'HTTP_X_FORWARDED_FOR',
+        'HTTP_CLIENT_IP') ;
         
         echo "\n\n". '<!--  LEN Pre potreby vývoja tejto stránky. Po vývoji ZMAZať !!!!!!!!!  -->' ;
 

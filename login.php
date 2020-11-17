@@ -19,8 +19,17 @@
             $user = $_POST['login-osobne-cislo'];
             $row = $db->query('SELECT * FROM `50_sys_users` WHERE `OsobneCislo` = ?', $user )->fetchArray();
             $userID = $row['ID50'];
+
+            if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+                $ip = $_SERVER['HTTP_CLIENT_IP'];
+            } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+            } else {
+                $ip = $_SERVER['REMOTE_ADDR'];
+            }
+
             // logovanie prihlásenia
-            $db->query('INSERT INTO `60_log_prihlasenie` (`ID50_sys_users`, `DatumCas`) VALUES (?, now() )', $userID);
+            $db->query('INSERT INTO `60_log_prihlasenie` (`ID50_sys_users`, `DatumCas`, `IP`) VALUES (?, now(), ? )', $userID, $ip);
 
             $_SESSION['userId'] = $row['OsobneCislo'];
             $_SESSION['userNameShort'] = (isset($row['Titul']) ? $row['Titul']." " : "" ) . $row['Meno'] . " " . $row['Priezvisko'];
