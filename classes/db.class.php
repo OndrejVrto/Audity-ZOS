@@ -1,5 +1,5 @@
 <?php
-
+// https://codeshack.io/super-fast-php-mysql-database-class/
 class db
 {
 
