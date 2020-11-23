@@ -2,7 +2,7 @@
     require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
     
     $page = new \Page\PageClear();
-
+    
     $v = new \Validator\Validator();
 
     if (isset($_POST['submit'])) {
@@ -14,12 +14,21 @@
 
         // ak validacia skonci TRUE (1) --> reditect page to Index
         if ($v->validateForm()) {
-            session_regenerate_id(); // ochrana pred útokom Session Fixation (tip č. 825 z knihy 1001 tipu a triku pro PHP)
             
             $user = $_POST['login-osobne-cislo'];
             $row = $db->query('SELECT * FROM `50_sys_users` WHERE `OsobneCislo` = ?', $user )->fetchArray();
             $userID = $row['ID50'];
+            $_SESSION['LoginUser'] = $user;
 
+            // konto nieje aktivované - presmeruje sa na stránku aktivácie
+            if (is_null($row['Datum_Inicializacie_Konta'])) {
+                header("Location: /signup");
+                exit;
+            }
+
+            // konto je aktivované - pokračuj v prihlásení
+            session_regenerate_id(); // ochrana pred útokom Session Fixation (tip č. 825 z knihy 1001 tipu a triku pro PHP)
+            
             if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
                 $ip = $_SERVER['HTTP_CLIENT_IP'];
             } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
@@ -28,14 +37,25 @@
                 $ip = $_SERVER['REMOTE_ADDR'];
             }
 
+            $prehliadac = $_SERVER['HTTP_USER_AGENT'];
+
             // logovanie prihlásenia
-            $db->query('INSERT INTO `60_log_prihlasenie` (`ID50_sys_users`, `DatumCas`, `IP`) VALUES (?, now(), ? )', $userID, $ip);
+            $db->query('INSERT INTO `60_log_prihlasenie` (`ID50_sys_users`, `DatumCas`, `IP`, `Prehliadac`) VALUES (?, now(), ?, ? )', $userID, $ip, $prehliadac);
 
             $_SESSION['userId'] = $row['OsobneCislo'];
-            $_SESSION['userNameShort'] = (isset($row['Titul']) ? $row['Titul']." " : "" ) . $row['Meno'] . " " . $row['Priezvisko'];
+            $_SESSION['userNameShort'] = (isset($row['Titul_OLD']) ? $row['Titul_OLD']." " : "" ) . $row['Meno_OLD'] . " " . $row['Priezvisko_OLD'];
             $_SESSION['userName'] = "[" . $row['OsobneCislo'] . "] " . $_SESSION['userNameShort'];
-            $_SESSION['Admin'] = $row['JeAdmin'];
-            
+            $_SESSION['RolaREAD'] = $row['RolaREAD'];
+            $_SESSION['RolaEDIT'] = $row['RolaEDIT'];
+            $_SESSION['RolaADMIN'] = $row['RolaADMIN'];
+
+
+            // konto nemá prideleného avatara - presmeruje sa na stránku avatar
+            if ( $row['Avatar'] === 0 ) {
+                header("Location: /avatar");
+                exit;
+            }
+
             header("Location: /");
             exit;
         }
@@ -81,26 +101,12 @@ ob_start();  // Začiatok definície hlavného obsahu
                     <?= $v->getMSG($pole) . PHP_EOL ?>
                 </div>
 
-                <div class="row">
-                    <div class="col-7">
-                        <div class="icheck-primary">
-                            <input type="checkbox" id="remember">
-                            <label for="remember">
-                                Zapamätaj si ma
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="col-5">
-                        <button type="submit" name="submit" class="btn btn-block bg-gradient-primary btn-lg">Prihlásiť</button>
-                    </div>
-                </div>
+                <button type="submit" name="submit" class="btn btn-block bg-gradient-warning btn-lg">Prihlásiť</button>
 
             </form>
 
             <p class="mb-1">
-                <a href="/signup" class="btn btn-outline-secondary d-block mt-3">Zaregistrovať nový účet</a>
-                <a href="#" class="d-block text-center mt-2 text-muted">Zabudol som heslo</a>
+                <a href="/password-reset" class="d-block text-center mt-2 text-muted">Obnoviť heslo</a>
             </p>
         </div>
 

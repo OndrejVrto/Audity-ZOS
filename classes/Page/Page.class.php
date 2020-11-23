@@ -4,6 +4,7 @@ namespace Page;
 
 class Page
 {
+
     // Vlastnosti třídy Page
     public $content;
     public $nadpis;
@@ -188,6 +189,9 @@ class Page
                 <a href="/" class="nav-link">Domov</a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
+                <a href="/avatar" class="nav-link">Avatar</a>
+            </li>
+            <li class="nav-item d-none d-sm-inline-block">
                 <a href="#" class="nav-link">Kontakt</a>
             </li>
         </ul>
@@ -235,9 +239,28 @@ class Page
     public function displayLogin()
     {
 ?>
-<?php if (isset($_SESSION['userId'])): ?>
+<?php if (isset($_SESSION['userId'])): 
+
+    // prebratie pripojenia na databazu z globálnej premennej
+    global $db;
+    
+    $row = $db->query('SELECT * FROM `50_sys_users` WHERE `OsobneCislo` = ?', $_SESSION['userId'])->fetchArray();
+            
+    // vytvorenie nazvu súboru
+    $filenameAvatar = "[".$row['OsobneCislo']."] ".$row['Meno_OLD']." ".$row['Priezvisko_OLD'];
+    // vyčistenie názvu súboru od diakritiky
+    setlocale(LC_ALL, 'sk_SK.UTF8');
+    $filenameAvatar = iconv("UTF-8", "ASCII//TRANSLIT", $filenameAvatar);
+    $filenameAvatar = strtolower(str_replace("'", "", $filenameAvatar));
+    // uloží vygenerovaný súbor do pracovného adresára
+    $suborAvatara = '/dist/avatar/' . $filenameAvatar . '.svg';
+
+    if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $suborAvatara)) {
+        $suborAvatara = "/dist/img/user-anonymous.png";
+    }
+?>
             <div class="image">
-                <img src="/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                <img src="<?= $suborAvatara ?>" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
                 <a href="/user-detail" class="d-block text-warning"><?= htmlspecialchars($_SESSION['userNameShort']) ?></a>

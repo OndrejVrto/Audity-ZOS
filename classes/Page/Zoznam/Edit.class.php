@@ -13,7 +13,7 @@ class Edit extends \Page\Page
         if ( !isset($_SESSION['Admin']) && !$_SESSION['Admin'] == 1 ){
             // ak je uživateľ neprihlásený, alebo nieje v roli admin ukončí nahrávanie triedy a tým zobrazí prázdnu stránku
             header('HTTP/1.0 401 Unauthorized');
-            header("Location: /errorpages/401.php");
+            header("Location: /errorpages/401");
             exit();
         }        
         

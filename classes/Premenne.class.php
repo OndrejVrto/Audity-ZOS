@@ -49,6 +49,7 @@ class Premenne
             "/user-detail"                          =>    "User detail | Audity ŽOS Zvolen",
             "/vlastnosti/oblasti-auditov/zoznam"    =>    "Zoznam oblastí auditovania | Audity ŽOS Zvolen",
             "/vlastnosti/typ-auditu/zoznam"         =>    "Typ auditu | Audity ŽOS Zvolen",
+            "/vlastnosti/typy-externych-zisteni/zoznam" =>    "Zoznam externých zistení | Audity ŽOS Zvolen",
             "/sprava/zoznam-pracovnikov-zos"        =>    "Zoznam pracovníkov ŽOS Zvolen | Audity ŽOS Zvolen",
             
         ),    // "Titulok Stránky"
@@ -63,6 +64,7 @@ class Premenne
             "/signup"                               =>    "Audity ŽOS Zvolen - vytvorenie nového účtu uživateľa",
             "/vlastnosti/oblasti-auditov/zoznam"    =>    "Audity ŽOS Zvolen - zoznam oblastí auditovania",
             "/vlastnosti/typ-auditu/zoznam"         =>    "Audity ŽOS Zvolen - zoznam typov auditov a odkaz na referrenčný dokument",
+            "/vlastnosti/typy-externych-zisteni/zoznam" =>    "Audity ŽOS Zvolen - Zoznam názvov externých zistení",
             "/sprava/zoznam-pracovnikov-zos"        =>    "Audity ŽOS Zvolen - aktuálny zoznam zamestnancov z dochádzkového systému",
         ),    // "Popis Stránky"
 
@@ -76,6 +78,7 @@ class Premenne
             "/user-detail"                          =>    "Detaily o užívateľovi",
             "/vlastnosti/oblasti-auditov/zoznam"    =>    "Zoznam oblastí auditovania",
             "/vlastnosti/typ-auditu/zoznam"         =>    "Typ auditu",
+            "/vlastnosti/typy-externych-zisteni/zoznam" =>    "Zoznam názvov externých zistení",
             "/sprava/zoznam-pracovnikov-zos"        =>    "Aktuálny zoznam zamestnancov ŽOS Zvolen",
         ),    // "Nadpis prvej kapitoly"
     );
@@ -228,17 +231,17 @@ class Premenne
                 array(
                     "Link" => "/vlastnosti/typ-auditu/zoznam",
                     "Nazov" => "Typ auditu",
-                    "Doplnok" => "badge badge-warning",
-                    "PopisDoplnku" => "Rozpracované",
+                    "Doplnok" => "badge badge-success",
+                    "PopisDoplnku" => "Hotovo",
                     "Ikona" => "far fa-check-circle text-success",
                     "SUBMENU" => false,
                 ),
                 array(
-                    "Link" => false,
+                    "Link" => "/vlastnosti/typy-externych-zisteni/zoznam",
                     "Nazov" => "Typy externych zistení",
-                    "Doplnok" => false,
-                    "PopisDoplnku" => false,
-                    "Ikona" => "far fa-circle",
+                    "Doplnok" => "badge badge-warning",
+                    "PopisDoplnku" => "TODO",
+                    "Ikona" => "fas fa-exclamation-circle text-warning",
                     "SUBMENU" => false,
                 ),
                 array(

@@ -1,16 +1,21 @@
     <?php
     require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
-    
+
     $page = new \Page\Zoznam\Zoznam();
     $page->bodyClassExtended = 'col-12';
     $page->bodyWidthExtended = 'max-width: 1200px;';
     $page->zobrazitTlacitka = false;
-    
-    $pdo = new PDO('odbc:MAXDATA', '', '');
 
-    if (!$pdo) {
-        echo "Pripojenie k databaze zlyhalo.";
-    } else {
+    try {
+        $pdo = new PDO('odbc:MAXDATA', '', '');
+        // set the PDO error mode to exception
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        //echo "Connected successfully";
+    } catch(PDOException $e) {
+        echo "Connection failed: " . trim(iconv('Windows-1250', 'UTF-8', $e->getMessage()));
+    }
+
+    if ($pdo) {
 
         $stmt = $pdo->prepare("SELECT * FROM maxmast.uoscis WHERE offdate > :datum ORDER BY ondate ASC");
         $stmt->execute(['datum' => date("Y-m-d")]);

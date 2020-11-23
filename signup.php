@@ -4,28 +4,72 @@
     $page = new \Page\PageClear();
 
     $v = new \Validator\Validator();
-
+    
     if (isset($_POST['submit'])) {
 
         // validačné podmienky jednotlivých polí
-        $v->addValidation("signup-osobne-cislo","req","Prosím vyplň svoje osobné číslo zamestnanca.");
+        $v->addValidation("signup-email","req","Prosím vyplň mailovú adresu.");
+        $v->addValidation("signup-email","email","Prosím vyplň správnu mailovú adresu.");
+
+        $v->addValidation("signup-telefon","req","Prosím vyplň telefonický kontakt.");
+        $v->addValidation("signup-pasword","req","Prosím vyplň nové heslo.");
+        $v->addValidation("signup-pasword-repeater","req","Prosím vyplň kontrolné heslo.");
+
         $custom_validator = new \Validator\Login();
         $v->AddCustomValidator($custom_validator);
 
         // ak validacia skonci TRUE (1) --> reditect page to Index
         if ($v->validateForm()) {
 
+            $user = $_POST['signup-osobne-cislo'];
+            $Email = $_POST['signup-email'];
+            $TelefonneCislo = $_POST['signup-telefon'];
+            $Password_NEW = $_POST['signup-pasword'];
+
+            $db->query('UPDATE `50_sys_users` 
+                        SET `TelefonneCislo` = ?, `Email` = ? , `Password_NEW` = ? , `Datum_Inicializacie_Konta` = NOW()
+                        WHERE `OsobneCislo` = ?', $TelefonneCislo, $Email, $Password_NEW, $user);
+
+            $row = $db->query('SELECT `Avatar` FROM `50_sys_users` WHERE `OsobneCislo` = ?', $user)->fetchArray();
             
-            header("Location: /login");
-            exit();
+            if ( $row['Avatar'] === 0 ) {
+                // konto nieje aktivované kým nieje zvolený avatar - presmeruje sa na stránku avatara
+                $_SESSION['LoginUser'] = $user;
+                header("Location: /avatar");
+                exit;
+            } else {
+                // avatar je zvolený, môžeš sa prihlásiť novým heslom
+                header("Location: /login");
+                exit();
+            }
         }
     }
 
+    if (isset($_SESSION['LoginUser'])) {
+        $user = $_SESSION['LoginUser'];
+        unset($_SESSION['LoginUser']);
+
+        $row = $db->query('SELECT * FROM `50_sys_users` WHERE `OsobneCislo` = ?', $user )->fetchArray();
+        $v->form_variables['signup-osobne-cislo'] = $user;
+        $v->form_variables['signup-titul'] = $row['Titul_OLD'];
+        $v->form_variables['signup-meno'] = $row['Meno_OLD'];
+        $v->form_variables['signup-priezvisko'] = $row['Priezvisko_OLD'];
+        $v->form_variables['signup-email'] = $row['Email'];
+        $v->form_variables['signup-telefon'] = $row['TelefonneCislo'];
+        $v->form_variables['signup-pasword'] = $row['Password_NEW'];
+        $v->form_variables['signup-pasword-repeater'] = $row['Password_NEW'];
+
+    } else {
+        if (!isset($_POST['submit'])) {
+            header("Location: /login");
+        }
+    }
 
 ob_start();  // Začiatok definície hlavného obsahu
+//print_r($_POST);
 ?>
 
-<div class="register-box" style="max-width: 950px;">
+<div class="register-box" style="max-width: 750px;">
 
     <div class="register-logo">
         <a href="/"><b>Audity</b>ŽOS</a>
@@ -33,86 +77,65 @@ ob_start();  // Začiatok definície hlavného obsahu
 
     <div class="card" >
         <div class="card-body register-card-body">
-            <p class="login-box-msg">Registrácia nového uživateľa</p>
+            <p class="login-box-msg">Inicializácia konta</p>
 
-            <form action="<?= $page->link ?>" enctype="multipart/form-data" method="POST">
+            <form action="<?= $page->link ?>" method="POST">
 
-            <div class="form-row">
+                <div class="form-row">
 
-                    <?php $pole = 'signup-osobne-cislo'; echo PHP_EOL; ?>
                     <!-- FORM - osobne cislo -->
-                    <div class="form-group col-md-4">
-                        <label>Osobné číslo uživateľa</label>
+                    <div class="form-group col-md-2">
+                        <label>Osobné číslo</label>
                         <div class="input-group">
-                            <input type="text" class="form-control<?= $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="<?= $pole; ?>" placeholder="Osobné číslo">
+                            <input readonly type="text" class="form-control" value="<?= $v->getVAL('signup-osobne-cislo') ?>" name="signup-osobne-cislo">
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-id-card"></span>
                                 </div>
                             </div>
-                            <!-- <small class="d-block w-100 mb-n2 text-muted">Osobné číslo zamestnanca</small> -->
-                            <?= $v->getMSG($pole) . PHP_EOL ?>
                         </div>
                     </div>
 
-                    <?php $pole = 'signup-avatar'; echo PHP_EOL; ?>
-                    <!-- FORM - Avatar -->
-                    <div class="form-group col-md-8">
-                        <label>Obrázok alebo fotka</label>
-                        <div class="input-group">
-                            <input type="file" class="custom-file-input<?= $v->getCLS($pole) ?>" id="inputFileAvatar" value="<?= $v->getVAL($pole) ?>" name="<?= $pole; ?>">
-                            <label class="custom-file-label text-secondary" for="inputFileAvatar" data-browse="Vložiť obrázok" value="<?= $v->getVAL($pole) ?>">Vlož si obrázok avatara</label>
-                            <?= $v->getMSG($pole) . PHP_EOL ?>
-                        </div>
-                    </div>
 
-                </div>
-
-                <div class="form-row">
-
-                    <?php $pole = 'signup-titul'; echo PHP_EOL; ?>
                     <!-- FORM - Titul -->
                     <div class="form-group col-md-2">        
                         <label>Titul</label>
                         <div class="input-group">
-                            <input type="text" class="form-control<?= $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="<?= $pole; ?>" placeholder="Titul">
+                            <input readonly type="text" class="form-control" value="<?= $v->getVAL('signup-titul') ?>" name="signup-titul">
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-graduation-cap"></span>
                                 </div>
                             </div>
-                            <?= $v->getMSG($pole) . PHP_EOL ?>
                         </div>
                     </div>
 
-                    <?php $pole = 'signup-meno'; echo PHP_EOL; ?>
+
                     <!-- FORM - Meno -->
-                    <div class="form-group col-md-5">  
+                    <div class="form-group col-md-4">  
                         <label>Krstné meno</label>
                         <div class="input-group">
-                            <input type="text" class="form-control<?= $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="<?= $pole; ?>" placeholder="Meno">
+                            <input readonly type="text" class="form-control" value="<?= $v->getVAL('signup-meno') ?>" name="signup-meno">
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-user"></span>
                                 </div>
                             </div>
-                            <?= $v->getMSG($pole) . PHP_EOL ?>
                         </div>
                     </div>
 
-                    <?php $pole = 'signup-priezvisko'; echo PHP_EOL; ?>
+
                     <!-- FORM - Priezvisko -->
-                    <div class="form-group col-md-5"> 
+                    <div class="form-group col-md-4"> 
                         <label>Priezvisko</label>
                         <div class="input-group">
-                            <input type="text" class="form-control<?= $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="<?= $pole; ?>" placeholder="Priezvisko">
+                            <input readonly type="text" class="form-control" value="<?= $v->getVAL('signup-priezvisko') ?>" name="signup-priezvisko">
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-user-tie"></span>
                                 </div>
                             </div>
                         </div>
-                        <?= $v->getMSG($pole) . PHP_EOL ?>
                     </div>
 
                 </div>
@@ -188,28 +211,16 @@ ob_start();  // Začiatok definície hlavného obsahu
                 
                 <div class="form-row mt-4">
 
-                    <?php $pole = 'signup-checkbox'; echo PHP_EOL;?>
-                    <!-- FORM - CheckBox podmienky -->
-                    <div class="col-xl-3">
-                        <div class="input-group mb-4 icheck-primary">
-                            <input type="checkbox" class="form-check-input<?= $v->getCLS($pole) ?>" value="Súhlasím s podmienkami." id="agreeTerms" name="<?= $pole; ?>" <?php if (!empty($val_values[$pole])) { echo 'checked';} ?> >
-                            <label class="" for="agreeTerms">
-                                Súhlasím s <a href="#">podmienkami</a>
-                            </label>
-                            <?= $v->getMSG($pole) . PHP_EOL ?>
-                        </div>
-                    </div>
-
 
                     <!-- FORM - Tlacitko Submit -->
-                    <div class="col-xl-5">                    
-                        <button name="submit" type="submit" class="btn btn-block bg-gradient-primary btn-lg">Registrovať</button>
+                    <div class="col-md-4 offset-md-2">                    
+                        <button name="submit" type="submit" class="btn btn-block bg-gradient-warning btn-lg">Aktivovať</button>
                     </div>
 
 
                     <!-- FORM - Tlacitko Login -->                
-                    <div class="col-xl-4">  
-                        <a href="/login" class="btn btn-outline-secondary btn-lg btn-block mt-2 mt-xl-0">Už som zaregistrovaný</a>
+                    <div class="col-md-4">  
+                        <a href="/login" class="btn btn-outline-secondary btn-lg btn-block mt-2 mt-md-0">Späť na prihlásenie</a>
                     </div>
                 
                 </div>
