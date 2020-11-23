@@ -3,6 +3,16 @@
     
     $page = new \Page\PageClear();
 
+    $user = (isset($_SESSION['LoginUser'])) ? $_SESSION['LoginUser'] : "" ;
+
+    // if (isset($_SERVER['HTTP_REFERER'])) {
+    //     if (substr($_SERVER['HTTP_REFERER'], -6, 6) === "signup" || substr($_SERVER['HTTP_REFERER'], -5, 5) === "login") {
+    //         $referer = "/user/login";
+    //     } else {
+            $referer = "/";
+    //     }
+    // }
+
 ob_start();  // Začiatok definície hlavného obsahu
 ?>
 
@@ -15,7 +25,9 @@ ob_start();  // Začiatok definície hlavného obsahu
         <div class="card">
             <div class="card-body register-card-body">
 
-                <input type="hidden" ID="ValueLoginUser" value="<?php if (isset($_SESSION['LoginUser'])) {echo $_SESSION['LoginUser'];} ?>">
+                <input type="hidden" ID="ValueLoginUser" value="<?= $user ?>">
+                <input type="hidden" ID="LoginReferer" value="<?= $referer ?>">
+
                 <div id="svgAvatars"></div>
 
             </div>

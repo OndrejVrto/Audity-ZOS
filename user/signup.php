@@ -30,16 +30,23 @@
                         SET `TelefonneCislo` = ?, `Email` = ? , `Password_NEW` = ? , `Datum_Inicializacie_Konta` = NOW()
                         WHERE `OsobneCislo` = ?', $TelefonneCislo, $Email, $Password_NEW, $user);
 
-            $row = $db->query('SELECT `Avatar` FROM `50_sys_users` WHERE `OsobneCislo` = ?', $user)->fetchArray();
+            $row = $db->query('SELECT * FROM `50_sys_users` WHERE `OsobneCislo` = ?', $user)->fetchArray();
             
+            $_SESSION['userId'] = $row['OsobneCislo'];
+            $_SESSION['userNameShort'] = (isset($row['Titul']) ? $row['Titul']." " : "" ) . $row['Meno'] . " " . $row['Priezvisko'];
+            $_SESSION['userName'] = "[" . $row['OsobneCislo'] . "] " . $_SESSION['userNameShort'];
+            $_SESSION['RolaREAD'] = $row['RolaREAD'];
+            $_SESSION['RolaEDIT'] = $row['RolaEDIT'];
+            $_SESSION['RolaADMIN'] = $row['RolaADMIN'];
+
             if ( $row['Avatar'] === 0 ) {
                 // konto nieje aktivované kým nieje zvolený avatar - presmeruje sa na stránku avatara
                 $_SESSION['LoginUser'] = $user;
-                header("Location: /avatar");
+                header("Location: /user/avatar");
                 exit;
             } else {
-                // avatar je zvolený, môžeš sa prihlásiť novým heslom
-                header("Location: /login");
+                // avatar je zvolený, a už si aj prihlásený
+                header("Location: /");
                 exit();
             }
         }
@@ -51,9 +58,9 @@
 
         $row = $db->query('SELECT * FROM `50_sys_users` WHERE `OsobneCislo` = ?', $user )->fetchArray();
         $v->form_variables['signup-osobne-cislo'] = $user;
-        $v->form_variables['signup-titul'] = $row['Titul_OLD'];
-        $v->form_variables['signup-meno'] = $row['Meno_OLD'];
-        $v->form_variables['signup-priezvisko'] = $row['Priezvisko_OLD'];
+        $v->form_variables['signup-titul'] = $row['Titul'];
+        $v->form_variables['signup-meno'] = $row['Meno'];
+        $v->form_variables['signup-priezvisko'] = $row['Priezvisko'];
         $v->form_variables['signup-email'] = $row['Email'];
         $v->form_variables['signup-telefon'] = $row['TelefonneCislo'];
         $v->form_variables['signup-pasword'] = $row['Password_NEW'];
@@ -61,7 +68,7 @@
 
     } else {
         if (!isset($_POST['submit'])) {
-            header("Location: /login");
+            header("Location: /user/login");
         }
     }
 
@@ -77,7 +84,7 @@ ob_start();  // Začiatok definície hlavného obsahu
 
     <div class="card" >
         <div class="card-body register-card-body">
-            <p class="login-box-msg">Inicializácia konta</p>
+            <p class="login-box-msg">Prvotná inicializácia konta</p>
 
             <form action="<?= $page->link ?>" method="POST">
 
@@ -180,7 +187,7 @@ ob_start();  // Začiatok definície hlavného obsahu
                     <?php $pole = 'signup-pasword'; echo PHP_EOL; ?>
                     <!-- FORM - Heslo -->
                     <div class="form-group col-md-6">
-                        <label>Heslo</label>
+                        <label>Nové heslo</label>
                         <div class="input-group">
                             <input type="password" class="form-control<?= $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="<?= $pole; ?>" placeholder="Heslo">
                             <div class="input-group-append">
@@ -195,7 +202,7 @@ ob_start();  // Začiatok definície hlavného obsahu
                     <?php $pole = 'signup-pasword-repeater'; echo PHP_EOL;?>
                     <!-- FORM - Heslo opakované -->
                     <div class="form-group col-md-6">
-                        <label>Kontrolné heslo</label>
+                        <label>Nové heslo - kontrola</label>
                         <div class="input-group">
                             <input type="password" class="form-control<?= $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="<?= $pole; ?>" placeholder="Opakovať heslo">
                             <div class="input-group-append">
@@ -220,7 +227,7 @@ ob_start();  // Začiatok definície hlavného obsahu
 
                     <!-- FORM - Tlacitko Login -->                
                     <div class="col-md-4">  
-                        <a href="/login" class="btn btn-outline-secondary btn-lg btn-block mt-2 mt-md-0">Späť na prihlásenie</a>
+                        <a href="/user/login" class="btn btn-outline-secondary btn-lg btn-block mt-2 mt-md-0">Späť na prihlásenie</a>
                     </div>
                 
                 </div>

@@ -189,7 +189,7 @@ class Page
                 <a href="/" class="nav-link">Domov</a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
-                <a href="/avatar" class="nav-link">Avatar</a>
+                <a href="/user/avatar" class="nav-link">Avatar</a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
                 <a href="#" class="nav-link">Kontakt</a>
@@ -223,11 +223,11 @@ class Page
             <!-- LogIn/LogOut -->
             <li class="nav-item">
 <?php if (isset($_SESSION['userId'])): ?>
-				<form class="" action="/include/inc.logout.php" method="post">
+				<form class="" action="/user/logout.php" method="post">
 					<input class="btn btn-warning" type="submit" name="logout-submit" value="LogOut">
 				</form>
 <?php else: ?>
-				<a class="btn btn-danger" href="/login">Login</a>
+				<a class="btn btn-danger" href="/user/login">Login</a>
 <?php endif; ?>
             </li>
         </ul>
@@ -244,17 +244,9 @@ class Page
     // prebratie pripojenia na databazu z globálnej premennej
     global $db;
     
-    $row = $db->query('SELECT * FROM `50_sys_users` WHERE `OsobneCislo` = ?', $_SESSION['userId'])->fetchArray();
-            
-    // vytvorenie nazvu súboru
-    $filenameAvatar = "[".$row['OsobneCislo']."] ".$row['Meno_OLD']." ".$row['Priezvisko_OLD'];
-    // vyčistenie názvu súboru od diakritiky
-    setlocale(LC_ALL, 'sk_SK.UTF8');
-    $filenameAvatar = iconv("UTF-8", "ASCII//TRANSLIT", $filenameAvatar);
-    $filenameAvatar = strtolower(str_replace("'", "", $filenameAvatar));
-    // uloží vygenerovaný súbor do pracovného adresára
-    $suborAvatara = '/dist/avatar/' . $filenameAvatar . '.svg';
-
+    $row = $db->query('SELECT `AvatarFILE` FROM `50_sys_users` WHERE `OsobneCislo` = ?', $_SESSION['userId'])->fetchArray();
+    $suborAvatara = "/dist/avatar/" . $row['AvatarFILE'];
+    
     if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $suborAvatara)) {
         $suborAvatara = "/dist/img/user-anonymous.png";
     }
@@ -263,14 +255,14 @@ class Page
                 <img src="<?= $suborAvatara ?>" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="/user-detail" class="d-block text-warning"><?= htmlspecialchars($_SESSION['userNameShort']) ?></a>
+                <a href="/user/detail" class="d-block text-warning"><?= htmlspecialchars($_SESSION['userNameShort']) ?></a>
             </div>
 <?php else: ?>
             <div class="image">
                 <img src="/dist/img/user-anonymous.png" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="/login" class="d-block text-warning">NEPRIHLASENÝ</a>
+                <a href="/user/login" class="d-block text-warning">NEPRIHLASENÝ</a>
             </div>
 <?php endif; ?>
 

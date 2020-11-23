@@ -6,14 +6,21 @@
 #  a potom som povolil len to co som potreboval
 !*.php
 
-!include
-!include/*
 !classes
 !classes/*
 !classes/Page/*
 !classes/Validator/*
+
+!errorpages
+
+!include
+!include/*
+
 !sprava
 !sprava/*
+
+!user
+
 !vlastnosti
 !vlastnosti/*
 

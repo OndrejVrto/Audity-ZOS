@@ -1,25 +1,12 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
 
-$homepage = new \Page\Page();
+    $homepage = new \Page\Page();
 
-$pdo = new PDO('odbc:MAXDATA', '', '');
-
-if (!$pdo) {
-    echo "Pripojenie k databaze zlyhalo.";
-} else {
-    
-    // data MAX
-    $stmt = $pdo->prepare("SELECT * FROM maxmast.uoscis WHERE ucislo = :osobneCislo");
-    $stmt->execute(['osobneCislo' => $_SESSION['userId']]);
-    $data = $stmt->fetch(PDO::FETCH_ASSOC);
-    array_convert_MAX($data);
-
-    // data local
+    $data = $db->query('SELECT * FROM `51_sys_users_maxmast_uoscis` WHERE `ucislo` = ?', $_SESSION['userId'])->fetchArray();
     $dataLocal = $db->query('SELECT * FROM `50_sys_users` WHERE `OsobneCislo` = ?', $_SESSION['userId'])->fetchArray();
 
 ob_start();  // Začiatok definície hlavného obsahu
-//print_r($data);
 ?>
 
     <div class="row justify-content-around">
@@ -154,6 +141,5 @@ ob_start();  // Začiatok definície hlavného obsahu
 
 <?php
 $homepage->content = ob_get_clean();  // Koniec hlavného obsahu
-}
 
 $homepage->display();  // vykreslenie stranky

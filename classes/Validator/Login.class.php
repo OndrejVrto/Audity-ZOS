@@ -20,22 +20,33 @@ class Login extends \Validator\Validator
                     $user = $formars['login-osobne-cislo'];
                     $password = $formars['login-pasword'];
                     $row = $db->query('SELECT * FROM `50_sys_users` WHERE `OsobneCislo` = ?', $user )->fetchArray();
+                    
+                    // záznam neexistuje v tabuľke
                     if ( empty($row) ) {
-                        $error_hash['login-osobne-cislo']="Uživateľ s týmto menom nieje zaregistrovaný.";
+                        $error_hash['login-osobne-cislo']="Uživateľ s týmto osobným číslom neexistuje.";
                         $vysledok = false;
-                    } else {
-                        if (is_null($row['Datum_Inicializacie_Konta'])) {
-                            $pwdCheck = strcmp($password, $row['Password_OLD']) === 0;
-                        } else {
-                            $pwdCheck = strcmp($password, $row['Password_NEW']) === 0;
-                        }
-
-                        if ($pwdCheck === false) {
-                            $error_hash['login-pasword']="Zadali ste nesprávne heslo pre uživateľa " . $this->PurifiText($user);
-                            $vysledok = false;
-                        }
+                        break;
                     }
-                    break;
+
+                    // uživateľovi bolo odobraté právo sa prihlásiť - záznam sa aktualizuje automaticky s MAXu
+                    if ($row['RolaNEPOUZIVAT'] === 1) {
+                        $error_hash['login-osobne-cislo'] = $this->PurifiText($row['Meno']." ".$row['Priezvisko']) ." už v ŽOS nepracuje.";
+                        $vysledok = false;
+                        break;
+                    }
+
+                    // nesprávne heslo
+                    if (is_null($row['Datum_Inicializacie_Konta'])) {
+                        $pwdCheck = strcmp($password, $row['Password_OLD']) === 0;
+                    } else {
+                        $pwdCheck = strcmp($password, $row['Password_NEW']) === 0;
+                    }
+                    if ($pwdCheck === false) {
+                        $error_hash['login-pasword']="Zadali ste nesprávne heslo pre uživateľa " . $this->PurifiText($user);
+                        $vysledok = false;
+                        break;
+                    }
+
                 }
 
 /*                 case 'signup-osobne-cislo': {

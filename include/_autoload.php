@@ -1,7 +1,7 @@
 <?php
     // pri hodnote TRUE zapne časti ktorá slúžia ako pomôcka pri vývoji tejto stránky + zobrazovanie chýb
-    defined("VYVOJ") or define("VYVOJ", TRUE);
-    //defined("VYVOJ") or define("VYVOJ", FALSE);
+    //defined("VYVOJ") or define("VYVOJ", TRUE);
+    defined("VYVOJ") or define("VYVOJ", FALSE);
 
     if (VYVOJ) {
         ini_set('display_errors', 1);

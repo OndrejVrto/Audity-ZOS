@@ -1,27 +1,13 @@
-    <?php
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
+<?php
+require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
 
-    $page = new \Page\Zoznam\Zoznam();
-    $page->bodyClassExtended = 'col-12';
-    $page->bodyWidthExtended = 'max-width: 1200px;';
-    $page->zobrazitTlacitka = false;
+$page = new \Page\Zoznam\Zoznam();
+$page->bodyClassExtended = 'col-12';
+$page->bodyWidthExtended = 'max-width: 1200px;';
+$page->zobrazitTlacitka = false;
 
-    try {
-        $pdo = new PDO('odbc:MAXDATA', '', '');
-        // set the PDO error mode to exception
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        //echo "Connected successfully";
-    } catch(PDOException $e) {
-        echo "Connection failed: " . trim(iconv('Windows-1250', 'UTF-8', $e->getMessage()));
-    }
-
-    if ($pdo) {
-
-        $stmt = $pdo->prepare("SELECT * FROM maxmast.uoscis WHERE offdate > :datum ORDER BY ondate ASC");
-        $stmt->execute(['datum' => date("Y-m-d")]);
-        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        array_convert_MAX($data);
+$datumDnes = date("Y-m-d");
+$data = $db->query('SELECT * FROM `51_sys_users_maxmast_uoscis` WHERE offdate > ? ORDER BY ondate ASC', $datumDnes)->fetchAll();
 
 ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 ?>
@@ -71,7 +57,6 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
                         </tbody>
 
 <?php
-}
 $page->content = ob_get_clean();  // Koniec hlavného obsahu
 
 ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor

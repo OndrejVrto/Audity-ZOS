@@ -22,7 +22,7 @@
 
             // konto nieje aktivované - presmeruje sa na stránku aktivácie
             if (is_null($row['Datum_Inicializacie_Konta'])) {
-                header("Location: /signup");
+                header("Location: /user/signup");
                 exit;
             }
 
@@ -43,16 +43,15 @@
             $db->query('INSERT INTO `60_log_prihlasenie` (`ID50_sys_users`, `DatumCas`, `IP`, `Prehliadac`) VALUES (?, now(), ?, ? )', $userID, $ip, $prehliadac);
 
             $_SESSION['userId'] = $row['OsobneCislo'];
-            $_SESSION['userNameShort'] = (isset($row['Titul_OLD']) ? $row['Titul_OLD']." " : "" ) . $row['Meno_OLD'] . " " . $row['Priezvisko_OLD'];
+            $_SESSION['userNameShort'] = (isset($row['Titul']) ? $row['Titul']." " : "" ) . $row['Meno'] . " " . $row['Priezvisko'];
             $_SESSION['userName'] = "[" . $row['OsobneCislo'] . "] " . $_SESSION['userNameShort'];
             $_SESSION['RolaREAD'] = $row['RolaREAD'];
             $_SESSION['RolaEDIT'] = $row['RolaEDIT'];
             $_SESSION['RolaADMIN'] = $row['RolaADMIN'];
 
-
             // konto nemá prideleného avatara - presmeruje sa na stránku avatar
             if ( $row['Avatar'] === 0 ) {
-                header("Location: /avatar");
+                header("Location: /user/avatar");
                 exit;
             }
 
@@ -106,7 +105,7 @@ ob_start();  // Začiatok definície hlavného obsahu
             </form>
 
             <p class="mb-1">
-                <a href="/password-reset" class="d-block text-center mt-2 text-muted">Obnoviť heslo</a>
+                <a href="/user/password-reset" class="d-block text-center mt-2 text-muted">Obnoviť heslo</a>
             </p>
         </div>
 
