@@ -27,6 +27,7 @@
     require_once $pathInclude . 'inc.dBconnect.php';
     // Globálne funkcie
     require_once $pathInclude . 'inc.funkction.php';
+    require_once $pathInclude . 'inc.cron.php';
 
     // derfinície Konštant
     defined("TAB1") or define("TAB1", "\t");

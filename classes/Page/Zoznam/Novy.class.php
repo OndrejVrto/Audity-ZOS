@@ -7,7 +7,7 @@ class Novy extends \Page\Page
 
     function __construct()
     {
-
+        // ak uživateľ nieje prihlásený alebo nemá oprávnenia, presmeruje ho na chybovú stránku
         if ( !isset($_SESSION['LEVEL']) OR $_SESSION['LEVEL'] < 2 ){
             header('HTTP/1.0 401 Unauthorized');
             header("Location: /errorpages/401");
@@ -16,7 +16,7 @@ class Novy extends \Page\Page
         
         parent::__construct();
         
-        $premenne = new \Premenne($this->linkZoznam);
+        $premenne = new \Premenne($this->linkZoznam, $this->linkZoznam);
 
         $this->title = $premenne->titulokStranky;
         $this->nadpis = $premenne->nadpisPrvejSekcie;

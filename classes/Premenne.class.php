@@ -74,6 +74,7 @@ class Premenne
             "/vlastnosti/typ-auditu/zoznam"         =>    "Typ auditu | Audity ŽOS Zvolen",
             "/vlastnosti/typy-externych-zisteni/zoznam" =>    "Zoznam externých zistení | Audity ŽOS Zvolen",
             "/sprava/zoznam-pracovnikov-zos"        =>    "Zoznam pracovníkov ŽOS Zvolen | Audity ŽOS Zvolen",
+            "/sprava/zoznam-pracovnikov-zos-komplet" =>    "Kompletný zoznam pracovníkov | Audity ŽOS Zvolen",
             
         ),    // "Titulok Stránky"
 
@@ -89,6 +90,7 @@ class Premenne
             "/vlastnosti/typ-auditu/zoznam"         =>    "Audity ŽOS Zvolen - zoznam typov auditov a odkaz na referrenčný dokument",
             "/vlastnosti/typy-externych-zisteni/zoznam" =>    "Audity ŽOS Zvolen - Zoznam názvov externých zistení",
             "/sprava/zoznam-pracovnikov-zos"        =>    "Audity ŽOS Zvolen - aktuálny zoznam zamestnancov z dochádzkového systému",
+            "/sprava/zoznam-pracovnikov-zos-komplet" =>    "Audity ŽOS Zvolen - kompletný zoznam pracovníkov ŽOS ktorý boli evidovaný v dochádzkovom systéme Human",
         ),    // "Popis Stránky"
 
         // Nadpisy prvej kapitoly.
@@ -103,6 +105,7 @@ class Premenne
             "/vlastnosti/typ-auditu/zoznam"         =>    "Typ auditu",
             "/vlastnosti/typy-externych-zisteni/zoznam" =>    "Zoznam názvov externých zistení",
             "/sprava/zoznam-pracovnikov-zos"        =>    "Aktuálny zoznam zamestnancov ŽOS Zvolen",
+            "/sprava/zoznam-pracovnikov-zos-komplet" =>   "Kompletný zoznam zamestnancov evidovaných v HUMANe",
         ),    // "Nadpis prvej kapitoly"
     );
 
@@ -245,28 +248,36 @@ class Premenne
             "Ikona" => "fas fa-clipboard-list",
             "SUBMENU" => array(
                 array(
-                    "MinUserLEVEL" => 2,
                     "Link" => "/vlastnosti/oblasti-auditov/zoznam",
                     "Nazov" => "Oblasti auditov",
-                    "Doplnok" => "badge badge-success",
-                    "PopisDoplnku" => "Hotovo",
+                    "Doplnok" => false,
+                    "PopisDoplnku" => false,
                     "Ikona" => "far fa-check-circle text-success",
                     "SUBMENU" => false,
                 ),
                 array(
                     "Link" => "/vlastnosti/typ-auditu/zoznam",
                     "Nazov" => "Typ auditu",
-                    "Doplnok" => "badge badge-success",
-                    "PopisDoplnku" => "Hotovo",
+                    "Doplnok" => false,
+                    "PopisDoplnku" => false,
                     "Ikona" => "far fa-check-circle text-success",
                     "SUBMENU" => false,
                 ),
+                array(
+                    "MinUserLEVEL" => 10,
+                    "Link" => "/vlastnosti/typy-internych-zisteni/zoznam",
+                    "Nazov" => "Typy internych zistení",
+                    "Doplnok" => false,
+                    "PopisDoplnku" => false,
+                    "Ikona" => "far fa-circle text-danger",
+                    "SUBMENU" => false,
+                ),                
                 array(
                     "Link" => "/vlastnosti/typy-externych-zisteni/zoznam",
                     "Nazov" => "Typy externych zistení",
                     "Doplnok" => "badge badge-warning",
                     "PopisDoplnku" => "TODO",
-                    "Ikona" => "fas fa-exclamation-circle text-warning",
+                    "Ikona" => "far fa-circle",
                     "SUBMENU" => false,
                 ),
                 array(
@@ -304,7 +315,7 @@ class Premenne
             "Ikona" => "fas fa-user-cog",
             "SUBMENU" => array(
                 array(
-                    "MinUserLEVEL" => 3,                    
+                    "MinUserLEVEL" => 1,                    
                     "Link" => "#",
                     "Nazov" => "Zoznam uživateľov",
                     "Doplnok" => false,
@@ -313,7 +324,7 @@ class Premenne
                     "SUBMENU" => false,
                 ),
                 array(
-                    "MinUserLEVEL" => 2,                    
+                    "MinUserLEVEL" => 1,                    
                     "Link" => false,
                     "Nazov" => "Zoznam správcov",
                     "Doplnok" => false,
@@ -322,12 +333,21 @@ class Premenne
                     "SUBMENU" => false,
                 ),
                 array(
-                    "MinUserLEVEL" => 3,                    
+                    "MinUserLEVEL" => 3,
                     "Link" => "/sprava/zoznam-pracovnikov-zos",
-                    "Nazov" => "Zamestnanci ŽOS",
-                    "Doplnok" => "badge badge-success",
-                    "PopisDoplnku" => "Hotovo",
-                    "Ikona" => "far fa-check-circle text-success",
+                    "Nazov" => "Aktívny zamestnanci ŽOS",
+                    "Doplnok" => false,
+                    "PopisDoplnku" => false,
+                    "Ikona" => "far fa-check-circle text-warning",
+                    "SUBMENU" => false,
+                ),                
+                array(
+                    "MinUserLEVEL" => 10,
+                    "Link" => "/sprava/zoznam-pracovnikov-zos-komplet",
+                    "Nazov" => "Všetci zamestnanci ŽOS",
+                    "Doplnok" => false,
+                    "PopisDoplnku" => false,
+                    "Ikona" => "far fa-check-circle text-danger",
                     "SUBMENU" => false,
                 ),
             ),

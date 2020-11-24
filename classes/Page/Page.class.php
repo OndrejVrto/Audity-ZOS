@@ -76,7 +76,7 @@ class Page
         $this->addScripts("jQuery", true);
         $this->addScripts("Bootstrap 4-bundle", true);
         $this->addScripts("AdminLTE App", false);
-        $this->addScripts("AdminLTE for demo purposes", false);
+        //$this->addScripts("AdminLTE for demo purposes", false);
 
     }
 
@@ -224,16 +224,6 @@ class Page
 
         <!-- Right navbar links -->
         <ul class="navbar-nav ml-auto">
-            <!-- Messages Dropdown Menu -->
-
-            <!-- Notifications Dropdown Menu -->
-
-            <li class="nav-item">
-                <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
-                    <i class="fas fa-th-large"></i>
-                </a>
-            </li>
-
             <!-- LogIn/LogOut -->
             <li class="nav-item">
 <?php if (isset($_SESSION['userId'])): ?>
@@ -303,7 +293,7 @@ class Page
             </div>
 
             <!-- Sidebar Menu -->
-            <nav class="mt-2">
+            <nav class="mt-2 pb-5">
                 <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent nav-compact" data-widget="treeview" role="menu" data-accordion="false">
                     <!-- Add icons to the links using the .nav-icon class
                         with font-awesome or any other icon font library -->

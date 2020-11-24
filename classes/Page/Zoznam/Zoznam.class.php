@@ -87,7 +87,7 @@ class Zoznam extends \Page\Page
         parent::addScripts("DataTables-Responsive",true);
         parent::addScripts("DataTables-Responsive-Bootstrap",true);
         parent::addScripts("AdminLTE App",true);
-        parent::addScripts("AdminLTE for demo purposes", false);
+        //parent::addScripts("AdminLTE for demo purposes", false);
         
         $this->skriptySpecial = $this->ScriptyZoznam() . $this->skriptySpecial;
 

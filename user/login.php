@@ -1,6 +1,11 @@
 <?php
     require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
     
+    // spustenie aktualizacie tabulky users s databazy max4
+    AktualizujMAX();
+    // spustenie synchronizácia dát v tabuľke USERS. Spúšťa sa vrámci predchádzajúceho programu, ale pri vývoji vždy.
+    if (VYVOJ) { AktualizujUSERS(); }
+
     $page = new \Page\PageClear();
     
     $v = new \Validator\Validator();

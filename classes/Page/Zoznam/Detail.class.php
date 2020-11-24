@@ -14,7 +14,7 @@ class Detail extends \Page\Page
             exit;
         }
 
-        $premenne = new \Premenne($this->linkZoznam);
+        $premenne = new \Premenne($this->linkZoznam, $this->linkZoznam);
 
         $this->title = $premenne->titulokStranky;
         $this->nadpis = $premenne->nadpisPrvejSekcie;
