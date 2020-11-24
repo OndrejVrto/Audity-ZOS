@@ -8,8 +8,9 @@ class Premenne
     public $popisStranky;
     public $bublinkoveMenu;
     public $nadpisPrvejSekcie;
+    public $MenuLevel = 0;
 
-    function __construct($link)
+    function __construct($link, $linkZoznam)
     {
         // Naplnenie konštánt pre konkrétnu stránku z poľa:  $konstantyStranok
         // ak na stránke nieje premenná ktorá označuje o akú stránku ide
@@ -33,6 +34,28 @@ class Premenne
             $this->nadpisPrvejSekcie = $this->konstantyStranok["Nadpis"][$link];
         } else {
             $this->nadpisPrvejSekcie = "";
+        }
+        
+        //* LEVEL = 0 neprihlásený uživateľ
+        //* LEVEL = 1 read
+        //* LEVEL = 2 edit
+        //* LEVEL = 3 admin
+        $this->getLevelMenu($this->menuHlavne, $link, $linkZoznam);
+    }
+
+    private function getLevelMenu($pole ,$link1, $link2) {
+        
+        foreach ($pole as $key => $value) {
+            if (is_array($value['SUBMENU'])) {
+                // rekurzívna funkcia - volá sama seba pri každej ďalšej vrste Menu !!!
+                $this->getLevelMenu( $value['SUBMENU'], $link1, $link2 );
+            } else {
+                if ($value['Link'] == $link1 OR $value['Link'] == $link2) {
+                    if (isset($value['MinUserLEVEL'])) {
+                        $this->MenuLevel = $value['MinUserLEVEL'];
+                    }
+                }
+            }
         }
     }
 
@@ -122,6 +145,7 @@ class Premenne
             "SUBMENU" => false,
         ),
         array(
+            "MinUserLEVEL" => 0,  //!  Musí byť 0, inak sa zacyklí načítavanie stránky
             "Link" => "/",
             "Nazov" => "Zoznam auditov",
             "Doplnok" => "badge badge-info",
@@ -145,7 +169,7 @@ class Premenne
             "Ikona" => "fas fa-praying-hands",
             "SUBMENU" => false,
         ),
-        array(
+        array(          
             "Link" => "#",
             "Nazov" => "Zoznam plnení",
             "Doplnok" => false,
@@ -153,7 +177,7 @@ class Premenne
             "Ikona" => "fas fa-flag-checkered",
             "SUBMENU" => false,
         ),
-        array(
+        array(           
             "Link" => "#",
             "Nazov" => "Zoznam súborov",
             "Doplnok" => false,
@@ -221,6 +245,7 @@ class Premenne
             "Ikona" => "fas fa-clipboard-list",
             "SUBMENU" => array(
                 array(
+                    "MinUserLEVEL" => 2,
                     "Link" => "/vlastnosti/oblasti-auditov/zoznam",
                     "Nazov" => "Oblasti auditov",
                     "Doplnok" => "badge badge-success",
@@ -271,6 +296,7 @@ class Premenne
             ),
         ),
         array(
+            "MinUserLEVEL" => 1,
             "Link" => false,
             "Nazov" => "Správa",
             "Doplnok" => false,
@@ -278,6 +304,7 @@ class Premenne
             "Ikona" => "fas fa-user-cog",
             "SUBMENU" => array(
                 array(
+                    "MinUserLEVEL" => 3,                    
                     "Link" => "#",
                     "Nazov" => "Zoznam uživateľov",
                     "Doplnok" => false,
@@ -286,6 +313,7 @@ class Premenne
                     "SUBMENU" => false,
                 ),
                 array(
+                    "MinUserLEVEL" => 2,                    
                     "Link" => false,
                     "Nazov" => "Zoznam správcov",
                     "Doplnok" => false,
@@ -294,6 +322,7 @@ class Premenne
                     "SUBMENU" => false,
                 ),
                 array(
+                    "MinUserLEVEL" => 3,                    
                     "Link" => "/sprava/zoznam-pracovnikov-zos",
                     "Nazov" => "Zamestnanci ŽOS",
                     "Doplnok" => "badge badge-success",
@@ -304,4 +333,5 @@ class Premenne
             ),
         ),
     );
+
 }

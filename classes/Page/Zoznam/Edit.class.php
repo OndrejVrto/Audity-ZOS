@@ -10,8 +10,7 @@ class Edit extends \Page\Page
     function __construct()
     {
         
-        if ( !isset($_SESSION['RolaEDIT']) && !$_SESSION['RolaEDIT'] == 1 ){
-            // ak je uživateľ neprihlásený, alebo nieje v roli admin ukončí nahrávanie triedy a tým zobrazí prázdnu stránku
+        if ( !isset($_SESSION['LEVEL']) OR $_SESSION['LEVEL'] < 2 ){
             header('HTTP/1.0 401 Unauthorized');
             header("Location: /errorpages/401");
             exit();

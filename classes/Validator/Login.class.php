@@ -29,7 +29,7 @@ class Login extends \Validator\Validator
                     }
 
                     // uživateľovi bolo odobraté právo sa prihlásiť - záznam sa aktualizuje automaticky s MAXu
-                    if ($row['RolaNEPOUZIVAT'] === 1) {
+                    if ($row['LEVEL'] === 0) {
                         $error_hash['login-osobne-cislo'] = $this->PurifiText($row['Meno']." ".$row['Priezvisko']) ." už v ŽOS nepracuje.";
                         $vysledok = false;
                         break;

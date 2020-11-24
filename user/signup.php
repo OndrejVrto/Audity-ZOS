@@ -35,11 +35,9 @@
             $_SESSION['userId'] = $row['OsobneCislo'];
             $_SESSION['userNameShort'] = (isset($row['Titul']) ? $row['Titul']." " : "" ) . $row['Meno'] . " " . $row['Priezvisko'];
             $_SESSION['userName'] = "[" . $row['OsobneCislo'] . "] " . $_SESSION['userNameShort'];
-            $_SESSION['RolaREAD'] = $row['RolaREAD'];
-            $_SESSION['RolaEDIT'] = $row['RolaEDIT'];
-            $_SESSION['RolaADMIN'] = $row['RolaADMIN'];
+            $_SESSION['LEVEL'] = $row['LEVEL'];
 
-            if ( $row['Avatar'] === 0 ) {
+            if ( is_null($row['AvatarFILE']) ) {
                 // konto nieje aktivované kým nieje zvolený avatar - presmeruje sa na stránku avatara
                 $_SESSION['LoginUser'] = $user;
                 header("Location: /user/avatar");

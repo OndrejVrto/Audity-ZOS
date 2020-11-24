@@ -1,13 +1,13 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
 
-$page = new \Page\Zoznam\Zoznam();
-$page->bodyClassExtended = 'col-12';
-$page->bodyWidthExtended = 'max-width: 1200px;';
-$page->zobrazitTlacitka = false;
+    $page = new \Page\Zoznam\Zoznam();
+    $page->bodyClassExtended = 'col-12';
+    $page->bodyWidthExtended = 'max-width: 1200px;';
+    $page->zobrazitTlacitka = false;
 
-$datumDnes = date("Y-m-d");
-$data = $db->query('SELECT * FROM `51_sys_users_maxmast_uoscis` WHERE offdate > ? ORDER BY ondate ASC', $datumDnes)->fetchAll();
+    $datumDnes = date("Y-m-d");
+    $data = $db->query('SELECT * FROM `51_sys_users_maxmast_uoscis` WHERE offdate > ? ORDER BY ondate ASC', $datumDnes)->fetchAll();
 
 ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 ?>

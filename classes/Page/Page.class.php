@@ -22,6 +22,7 @@ class Page
     protected $_nazovstranky;
     protected $link;
     private $aktivnemenu = false;
+    private $LevelMenu;
     
     public $bodyClassExtended = ''; //premenna sa používa v odvodených triedach
     public $bodyWidthExtended = ''; //premenna sa používa v odvodených triedach
@@ -45,12 +46,25 @@ class Page
 
         $this->list = (isset($_GET['p'])) ? $_GET['p'] : "1" ;;
 
-        $premenne = new \Premenne($this->link);
+        $premenne = new \Premenne($this->link, $this->linkZoznam);
 
         $this->title = $premenne->titulokStranky;
         $this->nadpis = $premenne->nadpisPrvejSekcie;
         $this->description = $premenne->popisStranky;
         $this->hlavneMenu = $premenne->menuHlavne;
+
+        // ak uživateľ nemá oprávnenia na danú stránku presmeruje ho na hlavnú stránku
+        // LEVEL = 0 neprihlásený uživateľ
+        // LEVEL = 1 read
+        // LEVEL = 2 edit
+        // LEVEL = 3 admin
+        $this->LevelMenu =  $premenne->MenuLevel;
+        if ($this->LevelMenu > 0) {
+            if ( !isset($_SESSION['LEVEL']) OR $_SESSION['LEVEL'] < $this->LevelMenu ){
+                header("Location: /");
+                exit();
+            }
+        }
 
         // zadefinovanie základných štýlov
         $this->addStyles("Font Awesome", true);
@@ -304,6 +318,13 @@ class Page
         $this->aktivnemenu = false;
 
         foreach ($vstup as $key => $value) {
+            //  ak na zobrazenie položky menu je potrebná určitá úrovať LEVELu uživateľa preskočí nezobrazí ju v MENU
+            //  neprihlásený uživateľ: LEVEL = 0
+            if (isset($value['MinUserLEVEL'])) {
+                if (isset($_SESSION['LEVEL'])) { $localLEVEL = $_SESSION['LEVEL']; } else { $localLEVEL = 0; }
+                if ($localLEVEL < $value['MinUserLEVEL'] ) { continue; }
+            }
+
             if (array_key_exists('Hlavicka', $value)) {
                     $html .= "\n".$odsad.'<li class="nav-header">';
                     $html .= "\n\t".$odsad.htmlspecialchars($value['Hlavicka']);
@@ -678,7 +699,7 @@ class Page
         echo '</footer>' ;
         
         echo "\n\n". '<footer class="main-footer"> <h3 class="text-success">Vývoj: php Info</h3>' ;
-            echo '<a href="/phpinfo">PHPinfo()</a>';
+            echo '<a href="/test/phpinfo">PHPinfo()</a>';
         echo '</footer>' ;  
 
         echo "\n\n". '<footer class="main-footer"> <h3 class="text-warning">Vývoj: $_GET</h3>' ;

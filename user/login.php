@@ -45,12 +45,10 @@
             $_SESSION['userId'] = $row['OsobneCislo'];
             $_SESSION['userNameShort'] = (isset($row['Titul']) ? $row['Titul']." " : "" ) . $row['Meno'] . " " . $row['Priezvisko'];
             $_SESSION['userName'] = "[" . $row['OsobneCislo'] . "] " . $_SESSION['userNameShort'];
-            $_SESSION['RolaREAD'] = $row['RolaREAD'];
-            $_SESSION['RolaEDIT'] = $row['RolaEDIT'];
-            $_SESSION['RolaADMIN'] = $row['RolaADMIN'];
+            $_SESSION['LEVEL'] = $row['LEVEL'];
 
             // konto nemá prideleného avatara - presmeruje sa na stránku avatar
-            if ( $row['Avatar'] === 0 ) {
+            if ( is_null($row['AvatarFILE']) ) {
                 header("Location: /user/avatar");
                 exit;
             }

@@ -1,6 +1,12 @@
 <?php
     require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
 
+    // ak uživateľ nieje prihlásený, presmeruje ho na hlavnú stránku
+    if ( !isset($_SESSION['LEVEL']) OR $_SESSION['LEVEL'] < 1 ){
+        header("Location: /");
+        exit();
+    }
+
     $homepage = new \Page\Page();
 
     $data = $db->query('SELECT * FROM `51_sys_users_maxmast_uoscis` WHERE `ucislo` = ?', $_SESSION['userId'])->fetchArray();
