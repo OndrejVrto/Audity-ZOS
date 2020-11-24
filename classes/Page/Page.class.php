@@ -23,6 +23,7 @@ class Page
     protected $link;
     private $aktivnemenu = false;
     private $LevelMenu;
+    public $suborAvatara;
     
     public $bodyClassExtended = ''; //premenna sa používa v odvodených triedach
     public $bodyWidthExtended = ''; //premenna sa používa v odvodených triedach
@@ -54,7 +55,7 @@ class Page
         $this->hlavneMenu = $premenne->menuHlavne;
 
         // ak uživateľ nemá oprávnenia na danú stránku presmeruje ho na hlavnú stránku
-        // LEVEL = 0 neprihlásený uživateľ
+        // LEVEL = 0 neprihlásený uživateľ alebo bývalý zamestnanec
         // LEVEL = 1 read
         // LEVEL = 2 edit
         // LEVEL = 3 admin
@@ -64,6 +65,15 @@ class Page
                 header("Location: /");
                 exit();
             }
+        }
+
+        // prebratie pripojenia na databazu z globálnej premennej
+        global $db;
+        
+        $row = $db->query('SELECT `AvatarFILE` FROM `50_sys_users` WHERE `OsobneCislo` = ?', $_SESSION['LoginUser'])->fetchArray();
+        $this->suborAvatara = "/dist/avatar/" . $row['AvatarFILE'];
+        if ( is_null($row['AvatarFILE']) OR !file_exists($_SERVER['DOCUMENT_ROOT'] . $this->suborAvatara) ) {
+            $this->suborAvatara = "/dist/img/ avatar-clear.svg";
         }
 
         // zadefinovanie základných štýlov
@@ -203,9 +213,6 @@ class Page
                 <a href="/" class="nav-link">Domov</a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
-                <a href="/user/avatar" class="nav-link">Avatar</a>
-            </li>
-            <li class="nav-item d-none d-sm-inline-block">
                 <a href="#" class="nav-link">Kontakt</a>
             </li>
         </ul>
@@ -226,7 +233,7 @@ class Page
         <ul class="navbar-nav ml-auto">
             <!-- LogIn/LogOut -->
             <li class="nav-item">
-<?php if (isset($_SESSION['userId'])): ?>
+<?php if (isset($_SESSION['LoginUser'])): ?>
 				<form class="" action="/user/logout.php" method="post">
 					<input class="btn btn-warning" type="submit" name="logout-submit" value="LogOut">
 				</form>
@@ -243,27 +250,16 @@ class Page
     public function displayLogin()
     {
 ?>
-<?php if (isset($_SESSION['userId'])): 
-
-    // prebratie pripojenia na databazu z globálnej premennej
-    global $db;
-    
-    $row = $db->query('SELECT `AvatarFILE` FROM `50_sys_users` WHERE `OsobneCislo` = ?', $_SESSION['userId'])->fetchArray();
-    $suborAvatara = "/dist/avatar/" . $row['AvatarFILE'];
-    
-    if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $suborAvatara)) {
-        $suborAvatara = "/dist/img/user-anonymous.png";
-    }
-?>
+<?php if (isset($_SESSION['LoginUser'])): ?>
             <div class="image">
-                <img src="<?= $suborAvatara ?>" class="img-circle elevation-2" alt="User Image">
+                <img src="<?= $this->suborAvatara ?>" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
                 <a href="/user/detail" class="d-block text-warning"><?= htmlspecialchars($_SESSION['userNameShort']) ?></a>
             </div>
 <?php else: ?>
             <div class="image">
-                <img src="/dist/img/user-anonymous.png" class="img-circle elevation-2" alt="User Image">
+                <img src="/dist/img/ avatar-clear.svg" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
                 <a href="/user/login" class="d-block text-warning">NEPRIHLASENÝ</a>
@@ -570,6 +566,10 @@ class Page
                 $cssComment = '';
                 $cssLink = '/plugins/datatables-responsive/css/responsive.bootstrap4';
                 break;
+            case "DataTables-Buttons":
+                $cssComment = '';
+                $cssLink = '/plugins/datatables-buttons/css/buttons.bootstrap4';
+                break;
             case "Tempusdominus Bbootstrap 4":
                 $cssLink = '/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4';
                 break;                
@@ -630,6 +630,18 @@ class Page
             case "DataTables-Responsive-Bootstrap":
                 $jsComment = '';                
                 $jsLink = '/plugins/datatables-responsive/js/responsive.bootstrap4';
+            break;
+            case "DataTables-Buttons":
+                $jsComment = '';                
+                $jsLink = '/plugins/datatables-buttons/js/dataTables.buttons';
+            break;
+            case "DataTables-Buttons-Bootstrap":
+                $jsComment = '';                
+                $jsLink = '/plugins/datatables-buttons/js/buttons.bootstrap4';
+            break;
+            case "DataTables-Buttons-HTML5":
+                $jsComment = '';                
+                $jsLink = '/plugins/datatables-buttons/js/buttons.html5';
             break;
         }
 

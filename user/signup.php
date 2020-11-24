@@ -31,15 +31,14 @@
                         WHERE `OsobneCislo` = ?', $TelefonneCislo, $Email, $Password_NEW, $user);
 
             $row = $db->query('SELECT * FROM `50_sys_users` WHERE `OsobneCislo` = ?', $user)->fetchArray();
-            
-            $_SESSION['userId'] = $row['OsobneCislo'];
+
+            $_SESSION['LoginUser'] = $user;
             $_SESSION['userNameShort'] = (isset($row['Titul']) ? $row['Titul']." " : "" ) . $row['Meno'] . " " . $row['Priezvisko'];
             $_SESSION['userName'] = "[" . $row['OsobneCislo'] . "] " . $_SESSION['userNameShort'];
             $_SESSION['LEVEL'] = $row['LEVEL'];
 
             if ( is_null($row['AvatarFILE']) ) {
                 // konto nieje aktivované kým nieje zvolený avatar - presmeruje sa na stránku avatara
-                $_SESSION['LoginUser'] = $user;
                 header("Location: /user/avatar");
                 exit;
             } else {
@@ -152,7 +151,7 @@ ob_start();  // Začiatok definície hlavného obsahu
                     <div class="form-group col-md-6">
                         <label>E-mail</label>
                         <div class="input-group">
-                            <input type="text" class="form-control<?= $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="<?= $pole; ?>" placeholder="meno@zoszv.sk">
+                            <input autofocus type="text" class="form-control<?= $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="<?= $pole; ?>" placeholder="meno@zoszv.sk">
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-envelope"></span>

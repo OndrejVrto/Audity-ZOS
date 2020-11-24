@@ -7,10 +7,35 @@
         exit();
     }
 
-    $homepage = new \Page\Page();
+    $page = new \Page\Page();
+    $page->zobrazitBublinky = false;
 
-    $data = $db->query('SELECT * FROM `51_sys_users_maxmast_uoscis` WHERE `ucislo` = ?', $_SESSION['userId'])->fetchArray();
-    $dataLocal = $db->query('SELECT * FROM `50_sys_users` WHERE `OsobneCislo` = ?', $_SESSION['userId'])->fetchArray();
+    $row = $db->query('SELECT * FROM `50_sys_users` WHERE `OsobneCislo` = ?', $_SESSION['LoginUser'])->fetchArray();
+
+    // todo: Funkčnosť tejto stránky
+    
+    // ! každý prihlásený uživateľ
+    // * zobrazenie veľkého obrázka avatara
+    // * zobrazenie údajov v peknej forme
+    // * zobrazenie posledných 5 dátumov nalogovania
+    // * editácia vstupných údajov (email, telefon)
+    // * zmena nového hesla
+    // * reset hesla na pôvodný Pasword_OLD
+    // * zmena avatara - v modálnom okne + referer na túto stránku
+    // ? štatistika:  počet nalogovania do aplikácie Celkový/po mesiacoch/po rokoch -> vytvoriť pohľad v databáze
+    // ? zoznam akcií v jednotlivých (hlavných) tabuľkách ktoré vykonal aktuálny uživateľ
+
+    // ! LEN admin
+    // * zobrazenie dátumu registrácie
+    // * zobrazenie kompletného zoznamu dátumov nalogovania do systému aj s IP adresou a typom prehliadača
+    // * zobrazenie hesla OLD
+    // * pridelenie LEVELu od -1 do 3 prepínačmi
+        // ^ LEVEL = -1 ručné znefunkčnenie konta
+        //// ^ LEVEL = 0 neprihlásený uživateľ alebo bývalý zamestnanec
+        // ^ LEVEL = 1 read
+        // ^ LEVEL = 2 edit
+        // ^ LEVEL = 3 admin
+
 
 ob_start();  // Začiatok definície hlavného obsahu
 ?>
@@ -146,6 +171,6 @@ ob_start();  // Začiatok definície hlavného obsahu
     </div>
 
 <?php
-$homepage->content = ob_get_clean();  // Koniec hlavného obsahu
+$page->content = ob_get_clean();  // Koniec hlavného obsahu
 
-$homepage->display();  // vykreslenie stranky
+$page->display();  // vykreslenie stranky

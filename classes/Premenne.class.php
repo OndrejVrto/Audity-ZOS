@@ -18,15 +18,15 @@ class Premenne
 
         // Meta značky stránky
         if (array_key_exists($link, $this->konstantyStranok["Titulok Stránky"])) {
-            $this->titulokStranky = $this->konstantyStranok["Titulok Stránky"][$link];
+            $this->titulokStranky = $this->konstantyStranok["Titulok Stránky"][$link] . " | Audity ŽOS Zvolen";
         } else {
             $this->titulokStranky = "Audity ŽOS Zvolen";
         }
 
         if (array_key_exists($link, $this->konstantyStranok["Popis Stránky"])) {
-            $this->popisStranky = $this->konstantyStranok["Popis Stránky"][$link];
+            $this->popisStranky = "Audity ŽOS Zvolen - " . $this->konstantyStranok["Popis Stránky"][$link];
         } else {
-            $this->popisStranky = "Audity ŽOS Zvolen - stránka bez špeciálneho popisu";
+            $this->popisStranky = "stránka bez špeciálneho popisu";
         }
 
         // určuje či sa na stránke zobrazí bublinkové menu a následne ho naplní
@@ -35,8 +35,8 @@ class Premenne
         } else {
             $this->nadpisPrvejSekcie = "";
         }
-        
-        //* LEVEL = 0 neprihlásený uživateľ
+        //* LEVEL = -1 ručne deaktivovaný uživateľ
+        //* LEVEL = 0 neprihlásený uživateľ alebo bývalý zamestnanec
         //* LEVEL = 1 read
         //* LEVEL = 2 edit
         //* LEVEL = 3 admin
@@ -64,48 +64,51 @@ class Premenne
 
         // Meta značka stránky - TITLE -> Zobrazuje sa ako názov okna.
         "Titulok Stránky" => array(
-            "/errorpages/404"                       =>    "Chybová stránka 404 | Audity ŽOS Zvolen",
-            "/errorpages/401"                       =>    "Chybová stránka 401 | Audity ŽOS Zvolen",
-            "/"                                     =>    "Home | Audity ŽOS Zvolen",
-            "/login"                                =>    "Login | Audity ŽOS Zvolen",
-            "/signup"                               =>    "Signup | Audity ŽOS Zvolen",
-            "/user-detail"                          =>    "User detail | Audity ŽOS Zvolen",
-            "/vlastnosti/oblasti-auditov/zoznam"    =>    "Zoznam oblastí auditovania | Audity ŽOS Zvolen",
-            "/vlastnosti/typ-auditu/zoznam"         =>    "Typ auditu | Audity ŽOS Zvolen",
-            "/vlastnosti/typy-externych-zisteni/zoznam" =>    "Zoznam externých zistení | Audity ŽOS Zvolen",
-            "/sprava/zoznam-pracovnikov-zos"        =>    "Zoznam pracovníkov ŽOS Zvolen | Audity ŽOS Zvolen",
-            "/sprava/zoznam-pracovnikov-zos-komplet" =>    "Kompletný zoznam pracovníkov | Audity ŽOS Zvolen",
+            "/errorpages/404"                           =>    "Chybová stránka 404",
+            "/errorpages/401"                           =>    "Chybová stránka 401",
+            "/"                                         =>    "Home",
+            "/login"                                    =>    "Login",
+            "/signup"                                   =>    "Signup",
+            "/user/detail"                              =>    "User detail",
+            "/user/avatar"                              =>    "Avatar",            
+            "/vlastnosti/oblasti-auditov/zoznam"        =>    "Zoznam oblastí auditovania",
+            "/vlastnosti/typ-auditu/zoznam"             =>    "Typ auditu",
+            "/vlastnosti/typy-externych-zisteni/zoznam" =>    "Zoznam externých zistení",
+            "/sprava/zoznam-pracovnikov-zos"            =>    "Zoznam pracovníkov ŽOS Zvolen",
+            "/sprava/zoznam-pracovnikov-zos-komplet"    =>    "Kompletný zoznam pracovníkov",
             
         ),    // "Titulok Stránky"
 
         // Meta značka stránky - Description -> popisuje stránku
         "Popis Stránky" => array(
-            "/errorpages/404"                       =>    "Audity ŽOS Zvolen - chyba 404 - odkaz na stránku neexistuje",
-            "/errorpages/401"                       =>    "Audity ŽOS Zvolen - Chyba 401 - Neautorizovaný vstup",            
-            "/"                                     =>    "Audity ŽOS Zvolen - hlavná stránka",
-            "/login"                                =>    "Audity ŽOS Zvolen - prihlasovanie uživateľa",
-            "/user-detail"                          =>    "Audity ŽOS Zvolen - detialy o prihlásenom užívateľovi",
-            "/signup"                               =>    "Audity ŽOS Zvolen - vytvorenie nového účtu uživateľa",
-            "/vlastnosti/oblasti-auditov/zoznam"    =>    "Audity ŽOS Zvolen - zoznam oblastí auditovania",
-            "/vlastnosti/typ-auditu/zoznam"         =>    "Audity ŽOS Zvolen - zoznam typov auditov a odkaz na referrenčný dokument",
-            "/vlastnosti/typy-externych-zisteni/zoznam" =>    "Audity ŽOS Zvolen - Zoznam názvov externých zistení",
-            "/sprava/zoznam-pracovnikov-zos"        =>    "Audity ŽOS Zvolen - aktuálny zoznam zamestnancov z dochádzkového systému",
-            "/sprava/zoznam-pracovnikov-zos-komplet" =>    "Audity ŽOS Zvolen - kompletný zoznam pracovníkov ŽOS ktorý boli evidovaný v dochádzkovom systéme Human",
+            "/errorpages/404"                           =>    "chyba 404 - odkaz na stránku neexistuje",
+            "/errorpages/401"                           =>    "Chyba 401 - Neautorizovaný vstup",            
+            "/"                                         =>    "hlavná stránka",
+            "/login"                                    =>    "prihlasovanie uživateľa",
+            "/user/detail"                              =>    "detialy o prihlásenom užívateľovi",
+            "/user/avatar"                              =>    "vytvorenie avatara pre aktuálne prihláseného uživateľa",  
+            "/signup"                                   =>    "vytvorenie nového účtu uživateľa",
+            "/vlastnosti/oblasti-auditov/zoznam"        =>    "zoznam oblastí auditovania",
+            "/vlastnosti/typ-auditu/zoznam"             =>    "zoznam typov auditov a odkaz na referrenčný dokument",
+            "/vlastnosti/typy-externych-zisteni/zoznam" =>    "Zoznam názvov externých zistení",
+            "/sprava/zoznam-pracovnikov-zos"            =>    "aktuálny zoznam zamestnancov z dochádzkového systému",
+            "/sprava/zoznam-pracovnikov-zos-komplet"    =>    "kompletný zoznam pracovníkov ŽOS ktorý boli evidovaný v dochádzkovom systéme Human",
         ),    // "Popis Stránky"
 
         // Nadpisy prvej kapitoly.
         "Nadpis" => array(
-            "/errorpages/404"                       =>    "Chybová stránka 404",
-            "/errorpages/401"                       =>    "Chybová stránka 401",
-            "/"                                     =>    "Predľad všetkých auditov",
-            "/login"                                =>    false,
-            "/signup"                               =>    false,
-            "/user-detail"                          =>    "Detaily o užívateľovi",
-            "/vlastnosti/oblasti-auditov/zoznam"    =>    "Zoznam oblastí auditovania",
-            "/vlastnosti/typ-auditu/zoznam"         =>    "Typ auditu",
+            "/errorpages/404"                           =>    "Chybová stránka 404",
+            "/errorpages/401"                           =>    "Chybová stránka 401",
+            "/"                                         =>    "Predľad všetkých auditov",
+            "/login"                                    =>    false,
+            "/signup"                                   =>    false,
+            "/user/detail"                              =>    "Detaily o prihlásenom užívateľovi",
+            "/user/avatar"                              =>    "Vyber si svojho Avatara",
+            "/vlastnosti/oblasti-auditov/zoznam"        =>    "Zoznam oblastí auditovania",
+            "/vlastnosti/typ-auditu/zoznam"             =>    "Typ auditu",
             "/vlastnosti/typy-externych-zisteni/zoznam" =>    "Zoznam názvov externých zistení",
-            "/sprava/zoznam-pracovnikov-zos"        =>    "Aktuálny zoznam zamestnancov ŽOS Zvolen",
-            "/sprava/zoznam-pracovnikov-zos-komplet" =>   "Kompletný zoznam zamestnancov evidovaných v HUMANe",
+            "/sprava/zoznam-pracovnikov-zos"            =>    "Aktuálny zoznam zamestnancov ŽOS Zvolen",
+            "/sprava/zoznam-pracovnikov-zos-komplet"    =>    "Kompletný zoznam zamestnancov evidovaných v HUMANe",
         ),    // "Nadpis prvej kapitoly"
     );
 

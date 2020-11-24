@@ -157,6 +157,8 @@
         if (VYVOJ) {echo "INSERT: " . $db->affectedRows() . PHP_EOL . "<br>";}
 
         // pridanie náhodného hesla tým zamestnancom kde je prázdne pole Password_OLD
+        // POZOR: treba viackrát zopakovať ak je veľa záznamov naraz
+        // potrebné zapnúť sql-mode="NO_ENGINE_SUBSTITUTION" do my.ini
         $db->query("UPDATE `50_sys_users` SET `Password_OLD` = CONCAT(
                         ELT(1+FLOOR(RAND()*64), 
                         'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
@@ -179,7 +181,7 @@
                         'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
                         '0','1','2','3','4','5','6','7','8','9')
                         )
-                    WHERE `Password_OLD` = '' OR `Password_OLD` IS NULL;");
+                    WHERE `Password_OLD` IS NULL;");
         if (VYVOJ) {echo "PASS: " . $db->affectedRows() . PHP_EOL . "<br>";}
 
         // zapíše do logu poslednú aktualizáciu

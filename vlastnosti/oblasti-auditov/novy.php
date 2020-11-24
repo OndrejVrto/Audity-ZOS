@@ -40,7 +40,7 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
                         <div class="form-group ">
                             <label>Názov oblasti</label>
                             <div class="input-group">
-                                <input type="text" class="form-control<?= $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="<?= $pole ?>" placeholder="Položka">
+                                <input autofocus type="text" class="form-control<?= $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="<?= $pole ?>" placeholder="Položka">
                                 <div class="input-group-append">
                                     <div class="input-group-text">
                                         <span class="fas fa-id-card"></span>

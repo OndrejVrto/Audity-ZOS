@@ -5,8 +5,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
     $page->bodyClassExtended = 'col-12';
     $page->bodyWidthExtended = 'max-width: 1400px;';
     $page->zobrazitTlacitka = false;
+    $page->pagination = true;
+    $page->info = true;
+    $page->riadkov = 50;
 
-    $datumDnes = date("Y-m-d");
     $data = $db->query('SELECT * FROM `51_sys_users_maxmast_uoscis` ORDER BY ondate ASC')->fetchAll();
 
 ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor

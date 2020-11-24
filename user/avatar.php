@@ -1,25 +1,24 @@
 <?php
     require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
     
-    // ak uživateľ nieje prihlásený, presmeruje ho na hlavnú stránku
-    if ( !isset($_SESSION['LEVEL']) OR $_SESSION['LEVEL'] < 1 ){
+    // ak uživateľ prišiel na stránku inak ako so stránky LOGIN alebo SIGNUP
+    if (isset($_SERVER['HTTP_REFERER']) AND (substr($_SERVER['HTTP_REFERER'], -6, 6) === "signup" OR substr($_SERVER['HTTP_REFERER'], -5, 5) === "login") ) {
+        // pokračuj
+    } else {
         header("Location: /");
+        exit;
+    }
+
+    // ak uživateľ nieje prihlásený, presmeruje ho na prihlásenie
+    if ( !isset($_SESSION['LEVEL']) OR $_SESSION['LEVEL'] < 1 ){
+        header("Location: /login");
         exit();
     }
 
     $page = new \Page\PageClear();
 
-    $user = (isset($_SESSION['LoginUser'])) ? $_SESSION['LoginUser'] : "" ;
-
-    // TODO dopracovať presmerovanie v zmysle
-    // TODO --Po vložení Avatara do databázy sa vráť na pôvodnú stránku... napr: /user/detail
-    // if (isset($_SERVER['HTTP_REFERER'])) {
-    //     if (substr($_SERVER['HTTP_REFERER'], -6, 6) === "signup" || substr($_SERVER['HTTP_REFERER'], -5, 5) === "login") {
-    //         $referer = "/user/login";
-    //     } else {
-            $referer = "/";
-    //     }
-    // }
+    $user = $_SESSION['LoginUser'];
+    $referer = "/";
 
 ob_start();  // Začiatok definície hlavného obsahu
 ?>

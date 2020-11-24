@@ -69,7 +69,7 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
                                 <div class="form-group ">
                                     <label>Názov auditu alebo norma</label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control<?=  $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="<?= $pole ?>">
+                                        <input autofocus type="text" class="form-control<?=  $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="<?= $pole ?>">
                                         <div class="input-group-append">
                                             <div class="input-group-text">
                                                 <span class="fas fa-book"></span>

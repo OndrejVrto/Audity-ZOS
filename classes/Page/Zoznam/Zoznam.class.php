@@ -7,6 +7,7 @@ class Zoznam extends \Page\Page
 
     public $pagination = false;
     public $info = false;
+    public $riadkov = 10;
 
     function ContentHeaderZoznamTlacitka (){
 
@@ -72,6 +73,7 @@ class Zoznam extends \Page\Page
         parent::addStyles("DataTables-jQuery", false);
         parent::addStyles("DataTables-Bootstrap", true);
         parent::addStyles("DataTables-Select", true);
+        // parent::addStyles("DataTables-Buttons", true);
         parent::addStyles("DataTables-Responsive", true);
         parent::addStyles("Adminlte style", false);
         parent::addStyles("Google Font: Source Sans Pro", false);
@@ -84,6 +86,9 @@ class Zoznam extends \Page\Page
         parent::addScripts("DataTables-Bootstrap4",true);
         parent::addScripts("DataTables-Select",true);
         parent::addScripts("DataTables-Select-Bootstrap4",true);
+        // parent::addScripts("DataTables-Buttons",true);
+        // parent::addScripts("DataTables-Buttons-Bootstrap4",true);
+        // parent::addScripts("DataTables-Buttons-HTML5",true);
         parent::addScripts("DataTables-Responsive",true);
         parent::addScripts("DataTables-Responsive-Bootstrap",true);
         parent::addScripts("AdminLTE App",true);
@@ -103,10 +108,20 @@ ob_start();  // Začiatok definície Špeciálnych SKRIPTov pre túto stránku
     <script>
     $(document).ready(function() {
         var table = $('#tabulka').DataTable({
+/*             dom: 'Bfrtip',
+            buttons: [
+                'copyHtml5',
+                'pageLength'
+            ], */
             responsive: true,
             select: 'single',
             paging: <?php if ($this->pagination) { echo 'true'; } else { echo 'false'; } ?>,
             info: <?php if ($this->info) { echo 'true'; } else { echo 'false'; } ?>,
+            pageLength: <?= $this->riadkov ?>,
+            lengthMenu: [
+                [ 10, 25, 50, -1 ],
+                [ '10 riadkov', '25 riadkov', '50 riadkov', 'Všetko' ]
+            ],
             language: {
                 sEmptyTable:     "Nie sú k dispozícii žiadne dáta",
                 sInfo:           "Záznamy _START_ až _END_ z celkom _TOTAL_",
@@ -114,7 +129,7 @@ ob_start();  // Začiatok definície Špeciálnych SKRIPTov pre túto stránku
                 sInfoFiltered:   "(vyfiltrované spomedzi _MAX_ záznamov)",
                 sInfoPostFix:    "",
                 sInfoThousands:  " ",
-                sLengthMenu:     "Zobraz _MENU_ záznamov",
+                sLengthMenu:     "_MENU_",
                 sLoadingRecords: "Načítavam...",
                 sProcessing:     "Spracúvam...",
                 sSearch:         "Hľadať v tabuľke:",

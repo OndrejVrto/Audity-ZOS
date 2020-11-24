@@ -47,7 +47,6 @@
             // logovanie prihlásenia
             $db->query('INSERT INTO `60_log_prihlasenie` (`ID50_sys_users`, `DatumCas`, `IP`, `Prehliadac`) VALUES (?, now(), ?, ? )', $userID, $ip, $prehliadac);
 
-            $_SESSION['userId'] = $row['OsobneCislo'];
             $_SESSION['userNameShort'] = (isset($row['Titul']) ? $row['Titul']." " : "" ) . $row['Meno'] . " " . $row['Priezvisko'];
             $_SESSION['userName'] = "[" . $row['OsobneCislo'] . "] " . $_SESSION['userNameShort'];
             $_SESSION['LEVEL'] = $row['LEVEL'];
@@ -82,7 +81,7 @@ ob_start();  // Začiatok definície hlavného obsahu
                 <?php $pole = 'login-osobne-cislo'; echo PHP_EOL; ?>
                 <!-- FORM - osobne cislo -->
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control<?= $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="login-osobne-cislo" placeholder="Osobné číslo">
+                    <input autofocus type="text" class="form-control<?= $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="login-osobne-cislo" placeholder="Osobné číslo">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-id-card"></span>
