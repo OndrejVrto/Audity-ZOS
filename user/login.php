@@ -3,6 +3,8 @@
     
     // spustenie aktualizacie tabulky users s databazy max4
     AktualizujMAX();
+    
+    // todo spraviť tlačítka v menu na ručné spustenie týchto funkcií
     // spustenie synchronizácia dát v tabuľke USERS. Spúšťa sa vrámci predchádzajúceho programu, ale pri vývoji vždy.
     if (VYVOJ) { AktualizujUSERS(); }
 
@@ -21,9 +23,13 @@
         if ($v->validateForm()) {
             
             $user = $_POST['login-osobne-cislo'];
+            
             $row = $db->query('SELECT * FROM `50_sys_users` WHERE `OsobneCislo` = ?', $user )->fetchArray();
             $userID = $row['ID50'];
             $_SESSION['LoginUser'] = $user;
+            $_SESSION['userNameShort'] = (isset($row['Titul']) ? $row['Titul']." " : "" ) . $row['Meno'] . " " . $row['Priezvisko'];
+            $_SESSION['userName'] = "[" . $row['OsobneCislo'] . "] " . $_SESSION['userNameShort'];
+            $_SESSION['LEVEL'] = $row['LEVEL'];
 
             // konto nieje aktivované - presmeruje sa na stránku aktivácie
             if (is_null($row['Datum_Inicializacie_Konta'])) {
@@ -41,15 +47,9 @@
             } else {
                 $ip = $_SERVER['REMOTE_ADDR'];
             }
-
             $prehliadac = $_SERVER['HTTP_USER_AGENT'];
-
             // logovanie prihlásenia
             $db->query('INSERT INTO `60_log_prihlasenie` (`ID50_sys_users`, `DatumCas`, `IP`, `Prehliadac`) VALUES (?, now(), ?, ? )', $userID, $ip, $prehliadac);
-
-            $_SESSION['userNameShort'] = (isset($row['Titul']) ? $row['Titul']." " : "" ) . $row['Meno'] . " " . $row['Priezvisko'];
-            $_SESSION['userName'] = "[" . $row['OsobneCislo'] . "] " . $_SESSION['userNameShort'];
-            $_SESSION['LEVEL'] = $row['LEVEL'];
 
             // konto nemá prideleného avatara - presmeruje sa na stránku avatar
             if ( is_null($row['AvatarFILE']) ) {

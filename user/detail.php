@@ -1,16 +1,16 @@
 <?php
     require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
 
+    $page = new \Page\Page();
+    $page->zobrazitBublinky = false;
+
     // ak uživateľ nieje prihlásený, presmeruje ho na hlavnú stránku
-    if ( !isset($_SESSION['LEVEL']) OR $_SESSION['LEVEL'] < 1 ){
+    if ( $page->levelUser < 1 ){
         header("Location: /");
         exit();
     }
 
-    $page = new \Page\Page();
-    $page->zobrazitBublinky = false;
-
-    $row = $db->query('SELECT * FROM `50_sys_users` WHERE `OsobneCislo` = ?', $_SESSION['LoginUser'])->fetchArray();
+    $row = $db->query('SELECT * FROM `50_sys_users` WHERE `OsobneCislo` = ?', $page->LoginUser)->fetchArray();
 
     // todo: Funkčnosť tejto stránky
     

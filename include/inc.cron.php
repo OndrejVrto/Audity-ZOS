@@ -31,7 +31,6 @@
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch(PDOException $e) {
             // v prípade že sa nepripojí do databázy MAX ukončí skritp a teda nepríde k zmazaniu údajov
-            
             // uzavrie toto dočasné pripojenie do databazy
             $dbCRON->close();
             return;
@@ -41,7 +40,10 @@
         $stmt = $pdo->prepare("SELECT * FROM maxmast.uoscis");
         $stmt->execute();
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        // opraví formátovanie dát načítaných z MAXu
+
+        // opraví formátovanie dát načítaných z MAXu cez DSN v ktorom je nastavené prímanie dát vo formáte cp1250 (Windows-1250)
+        // V prípade, ak by som sa vedel pripojiť priamo do databázy (ale bohužiaľ neviem heslo)
+        // dalo by sa nastaviť prímanie dát priamo v UTF8 cez nastavenie "SET NAMES utf8"
         array_convert_MAX($data);
 
         // vytvrí SQL dotaz na vloženie nových dát do tabuľky v lokálnej databáze
@@ -93,8 +95,8 @@
     // niesú to živnostníci, ani dohodári
     // majú dátum prepustenia neskôr ako je dnes
     // ^ a porovnaj ich s tabuľkou
-    // ? ak je záznam v tabuľke a zároveň medzi dátami je rozdiel -> UPDATE
-    // ? ak NIEje záznam v tabuľke -> INSERT + vygeruj im prvotné heslo do premennej Pasword-OLD
+    // ? ak je záznam v tabuľke -> UPDATE
+    // ? ak NIEje záznam v tabuľke -> INSERT -> vygeruj im prvotné heslo do premennej Pasword-OLD
 
     // ! zmena stavu po prepustení so ŽOS v stĺpci NEPOUZIVAT na 1
     // * vyber záznamy kde je osobné číslo rovnaké v obidvoch tabuľkách ale je rozdiel v hodnote offdate
@@ -158,7 +160,7 @@
 
         // pridanie náhodného hesla tým zamestnancom kde je prázdne pole Password_OLD
         // POZOR: treba viackrát zopakovať ak je veľa záznamov naraz
-        // potrebné zapnúť sql-mode="NO_ENGINE_SUBSTITUTION" do my.ini
+        // potrebné zapnúť  sql-mode="NO_ENGINE_SUBSTITUTION"  v  my.ini
         $db->query("UPDATE `50_sys_users` SET `Password_OLD` = CONCAT(
                         ELT(1+FLOOR(RAND()*64), 
                         'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',

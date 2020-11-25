@@ -57,6 +57,6 @@
         $odhlasenie = true;
     }
     // resetnutie času pre automaticke odhlásenie
-    if (isset($_SESSION['userId'])) {
+    if (isset($_SESSION['LoginUser'])) {
         $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
     }

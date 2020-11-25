@@ -4,7 +4,8 @@
     $page = new \Page\Zoznam\Novy();
     $page->bodyClassExtended = 'col-12 col-sm-10 col-md-9 col-lg-7';
     $page->bodyWidthExtended = 'max-width: 600px;';
-
+    $page->todo = true;
+    
     $v = new \Validator\Validator();
 
     if (isset($_POST['submit'])) {
@@ -17,7 +18,7 @@
 
         // ak validacia skonci TRUE --> vlož dáta do databázy
         if ($v->validateForm()) {
-            $user = $_SESSION['userName'];
+            $user = $page->userName;
             $oblast = $_POST['oblast-auditu'];
             $poznamka = $_POST['oblast-auditu-poznamka'];
 

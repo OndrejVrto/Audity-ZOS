@@ -4,7 +4,8 @@
     $page = new \Page\Zoznam\Detail();
     $page->bodyClassExtended = 'col-12 col-sm-10 col-md-9 col-lg-7';
     $page->bodyWidthExtended = 'max-width: 600px;';
-
+    $page->todo = true;
+    
     $id = (int)$_POST['detail'];
 
     $data = $db->query('SELECT * FROM `33_zoznam_typ_externych_zisteni` WHERE ID33 = ?', $id)->fetchArray();

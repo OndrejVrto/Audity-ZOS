@@ -9,15 +9,15 @@
         exit;
     }
 
+    $page = new \Page\PageClear();
+
     // ak uživateľ nieje prihlásený, presmeruje ho na prihlásenie
-    if ( !isset($_SESSION['LEVEL']) OR $_SESSION['LEVEL'] < 1 ){
+    if ( $page->levelUser < 1 ){
         header("Location: /login");
         exit();
     }
 
-    $page = new \Page\PageClear();
-
-    $user = $_SESSION['LoginUser'];
+    $user = $page->LoginUser;
     $referer = "/";
 
 ob_start();  // Začiatok definície hlavného obsahu

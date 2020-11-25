@@ -17,7 +17,7 @@
 
         // ak validacia skonci TRUE --> vlož dáta do databázy
         if ($v->validateForm()) {
-            $user = $_SESSION['userName'];
+            $user = $page->userName;
             $oblast = $_POST['oblast-auditu'];
             $poznamka = $_POST['oblast-auditu-poznamka'];
 

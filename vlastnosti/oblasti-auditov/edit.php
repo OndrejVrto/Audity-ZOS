@@ -19,7 +19,7 @@
 
         // ak validacia skonci TRUE (1) --> zktualizuj dáta v databáze
         if ($v->validateForm()) {
-            $user = $_SESSION['userName'];
+            $user = $page->userName;
             $oblast = $_POST['oblast-auditu'];
             $poznamka = $_POST['oblast-auditu-poznamka'];
 

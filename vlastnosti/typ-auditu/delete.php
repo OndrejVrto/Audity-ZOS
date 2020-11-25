@@ -8,7 +8,7 @@
     // vymazanie záznamu z databazy
     // POZOR tento blok kodu musi byt na zaciatku aby ukončil zvyšný skript včas
     if (isset($_POST['submit'])) {
-        $user = $_SESSION['userName'];
+        $user = $page->userName;
         $id = (int)$_POST['submit'];
         
         $db->query('UPDATE `31_zoznam_typ_auditu` SET `KtoVykonalZmenu` = ? WHERE `ID31` = ?', $user, $id);

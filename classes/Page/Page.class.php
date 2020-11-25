@@ -19,12 +19,20 @@ class Page
     public $stylySpecial = '';
     public $skriptyArray = [];
     public $skriptySpecial = '';
+    public $todo = false;
     protected $_nazovstranky;
     protected $link;
     private $aktivnemenu = false;
-    private $LevelMenu;
+    private $levelMenu;
+    private $searchValue;
+
+    // premenné k aktuálne prihlásenému uživateľovi
+    public $levelUser;
+    public $LoginUser;
+    public $userNameShort;
+    public $userName;
     public $suborAvatara;
-    
+
     public $bodyClassExtended = ''; //premenna sa používa v odvodených triedach
     public $bodyWidthExtended = ''; //premenna sa používa v odvodených triedach
     public $linkCisty; //premenna sa používa v odvodených triedach
@@ -44,8 +52,15 @@ class Page
         $this->link = $_SERVER['REQUEST_URI'];
         $this->linkCisty = $this->upravLink($this->link);
         $this->linkZoznam = $this->linkCisty . "zoznam";
+        
+        // priradenie všetkých SESSION premenných do vlastností triedy
+        $this->LoginUser = ( isset($_SESSION['LoginUser']) ) ? $_SESSION['LoginUser'] : "" ;
+        $this->levelUser = ( isset($_SESSION['LEVEL']) ) ? $_SESSION['LEVEL'] : "0" ;
+        $this->userNameShort = ( isset($_SESSION['userNameShort']) ) ? $_SESSION['userNameShort'] : "" ;
+        $this->userName = ( isset($_SESSION['userName']) ) ? $_SESSION['userName'] : "" ;
 
-        $this->list = (isset($_GET['p'])) ? $_GET['p'] : "1" ;;
+        $this->list = (isset($_GET['p'])) ? $_GET['p'] : "1" ;
+        $this->searchValue = (isset($_POST['hladanyRetazec'])) ? $_POST['hladanyRetazec'] : "" ;
 
         $premenne = new \Premenne($this->link, $this->linkZoznam);
 
@@ -59,9 +74,9 @@ class Page
         // LEVEL = 1 read
         // LEVEL = 2 edit
         // LEVEL = 3 admin
-        $this->LevelMenu =  $premenne->MenuLevel;
-        if ($this->LevelMenu > 0) {
-            if ( !isset($_SESSION['LEVEL']) OR $_SESSION['LEVEL'] < $this->LevelMenu ){
+        $this->levelMenu =  $premenne->MenuLevel;
+        if ($this->levelMenu > 0) {
+            if ( $this->levelUser < $this->levelMenu ){
                 header("Location: /");
                 exit();
             }
@@ -70,7 +85,7 @@ class Page
         // prebratie pripojenia na databazu z globálnej premennej
         global $db;
         
-        $row = $db->query('SELECT `AvatarFILE` FROM `50_sys_users` WHERE `OsobneCislo` = ?', $_SESSION['LoginUser'])->fetchArray();
+        $row = $db->query('SELECT `AvatarFILE` FROM `50_sys_users` WHERE `OsobneCislo` = ?', $this->LoginUser)->fetchArray();
         $this->suborAvatara = "/dist/avatar/" . $row['AvatarFILE'];
         if ( is_null($row['AvatarFILE']) OR !file_exists($_SERVER['DOCUMENT_ROOT'] . $this->suborAvatara) ) {
             $this->suborAvatara = "/dist/img/ avatar-clear.svg";
@@ -116,6 +131,9 @@ class Page
         }
 
         $this->displayContentHeader();
+        if ($this->todo) {
+            $this->displayTODOtext();
+        }
         if ($this->zobrazitTlacitka) {
             $this->ContentHeaderZoznamTlacitka();
         }
@@ -218,9 +236,9 @@ class Page
         </ul>
 
         <!-- SEARCH FORM -->
-        <form class="form-inline ml-3">
+        <form class="form-inline ml-3" action="/vyhladavanie" method="POST">
             <div class="input-group input-group-sm">
-                <input class="form-control form-control-navbar" type="search" placeholder="Hľadaj ..." aria-label="Search">
+                <input name="hladanyRetazec" value="<?= $this->searchValue ?>" class="form-control form-control-navbar" type="search" placeholder="Hľadaj ..." aria-label="Search">
                 <div class="input-group-append">
                     <button class="btn btn-navbar" type="submit">
                         <i class="fas fa-search"></i>
@@ -233,7 +251,7 @@ class Page
         <ul class="navbar-nav ml-auto">
             <!-- LogIn/LogOut -->
             <li class="nav-item">
-<?php if (isset($_SESSION['LoginUser'])): ?>
+<?php if ( $this->levelUser > 0): ?>
 				<form class="" action="/user/logout.php" method="post">
 					<input class="btn btn-warning" type="submit" name="logout-submit" value="LogOut">
 				</form>
@@ -250,12 +268,22 @@ class Page
     public function displayLogin()
     {
 ?>
-<?php if (isset($_SESSION['LoginUser'])): ?>
+<?php if ($this->levelUser > 0): 
+    
+    $typKonta = "";
+    if ($this->levelUser == 2) {
+        $typKonta = '<span class="text-danger ml-2"><small>[EDIT]</small></span>';
+    } elseif ($this->levelUser > 2 AND $this->levelUser <= 5) {
+        $typKonta = '<span class="text-danger ml-2"><small>[ADMIN]</small></span>';
+    } elseif ($this->levelUser > 5) {
+        $typKonta = '<span class="text-danger ml-2"><small>[ADMIN-EXTRA]</small></span>';
+    }
+?>
             <div class="image">
                 <img src="<?= $this->suborAvatara ?>" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="/user/detail" class="d-block text-warning"><?= htmlspecialchars($_SESSION['userNameShort']) ?></a>
+                <a href="/user/detail" class="d-block text-warning"><?= htmlspecialchars($this->userNameShort) . $typKonta ?></a>
             </div>
 <?php else: ?>
             <div class="image">
@@ -307,8 +335,7 @@ class Page
             //  ak na zobrazenie položky menu je potrebná určitá úrovať LEVELu uživateľa preskočí nezobrazí ju v MENU
             //  neprihlásený uživateľ: LEVEL = 0
             if (isset($value['MinUserLEVEL'])) {
-                if (isset($_SESSION['LEVEL'])) { $localLEVEL = $_SESSION['LEVEL']; } else { $localLEVEL = 0; }
-                if ($localLEVEL < $value['MinUserLEVEL'] ) { continue; }
+                if ($this->levelUser < $value['MinUserLEVEL'] ) { continue; }
             }
 
             if (array_key_exists('Hlavicka', $value)) {
@@ -475,6 +502,17 @@ class Page
     </div>
 
 <?php 
+    }
+    private function displayTODOtext(){
+?>
+        <div class="text-center mt-n2">
+            <hr class="mt-0">
+            <span class="h4 text-danger">Na tejto stránke pracujeme usilovne ako včielky.</span>
+            <br>
+            Keď bude stránka úplne funkčná, tento text zmizne.<span class="ml-3 h4 text-success"><i class="far fa-grin-wink"></i></span>
+            <hr>
+        </div>
+<?php
     }
 
     public function displayFooter()
