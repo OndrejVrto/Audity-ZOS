@@ -18,9 +18,9 @@ ob_start();  // Začiatok definície hlavného obsahu
                         Skús pokračovať na <a href="/">hlavnej stránke</a> alebo využi vyhľadávanie.
                     </p>
 
-                    <form class="search-form" method="POST">
+                    <form class="search-form" action="/vyhladavanie" method="POST">
                         <div class="input-group">
-                            <input type="text" name="search" class="form-control" placeholder="Hľadať ...">
+                            <input type="text" name="hladanyRetazec" class="form-control" placeholder="Hľadať ...">
 
                             <div class="input-group-append">
                                 <button type="submit" name="submit" class="btn btn-danger"><i class="fas fa-search"></i></button>

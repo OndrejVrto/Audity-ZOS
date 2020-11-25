@@ -5,7 +5,7 @@
     $page->zobrazitBublinky = false;
 
     // ak uživateľ nieje prihlásený, presmeruje ho na hlavnú stránku
-    if ( $page->levelUser < 1 ){
+    if ( $page->levelUser <= 2 ){
         header("Location: /");
         exit();
     }
@@ -29,12 +29,7 @@
     // * zobrazenie dátumu registrácie
     // * zobrazenie kompletného zoznamu dátumov nalogovania do systému aj s IP adresou a typom prehliadača
     // * zobrazenie hesla OLD
-    // * pridelenie LEVELu od -1 do 3 prepínačmi
-        // ^ LEVEL = -1 ručné znefunkčnenie konta
-        //// ^ LEVEL = 0 neprihlásený uživateľ alebo bývalý zamestnanec
-        // ^ LEVEL = 1 read
-        // ^ LEVEL = 2 edit
-        // ^ LEVEL = 3 admin
+    // * pridelenie LEVELu od -1 do 20 prepínačmi
 
 
 ob_start();  // Začiatok definície hlavného obsahu

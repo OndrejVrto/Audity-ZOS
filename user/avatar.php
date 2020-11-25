@@ -12,7 +12,7 @@
     $page = new \Page\PageClear();
 
     // ak uživateľ nieje prihlásený, presmeruje ho na prihlásenie
-    if ( $page->levelUser < 1 ){
+    if ( $page->levelUser <= 2 ){
         header("Location: /login");
         exit();
     }

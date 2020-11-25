@@ -14,7 +14,9 @@ ob_start();  // Začiatok definície hlavného obsahu
 ?>
 
         <p><u><strong>Hľadaný výraz:</strong></u></p>
-        <p><?= $_POST['hladanyRetazec'] ?></p>
+        <p class="h3 ml-5 mb-4 text-danger"><?= $_POST['hladanyRetazec'] ?></p>
+        <p><u><strong>Nájdené výsledky:</strong></u></p>
+        <p class="ml-5 mb-4 text-secondary">Zatiaľ vyhľadávanie nefunguje !</p>
 
 <?php
 $page->content = ob_get_clean();  // Koniec hlavného obsahu

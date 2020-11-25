@@ -29,7 +29,7 @@
             $_SESSION['LoginUser'] = $user;
             $_SESSION['userNameShort'] = (isset($row['Titul']) ? $row['Titul']." " : "" ) . $row['Meno'] . " " . $row['Priezvisko'];
             $_SESSION['userName'] = "[" . $row['OsobneCislo'] . "] " . $_SESSION['userNameShort'];
-            $_SESSION['LEVEL'] = $row['LEVEL'];
+            $_SESSION['LEVEL'] = $row['ID53_sys_levels'];
 
             // konto nieje aktivované - presmeruje sa na stránku aktivácie
             if (is_null($row['Datum_Inicializacie_Konta'])) {

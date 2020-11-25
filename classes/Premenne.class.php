@@ -8,7 +8,7 @@ class Premenne
     public $popisStranky;
     public $bublinkoveMenu;
     public $nadpisPrvejSekcie;
-    public $MenuLevel = 0;
+    public $MenuLevel = 1;
 
     function __construct($link, $linkZoznam)
     {
@@ -35,11 +35,7 @@ class Premenne
         } else {
             $this->nadpisPrvejSekcie = "";
         }
-        //* LEVEL = -1 ručne deaktivovaný uživateľ
-        //* LEVEL = 0 neprihlásený uživateľ alebo bývalý zamestnanec
-        //* LEVEL = 1 read
-        //* LEVEL = 2 edit
-        //* LEVEL = 3 admin
+
         $this->getLevelMenu($this->menuHlavne, $link, $linkZoznam);
     }
 
@@ -270,7 +266,7 @@ class Premenne
                     "SUBMENU" => false,
                 ),
                 array(
-                    "MinUserLEVEL" => 10,
+                    "MinUserLEVEL" => 20,
                     "Link" => "/vlastnosti/typy-internych-zisteni/zoznam",
                     "Nazov" => "Typy internych zistení",
                     "Doplnok" => false,
@@ -313,7 +309,7 @@ class Premenne
             ),
         ),
         array(
-            "MinUserLEVEL" => 1,
+            "MinUserLEVEL" => 10,
             "Link" => false,
             "Nazov" => "Správa",
             "Doplnok" => false,
@@ -321,7 +317,7 @@ class Premenne
             "Ikona" => "fas fa-user-cog",
             "SUBMENU" => array(
                 array(
-                    "MinUserLEVEL" => 1,                    
+                    "MinUserLEVEL" => 10,                    
                     "Link" => "#",
                     "Nazov" => "Zoznam uživateľov",
                     "Doplnok" => false,
@@ -330,7 +326,7 @@ class Premenne
                     "SUBMENU" => false,
                 ),
                 array(
-                    "MinUserLEVEL" => 1,                    
+                    "MinUserLEVEL" => 10,                    
                     "Link" => false,
                     "Nazov" => "Zoznam správcov",
                     "Doplnok" => false,
@@ -339,7 +335,7 @@ class Premenne
                     "SUBMENU" => false,
                 ),
                 array(
-                    "MinUserLEVEL" => 3,
+                    "MinUserLEVEL" => 14,
                     "Link" => "/sprava/zoznam-pracovnikov-zos",
                     "Nazov" => "Aktívny zamestnanci ŽOS",
                     "Doplnok" => false,
@@ -348,7 +344,7 @@ class Premenne
                     "SUBMENU" => false,
                 ),                
                 array(
-                    "MinUserLEVEL" => 10,
+                    "MinUserLEVEL" => 16,
                     "Link" => "/sprava/zoznam-pracovnikov-zos-komplet",
                     "Nazov" => "Všetci zamestnanci ŽOS",
                     "Doplnok" => false,

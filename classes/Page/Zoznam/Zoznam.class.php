@@ -14,7 +14,7 @@ class Zoznam extends \Page\Page
 ?>
     <div class='row justify-content-center pb-3'>
         <div id="UpravaDat" class='form-inline'>
-<?php if ( $this->levelUser >= 2 ){ ?>
+<?php if ( $this->levelUser >= 12 ){ ?>
             <form action="<?= $this->linkCisty ?>novy" method="post">
                 <button type="submit" name="novy" ID='novy-zaznam' class="btn btn-primary">Pridať položku</button>
             </form>
@@ -22,7 +22,7 @@ class Zoznam extends \Page\Page
             <form action="<?= $this->linkCisty ?>detail" method="post" class="mx-1">
                 <button type="submit" name="detail" ID='button-detail' value="" class="btn btn-warning" disabled>Detaily</button>
             </form>
-<?php if ( $this->levelUser >= 2 ){ ?>
+<?php if ( $this->levelUser >= 12 ){ ?>
             <form action="<?= $this->linkCisty ?>edit" method="post" class="mr-1">
                 <button type="submit" name="edit" ID='button-edit' value="" class="btn btn-success" disabled>Editovať</button>
             </form>

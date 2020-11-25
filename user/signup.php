@@ -35,7 +35,7 @@
             $_SESSION['LoginUser'] = $user;
             $_SESSION['userNameShort'] = (isset($row['Titul']) ? $row['Titul']." " : "" ) . $row['Meno'] . " " . $row['Priezvisko'];
             $_SESSION['userName'] = "[" . $row['OsobneCislo'] . "] " . $_SESSION['userNameShort'];
-            $_SESSION['LEVEL'] = $row['LEVEL'];
+            $_SESSION['LEVEL'] = $row['ID53_sys_levels'];
 
             if ( is_null($row['AvatarFILE']) ) {
                 // konto nieje aktivované kým nieje zvolený avatar - presmeruje sa na stránku avatara

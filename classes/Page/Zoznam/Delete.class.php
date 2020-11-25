@@ -14,7 +14,7 @@ class Delete extends \Page\Page
         parent::__construct();
 
         // ak uživateľ nieje prihlásený alebo nemá oprávnenia, presmeruje ho na chybovú stránku
-        if ( $this->levelUser < 2 ){
+        if ( $this->levelUser <= 2 ){
             header('HTTP/1.0 401 Unauthorized');
             header("Location: /errorpages/401");
             exit();

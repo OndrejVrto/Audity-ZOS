@@ -132,7 +132,7 @@
         $db->query("UPDATE `50_sys_users` AS A INNER JOIN
                     (SELECT * FROM `51_sys_users_maxmast_uoscis` WHERE `offdate` < NOW() ) AS B
                     ON A.`OsobneCislo` = B.`ucislo`
-                    SET A.`LEVEL` = 0
+                    SET A.`ID53_sys_levels` = 3
                     ;");
         if (VYVOJ) {echo "OFF: " . $db->affectedRows() . PHP_EOL . "<br>";}
 
@@ -140,14 +140,14 @@
         $db->query("UPDATE `50_sys_users` AS A INNER JOIN
                     (SELECT * FROM `51_sys_users_maxmast_uoscis` WHERE `offdate` >= NOW() ) AS B
                     ON A.`OsobneCislo` = B.`ucislo`
-                    SET A.`LEVEL` = 1
-                    WHERE A.`LEVEL` = 0
+                    SET A.`ID53_sys_levels` = 3
+                    WHERE A.`ID53_sys_levels` = 2
                     ;");
         if (VYVOJ) {echo "ON: " . $db->affectedRows() . PHP_EOL . "<br>";}
 
         // vloženie nových záznamov
-        $db->query("INSERT INTO `50_sys_users` (`OsobneCislo`, `Titul`, `Meno`, `Priezvisko`, `Stredisko`, `NazovStrediska`, `Zamestnany_OD`, `Zamestnany_DO` )
-                    SELECT `ucislo`, `utitul`, `umeno`, `upriezv`, `ustred`, `nazstred`, `ondate`, `offdate` 
+        $db->query("INSERT INTO `50_sys_users` (`ID53_sys_levels`, `OsobneCislo`, `Titul`, `Meno`, `Priezvisko`, `Stredisko`, `NazovStrediska`, `Zamestnany_OD`, `Zamestnany_DO` )
+                    SELECT 3, `ucislo`, `utitul`, `umeno`, `upriezv`, `ustred`, `nazstred`, `ondate`, `offdate` 
                     FROM (
                         SELECT *
                         FROM `51_sys_users_maxmast_uoscis`

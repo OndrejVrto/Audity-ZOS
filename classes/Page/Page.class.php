@@ -25,6 +25,8 @@ class Page
     private $aktivnemenu = false;
     private $levelMenu;
     private $searchValue;
+    private $starttime;
+    private $endtime;
 
     // premenné k aktuálne prihlásenému uživateľovi
     public $levelUser;
@@ -46,6 +48,7 @@ class Page
 
     function __construct()
     {
+        $this->starttime = microtime(true); // Začiatok merania času
 
         header('Content-Type: text/html; charset=utf-8');
 
@@ -70,12 +73,9 @@ class Page
         $this->hlavneMenu = $premenne->menuHlavne;
 
         // ak uživateľ nemá oprávnenia na danú stránku presmeruje ho na hlavnú stránku
-        // LEVEL = 0 neprihlásený uživateľ alebo bývalý zamestnanec
-        // LEVEL = 1 read
-        // LEVEL = 2 edit
-        // LEVEL = 3 admin
         $this->levelMenu =  $premenne->MenuLevel;
-        if ($this->levelMenu > 0) {
+
+        if ($this->levelMenu > 1) {
             if ( $this->levelUser < $this->levelMenu ){
                 header("Location: /");
                 exit();
@@ -142,6 +142,10 @@ class Page
         $this->ContentFooterZoznam();
         $this->displayContentFooter();
         
+        // ukončenie merania času musí byť skôr ako je zobrazenie footer. Inak zobrazí nesprávnu hodnotu.
+        // zvyšok stránky trvá načítať krátko tak tam prirátam natvrdo majhoršiu hodnotu ktorú nameral
+        $this->endtime = microtime(true) + 0.0003;
+
         $this->displayFooter();
         $this->displayBodyFooter();
         
@@ -251,7 +255,7 @@ class Page
         <ul class="navbar-nav ml-auto">
             <!-- LogIn/LogOut -->
             <li class="nav-item">
-<?php if ( $this->levelUser > 0): ?>
+<?php if ( $this->levelUser >= 3): ?>
 				<form class="" action="/user/logout.php" method="post">
 					<input class="btn btn-warning" type="submit" name="logout-submit" value="LogOut">
 				</form>
@@ -268,14 +272,12 @@ class Page
     public function displayLogin()
     {
 ?>
-<?php if ($this->levelUser > 0): 
-    
+<?php if ($this->levelUser >= 3): 
+    // TODO dorobiť s prepojením na databázu
     $typKonta = "";
-    if ($this->levelUser == 2) {
+    if ($this->levelUser > 2 AND $this->levelUser <= 15) {
         $typKonta = '<span class="text-danger ml-2"><small>[EDIT]</small></span>';
-    } elseif ($this->levelUser > 2 AND $this->levelUser <= 5) {
-        $typKonta = '<span class="text-danger ml-2"><small>[ADMIN]</small></span>';
-    } elseif ($this->levelUser > 5) {
+    } elseif ($this->levelUser >= 16) {
         $typKonta = '<span class="text-danger ml-2"><small>[ADMIN-EXTRA]</small></span>';
     }
 ?>
@@ -517,13 +519,15 @@ class Page
 
     public function displayFooter()
     {
+    $cas = $this->endtime - $this->starttime;
 ?>
 
     <footer class="main-footer">
         <strong>Copyright &copy; 2020-2021 <a href="#">Ing. Ondrej VRŤO, IWE</a></strong>
         All rights reserved.
         <div class="float-right d-none d-sm-inline-block">
-            <b>Version</b> 0.0.6
+            <!-- <b>Version</b> 0.0.9 -->
+            <b>Zobrazenie trvalo:</b> <?= round($cas, 4) ?>s
         </div>
     </footer>
 <?php
@@ -777,7 +781,11 @@ class Page
             }
             echo '</table> </div>';
         echo "</footer>\n\n";
-
+        
+        $caskonecny = microtime(true) - $this->starttime;
+        echo "\n\n". '<footer class="main-footer"> <h3 class="text-warning">Vývoj: Presný ČAS spracovania stránky</h3>';
+            print_r(round($caskonecny, 4)); echo "s";
+        echo '</footer>' ; 
     }
 
     // funkcia  upravLink  vymaže posledný podadresár z cesty
