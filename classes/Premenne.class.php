@@ -29,13 +29,10 @@ class Premenne
                 // rekurzívna funkcia - volá sama seba pri každej ďalšej vrste Menu !!!
                 $this->getParametre( $value['SUBMENU'], $link1, $link2 );
             } else {
-                //! Level stránky sa môže vyhodnotiť aj na základe materskej stránky vloženej v linku č.2
                 if ($value['Link'] == $link1 OR $value['Link'] == $link2) {
                     if (isset($value['LEVEL'])) {
                         $this->levelStranky = $value['LEVEL'];
                     }
-                }
-                if ($value['Link'] == $link1) {
                     if (isset($value['Title'])) {
                         $this->titulokStranky = $value['Title'];
                     }

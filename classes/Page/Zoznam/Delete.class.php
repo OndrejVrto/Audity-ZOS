@@ -27,12 +27,6 @@ class Delete extends \Page\Page
             }
         }
 
-        $premenne = new \Premenne($this->linkZoznam, $this->linkZoznam);
-
-        $this->title = $premenne->titulokStranky;
-        $this->nadpis = $premenne->nadpisPrvejSekcie;
-        $this->description = $premenne->popisStranky;
-        $this->hlavneMenu = $premenne->menuHlavne;        
     }
 
     function ContentHeaderZoznam ()
