@@ -54,8 +54,10 @@
         // last request was more than 30 minutes ago
         session_unset();     // unset $_SESSION variable for the run-time 
         session_destroy();   // destroy session data in storage
-        $odhlasenie = true;
+        //$odhlasenie = true;
+        $_SESSION['ALERT'] = ' "Bohužiaľ ste boli neaktívny viac ako 30 minút." + "\n\n" + "Prihláste sa znovu." ';
     }
+
     // resetnutie času pre automaticke odhlásenie
     if (isset($_SESSION['LoginUser'])) {
         $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp

@@ -21,8 +21,11 @@ class Page
     public $skriptyArray = [];
     public $skriptySpecial = '';
     public $todo = false;
+    public $alert = false;
+
     protected $_nazovstranky;
     protected $link;
+    
     private $aktivnemenu = false;
     private $levelStranky;
     private $searchValue;
@@ -65,6 +68,11 @@ class Page
 
         $this->list = (isset($_GET['p'])) ? $_GET['p'] : "1" ;
         $this->searchValue = (isset($_POST['hladanyRetazec'])) ? $_POST['hladanyRetazec'] : "" ;
+        
+        if (isset($_SESSION['ALERT'])) {
+            $this->alert = $_SESSION['ALERT'];
+            unset($_SESSION['ALERT']);
+        }
 
         $premenne = new \Premenne($this->link, $this->linkZoznam);
 
@@ -79,6 +87,9 @@ class Page
 
         if ($this->levelStranky > 1) {
             if ( $this->levelUser < $this->levelStranky ){
+                $_SESSION['ALERT'] = ' "Stránka ktorú ste požadovali existuje, ale keďže nemáte dostatočné oprávnenia," +
+                    "\n" + "boli ste presmerovaný na hlavnú stránku." +
+                    "\n\n" + "Skúste sa prihlásiť, alebo kontaktujte administrátora." ';
                 header("Location: /");
                 exit();
             }
@@ -153,11 +164,14 @@ class Page
         
         $this->displayScripts();
         echo $this->skriptySpecial;
-        // vypíše upozornenie 
-        if ($GLOBALS['odhlasenie']) {
-            echo '<script>alert("Bohužiaľ ste boli neaktívny viac ako 30 minút." + "\n\n" + "Prihláste sa znovu.");</script>';
+
+        // vypíše upozornenie pri zobrazení stránky
+        if ($this->alert) {
+            echo "\n\t<!--  okno s upozornením zobrazené pri neautorizovanej požiadavke -->\n\t";
+            echo '<script>alert(' . (string)$this->alert . ');</script>';
         }
-        (VYVOJ) ? $this->VYVOJ() : '';
+
+        ( VYVOJ OR $this->levelUser >= 20 ) ? $this->VYVOJ() : '';
         echo "\n</body>\n</html>";
     }
 
@@ -252,7 +266,16 @@ class Page
                 </div>
             </div>
         </form>
-
+<?php if (VYVOJ OR $this->levelUser >= 20 ) { ?>
+        <ul class="ml-4 navbar-nav">
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="#" class="nav-link"><small>Level stranka: </small><span class="text-warning h5 ml-1"><?= $this->levelStranky ?></span></a>
+            </li>
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="#" class="nav-link"><small>Level user: </small><span class="text-warning h5 ml-1"><?= $this->levelUser ?></span></a>
+            </li>
+        </ul>
+<?php } ?>
         <!-- Right navbar links -->
         <ul class="navbar-nav ml-auto">
             <!-- LogIn/LogOut -->
@@ -522,14 +545,18 @@ class Page
     public function displayFooter()
     {
     $cas = $this->endtime - $this->starttime;
-?>
+    // celkový počet vykonaných dotazov do databazy
+    global $db;
+    $dotazov = $db->query_count;
 
+?>
     <footer class="main-footer">
         <strong>Copyright &copy; 2020-2021 <a href="#">Ing. Ondrej VRŤO, IWE</a></strong>
         All rights reserved.
         <div class="float-right d-none d-sm-inline-block">
             <!-- <b>Version</b> 0.0.9 -->
             <b>Zobrazenie trvalo:</b> <?= round($cas, 4) ?>s
+<?php if ( VYVOJ OR $this->levelUser >= 20 ) { echo "\t\t\t".'<b class="ml-2">Dotazov do databázy:</b> ' . $dotazov; } ?>
         </div>
     </footer>
 <?php

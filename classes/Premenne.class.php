@@ -451,7 +451,7 @@ class Premenne
                     "SUBMENU" => false,
                 ),
                 array(
-                    "LEVEL" => 14,
+                    "LEVEL" => 12,
                     "Link" => "/sprava/zoznam-pracovnikov-zos",
                     "Title" => "Zoznam pracovníkov ŽOS Zvolen",
                     "Description" => "aktuálny zoznam zamestnancov z dochádzkového systému",
