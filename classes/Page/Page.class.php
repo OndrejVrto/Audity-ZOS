@@ -758,7 +758,7 @@ class Page
 
                 if (self.seconds <= 9) { self.seconds = '0' + self.seconds; }
 
-                self.element.textContent = self.minutes + ':' + self.seconds;
+                self.element.textContent = ("0" + self.minutes).slice(-2) + ':' + self.seconds;
             }
         };
 
