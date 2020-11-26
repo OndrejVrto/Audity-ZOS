@@ -13,6 +13,7 @@ class Page
     public $odsadenie = 5;
     public $list = 1;
     public $hlavneMenu;
+    public $bubleMenu;
     public $zobrazitBublinky = true;
     public $zobrazitTlacitka = true;
     public $stylyArray = [];
@@ -23,7 +24,7 @@ class Page
     protected $_nazovstranky;
     protected $link;
     private $aktivnemenu = false;
-    private $levelMenu;
+    private $levelStranky;
     private $searchValue;
     private $starttime;
     private $endtime;
@@ -70,13 +71,14 @@ class Page
         $this->title = $premenne->titulokStranky;
         $this->nadpis = $premenne->nadpisPrvejSekcie;
         $this->description = $premenne->popisStranky;
-        $this->hlavneMenu = $premenne->menuHlavne;
+        $this->hlavneMenu = $premenne->konstantyStrankyMenu;
+        $this->bubleMenu = $premenne->konstantyStranokKomplet;
 
         // ak uživateľ nemá oprávnenia na danú stránku presmeruje ho na hlavnú stránku
-        $this->levelMenu =  $premenne->MenuLevel;
+        $this->levelStranky =  $premenne->levelStranky;
 
-        if ($this->levelMenu > 1) {
-            if ( $this->levelUser < $this->levelMenu ){
+        if ($this->levelStranky > 1) {
+            if ( $this->levelUser < $this->levelStranky ){
                 header("Location: /");
                 exit();
             }
@@ -126,7 +128,7 @@ class Page
         
         if ($this->zobrazitBublinky) {
             $this->displayBubleMenuHeader();
-            echo $this->displayBubleMenu($this->hlavneMenu);
+            echo $this->displayBubleMenu($this->bubleMenu);
             $this->displayBubleMenuFooter();
         }
 
@@ -336,8 +338,8 @@ class Page
         foreach ($vstup as $key => $value) {
             //  ak na zobrazenie položky menu je potrebná určitá úrovať LEVELu uživateľa preskočí nezobrazí ju v MENU
             //  neprihlásený uživateľ: LEVEL = 0
-            if (isset($value['MinUserLEVEL'])) {
-                if ($this->levelUser < $value['MinUserLEVEL'] ) { continue; }
+            if (isset($value['LEVEL'])) {
+                if ($this->levelUser < $value['LEVEL'] ) { continue; }
             }
 
             if (array_key_exists('Hlavicka', $value)) {
@@ -354,7 +356,7 @@ class Page
                     $html .= 'class="nav-link'.(($this->aktivnemenu === true) ? ' active' : '' ).'">';
                     $html .= "\n\t\t".$odsad.'<i class="nav-icon '.(($value['Ikona'] === false) ? 'far fa-circle' : $value['Ikona'] ).'"></i>';
                     $html .= "\n\t\t".$odsad.'<p>';
-                    $html .= "\n\t\t\t".$odsad.$value['Nazov'];
+                    $html .= "\n\t\t\t".$odsad.$value['NazovMENU'];
                     $html .= "\n\t\t\t".$odsad.'<i class="right fas fa-angle-left"></i>';
                     if ($value['Doplnok'] !== false) {
                         $html .= "\n\t\t\t".$odsad.'<span class="right '.$value['Doplnok'].'">';
@@ -381,7 +383,7 @@ class Page
                     $html .= 'class="nav-link'.(($activSubMenu === true) ? ' active' : '' ).'">';
                     $html .= "\n\t\t".$odsad.'<i class="nav-icon '.(($value['Ikona'] === false) ? 'far fa-circle' : $value['Ikona'] ).'"></i>';
                     $html .= "\n\t\t".$odsad.'<p>';
-                    $html .= "\n\t\t\t".$odsad.$value['Nazov'];
+                    $html .= "\n\t\t\t".$odsad.$value['NazovMENU'];
                     if ($value['Doplnok'] !== false) {
                         $html .= "\n\t\t\t".$odsad.'<span class="right '.$value['Doplnok'].'">';
                         $html .= "\n\t\t\t\t".$odsad.$value['PopisDoplnku'];
@@ -442,9 +444,9 @@ class Page
                     if ($this->aktivnemenu === true) {
                         $html .= "\n".$odsad.'<li class="breadcrumb-item">';
                         if ($value['Link'] !== false) {
-                            $html .= '<a href="'.$value['Link'].'">'.$value['Nazov'].'</a>';
+                            $html .= '<a href="'.$value['Link'].'">'.$value['NazovMENU'].'</a>';
                         } else {
-                            $html .= $value['Nazov'];
+                            $html .= $value['NazovMENU'];
                         }
                         $html .= '</li>';
                         $html .= $submenu;
@@ -453,7 +455,7 @@ class Page
                     if ($value['Link'] == $this->link || $value['Link'] == $this->linkZoznam) {
                         $this->aktivnemenu = true;
                         $html .= "\n".$odsad.'<li class="breadcrumb-item active">';
-                        $html .= $value['Nazov'];
+                        $html .= $value['NazovMENU'];
                         $html .= '</li>';
                     }
                 }

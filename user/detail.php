@@ -2,7 +2,6 @@
     require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
 
     $page = new \Page\Page();
-    $page->zobrazitBublinky = false;
 
     // ak uživateľ nieje prihlásený, presmeruje ho na hlavnú stránku
     if ( $page->levelUser <= 2 ){
