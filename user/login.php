@@ -3,10 +3,6 @@
     
     // spustenie aktualizácie tabuliek "Users" z databázy max4 cez DSN:MAXDATA kde sú v tabuľke maxdata.uoscis dáta s dochádzkového systému
     AktualizujMAX();
-    
-    // todo spraviť tlačítka v menu na ručné spustenie týchto funkcií
-    // spustenie synchronizácia dát v tabuľke USERS. Spúšťa sa vrámci predchádzajúceho programu, ale pri vývoji vždy.
-    //if (VYVOJ) { AktualizujUSERS(); }
 
     $page = new \Page\PageClear();
     $page->classBodySpecial = "hold-transition register-page vh-100";

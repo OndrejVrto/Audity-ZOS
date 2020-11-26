@@ -10,8 +10,8 @@
     if (isset($_POST['submit'])) {
 
         // validačné podmienky jednotlivých polí
-        $v->addValidation("typ-externych-zisteni","minlen=5","Trochu krátky popis. Použi aspoň 5 znakov.");
-        $v->addValidation("typ-externych-zisteni","req","Prosím vyplň toto pole.");
+        $v->addValidation("typ-prilohy","minlen=5","Trochu krátky popis. Použi aspoň 5 znakov.");
+        $v->addValidation("typ-prilohy","req","Prosím vyplň toto pole.");
         $custom_validator = new \Validator\UnikatneHodnoty();
         $v->AddCustomValidator($custom_validator);
 
@@ -20,12 +20,11 @@
         // ak validacia skonci TRUE (1) --> zktualizuj dáta v databáze
         if ($v->validateForm()) {
             $user = $page->userName;
-            $typ = $_POST['typ-externych-zisteni'];
-            $poznamka = $_POST['typ-externych-zisteni--poznamka'];
+            $TypPrilohy = $_POST['typ-prilohy'];
 
-            $db->query('UPDATE `33_zoznam_typ_externych_zisteni` 
-                        SET `NazovExternehoZistenia` = ?, `Poznamka` = ? , `KtoVykonalZmenu` = ? 
-                        WHERE `ID33` = ?', $typ, $poznamka, $user, $id);
+            $db->query('UPDATE `38_zoznam_typ_prilohy` 
+                        SET `TypPrilohy` = ?, `KtoVykonalZmenu` = ? 
+                        WHERE `ID38` = ?', $TypPrilohy, $user, $id);
 
             header("Location: $page->linkZoznam");
             exit();
@@ -37,13 +36,17 @@
         // kontrola či je záznam použitý v iných tabuľkách. Ak áno, nedá sa editovať jeho názov.
         $id = (int)$_POST['edit'];
 
-        $dataA = $db->query('SELECT COUNT(*) AS Pocet FROM `04_zistenia` WHERE `ID33_zoznam_typ_externych_zisteni` = ?', $id )->fetchArray();
+        $dataA = $db->query(
+            'SELECT 
+                (SELECT COUNT(*) FROM `08_subory` WHERE `ID38_zoznam_typ_prilohy` = ?)
+                +
+                (SELECT COUNT(*) FROM `01_certifikaty` WHERE `ID38_zoznam_typ_prilohy` = ?)
+            AS Pocet', $id, $id )->fetchArray();
         $pocet = (int)$dataA['Pocet'];  // premenná $pocet sa použije v ternálnom operatore tých poli ktorým chcem nastaviť readonly hodnotu
 
         // načítanie dát o položke
-        $data = $db->query('SELECT * FROM `33_zoznam_typ_externych_zisteni` WHERE ID33 = ?', $id)->fetchArray();
-        $v->form_variables['typ-externych-zisteni'] = $v->form_variables['valueOld'] = $data['NazovExternehoZistenia'];
-        $v->form_variables['typ-externych-zisteni--poznamka'] = $data['Poznamka'];
+        $data = $db->query('SELECT * FROM `38_zoznam_typ_prilohy` WHERE ID38 = ?', $id)->fetchArray();
+        $v->form_variables['typ-prilohy'] = $v->form_variables['valueOld'] = $data['TypPrilohy'];
 
     }
 
@@ -59,27 +62,19 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
                         <!-- FORM - Oblasť - pôvodná hodnota - HIDDEN -->
                         <input type="hidden" name="valueOld" value="<?= $v->getVAL($pole) ?>">
 
-                        <?php $pole = 'typ-externych-zisteni'; echo PHP_EOL; ?>
+                        <?php $pole = 'typ-prilohy'; echo PHP_EOL; ?>
                         <!-- FORM - Oblasť -->
                         <div class="form-group ">
-                            <label>Názov externeho zistenia</label>
+                            <label>Typ Prílohy</label>
                             <div class="input-group">
                                 <input <?= $pocet > 0 ? 'readonly ' : 'autofocus ' ?>type="text" class="form-control<?= $v->getCLS($pole) ?>" value="<?= $v->getVAL($pole) ?>" name="<?= $pole ?>" placeholder="Položka">
                                 <div class="input-group-append">
                                     <div class="input-group-text">
-                                        <span class="fas fa-id-card"></span>
+                                        <span class="fas fa-folder-open"></span>
                                     </div>
                                 </div>
                                 <?= $v->getMSG($pole) . PHP_EOL ?>
                             </div>
-                        </div>
-
-                        <?php $pole = 'typ-externych-zisteni--poznamka'; echo PHP_EOL; ?>
-                        <!-- FORM - Poznámka -->
-                        <div class="form-group ">
-                            <label>Poznámka</label>
-                            <textarea class="form-control<?= $v->getCLS($pole) ?>" name="<?= $pole ?>"><?= $v->getVAL($pole) ?></textarea>
-                            <?= $v->getMSG($pole) . PHP_EOL ?>
                         </div>
 
 <?php

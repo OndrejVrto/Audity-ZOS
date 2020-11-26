@@ -22,7 +22,7 @@
 
         $v->addValidation("typ-auditu--oblast","req","Prosím vyber niektorú hodnotu so zoznamu.");
 
-        $custom_validator = new \Validator\Zoznam();
+        $custom_validator = new \Validator\UnikatneHodnoty();
         $v->AddCustomValidator($custom_validator);
 
         // ak validacia skonci TRUE --> vlož dáta do databázy

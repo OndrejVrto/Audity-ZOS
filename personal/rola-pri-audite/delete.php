@@ -11,8 +11,8 @@
         $user = $page->userName;
         $id = (int)$_POST['submit'];
         
-        $db->query('UPDATE `33_zoznam_typ_externych_zisteni` SET `KtoVykonalZmenu` = ? WHERE `ID33` = ?', $user, $id);
-        $db->query('DELETE FROM `33_zoznam_typ_externych_zisteni` WHERE `ID33` = ?', $id);
+        $db->query('UPDATE `36_zoznam_rola_pri_audite` SET `KtoVykonalZmenu` = ? WHERE `ID36` = ?', $user, $id);
+        $db->query('DELETE FROM `36_zoznam_rola_pri_audite` WHERE `ID36` = ?', $id);
         
         header("Location: $page->linkZoznam");  
         exit();
@@ -23,7 +23,7 @@
         // kontrola či je záznam použitý v iných tabuľkách. Ak áno, nedá sa zmazať.
         $id = (int)$_POST['delete'];
 
-        $data = $db->query('SELECT COUNT(*) AS Pocet FROM `04_zistenia` WHERE `ID33_zoznam_typ_externych_zisteni` = ?', $id )->fetchArray();
+        $data = $db->query('SELECT COUNT(*) AS Pocet FROM `03_osoby_pri_audite` WHERE `ID36_zoznam_rola_pri_audite` = ?', $id )->fetchArray();
         $pocet = (int)$data['Pocet'];
     }
 
@@ -51,18 +51,15 @@ ob_start();  // Začiatok definície hlavného obsahu -> 5x a 6x tabulátor
     // potvrdzovací dialóg
     // tento blok kodu sa spusti ak NIE je zmazavana polozka pouzita v iných, prepojenych, tabulkach
         
-        $data = $db->query('SELECT * FROM `33_zoznam_typ_externych_zisteni` WHERE ID33 = ?', $id)->fetchArray();
+        $data = $db->query('SELECT * FROM `36_zoznam_rola_pri_audite` WHERE ID36 = ?', $id)->fetchArray();
 
-        $oblast = htmlspecialchars($data['OblastAuditovania']);
-        $poznamka = htmlspecialchars($data['Poznamka']);
+        $RolaAudit = htmlspecialchars($data['RolaAudit']);
 ?>
 
                         <div>
                             Si si istý, že chceš zmazať položku 
-                            <span class="h5 text-danger"><?= $oblast ?></span>
+                            <span class="h5 text-danger"><?= $RolaAudit ?></span>
                             ?
-                            <div class="mt-3"><u>Bližšie informácie o položke:</u></div>
-                            <p class="pl-4"><strong>Poznámka:</strong> <?= $poznamka ?></p>
                         </div>
 
 <?php

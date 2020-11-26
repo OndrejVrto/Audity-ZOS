@@ -37,7 +37,7 @@
 
             // konto je aktivované - pokračuj v prihlásení
             // ochrana pred útokom Session Fixation (tip č. 825 z knihy 1001 tipu a triku pro PHP)
-            // vypol som to, lebo mi vytvára TMP súbory a nemaže ich - treba urobiť cleaner a potom to zapnúť.
+            // todo vypol som to, lebo mi vytvára TMP súbory a nemaže ich - treba urobiť cleaner a potom to zapnúť.
             //session_regenerate_id();
 
             if (!empty($_SERVER['HTTP_CLIENT_IP'])) {

@@ -12,7 +12,7 @@
         // validačné podmienky jednotlivých polí
         $v->addValidation("oblast-auditu","minlen=3","Trochu krátky názov. Použi aspoň 3 znaky.");
         $v->addValidation("oblast-auditu","req","Prosím vyplň toto pole.");
-        $custom_validator = new \Validator\Zoznam();
+        $custom_validator = new \Validator\UnikatneHodnoty();
         $v->AddCustomValidator($custom_validator);
 
         $id = (int)$_POST['submit'];

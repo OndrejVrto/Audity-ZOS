@@ -14,7 +14,7 @@
     // todo: Funkčnosť tejto stránky
 
     // ! každý prihlásený uživateľ
-    // * zobrazenie veľkého obrázka avatara
+    // *// zobrazenie veľkého obrázka avatara
     // *// zobrazenie údajov v peknej forme
     // * zobrazenie posledných 5 dátumov nalogovania
     // * editácia vstupných údajov (email, telefon)

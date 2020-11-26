@@ -169,8 +169,8 @@ class Page
         
         // vypíše upozornenie pri zobrazení stránky
         if ($this->alert) {
-            echo "\n\t<!--  okno s upozornením zobrazené pri neautorizovanej požiadavke -->\n\t";
-            echo '<script>alert(' . (string)$this->alert . ');</script>';
+            echo "\n\t<!--  Okno s upozornením zobrazené pri neautorizovanej požiadavke -->\n\t";
+            echo '<script>alert(' . (string)$this->alert . ');</script>' . PHP_EOL;
         }
         $this->displayScripts();
         $this->displayScriptsTime();
@@ -278,6 +278,9 @@ class Page
             </li>
             <li class="nav-item d-none d-sm-inline-block">
                 <a href="#" class="nav-link"><small>Level user: </small><span class="text-warning h5 ml-1"><?= $this->levelUser ?></span></a>
+            </li>
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="/include/rucna-aktualizacia-databazy" class="nav-link">Aktualizuj Databázu</a>
             </li>
         </ul>
 <?php } ?>

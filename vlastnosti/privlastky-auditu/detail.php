@@ -7,9 +7,9 @@
     
     $id = (int)$_POST['detail'];
 
-    $data = $db->query('SELECT * FROM `33_zoznam_typ_externych_zisteni` WHERE ID33 = ?', $id)->fetchArray();
+    $data = $db->query('SELECT * FROM `34_zoznam_privlastok_auditu` WHERE ID34 = ?', $id)->fetchArray();
 
-    $NazovExternehoZistenia = htmlspecialchars($data['NazovExternehoZistenia']);
+    $PrivlastokAuditu = htmlspecialchars($data['PrivlastokAuditu']);
     $poznamka = htmlspecialchars($data['Poznamka']);
 
 ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
@@ -18,12 +18,12 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 
                         <!-- FORM - Oblasť -->
                         <div class="form-group ">
-                            <label>Názov externeho zistenia</label>
+                            <label>Prívlastok auditu</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" value="<?= $NazovExternehoZistenia ?>" placeholder="Položka">
+                                <input type="text" class="form-control" value="<?= $PrivlastokAuditu ?>" placeholder="Položka">
                                 <div class="input-group-append">
                                     <div class="input-group-text">
-                                        <span class="fas fa-exclamation-triangle"></span>
+                                        <span class="fas fa-hashtag"></span>
                                     </div>
                                 </div>
                             </div>
