@@ -59,7 +59,12 @@ class Page
         $this->link = $_SERVER['REQUEST_URI'];
         $this->linkCisty = $this->upravLink($this->link);
         $this->linkZoznam = $this->linkCisty . "zoznam";
-        
+
+        if (!isset($_SESSION['Login']) AND $this->link <> '/user/lock') {
+            // vymaže session ak sa uživateľ nenaloguje cez Lock scrreen
+            session_unset();
+        }
+
         // priradenie všetkých SESSION premenných do vlastností triedy
         $this->LoginUser = ( isset($_SESSION['LoginUser']) ) ? $_SESSION['LoginUser'] : "" ;
         $this->levelUser = ( isset($_SESSION['LEVEL']) ) ? $_SESSION['LEVEL'] : "0" ;
@@ -162,14 +167,14 @@ class Page
         $this->displayFooter();
         $this->displayBodyFooter();
         
-        $this->displayScripts();
-        echo $this->skriptySpecial;
-
         // vypíše upozornenie pri zobrazení stránky
         if ($this->alert) {
             echo "\n\t<!--  okno s upozornením zobrazené pri neautorizovanej požiadavke -->\n\t";
             echo '<script>alert(' . (string)$this->alert . ');</script>';
         }
+        $this->displayScripts();
+        $this->displayScriptsTime();
+        echo $this->skriptySpecial;
 
         ( VYVOJ OR $this->levelUser >= 20 ) ? $this->VYVOJ() : '';
         echo "\n</body>\n</html>";
@@ -280,10 +285,10 @@ class Page
         <ul class="navbar-nav ml-auto">
             <!-- LogIn/LogOut -->
             <li class="nav-item">
-<?php if ( $this->levelUser >= 3): ?>
-				<form class="" action="/user/logout.php" method="post">
-					<input class="btn btn-warning" type="submit" name="logout-submit" value="LogOut">
-				</form>
+<?php if ( $this->levelUser >= 3): 
+    $time = strftime("%M:%S", TIME_OUT*60);
+?>
+				<a href="/user/logout" class="btn btn-warning" type="submit">Odhlásiť<span class="ml-2 small text-secondary" id="time"><?= $time ?></span></a>
 <?php else: ?>
 				<a class="btn btn-danger" href="/user/login">Login</a>
 <?php endif; ?>
@@ -301,9 +306,9 @@ class Page
     // TODO dorobiť s prepojením na databázu
     $typKonta = "";
     if ($this->levelUser > 2 AND $this->levelUser <= 15) {
-        $typKonta = '<span class="text-danger ml-2"><small>[EDIT]</small></span>';
+        $typKonta = '<span class="text-danger ml-2 align-top"><small>[EDIT]</small></span>';
     } elseif ($this->levelUser >= 16) {
-        $typKonta = '<span class="text-danger ml-2"><small>[ADMIN-EXTRA]</small></span>';
+        $typKonta = '<span class="text-danger ml-2 align-top"><small>[ADMIN-EXTRA]</small></span>';
     }
 ?>
             <div class="image">
@@ -719,6 +724,56 @@ class Page
         $this->skriptyArray[] = ($jsComment != '' ? '<!-- '.$jsComment.' -->'.PHP_EOL.TAB1 : '').'<script src="'.$jsLink.($min ? '.min' : '').'.js"></script>';
     }
 
+    private function displayScriptsTime(){
+?>
+
+    <!-- BEGIN - SCRIPT - TIME LogOut -->
+    <script>
+        var Timer = function(opts) {
+            var self = this;
+
+            self.opts     = opts || {};
+            self.element  = opts.element || null;
+            self.minutes  = opts.minutes || 0;
+            self.seconds  = opts.seconds || 0;
+
+            self.start = function() {
+                self.interval = setInterval(countDown, 1000);
+            };
+
+            self.stop = function() {
+                clearInterval(self.interval);
+            };
+
+            function countDown() {
+                self.seconds--; //Changed Line
+                if (self.minutes == 0 && self.seconds == 0) {
+                self.stop();
+                }
+
+                if (self.seconds < 0) { //Changed Condition. Not include 0
+                self.seconds = 59;
+                self.minutes--;
+                }
+
+                if (self.seconds <= 9) { self.seconds = '0' + self.seconds; }
+
+                self.element.textContent = self.minutes + ':' + self.seconds;
+            }
+        };
+
+        var myTimer = new Timer({
+            minutes: <?= TIME_OUT ?>,
+            seconds: 0,
+            element: document.querySelector('#time')
+        });
+
+        myTimer.start();
+    </script>
+    <!-- END - SCRIPT - TIME LogOut -->
+
+<?php
+    }
 
     protected function VYVOJ () {
 

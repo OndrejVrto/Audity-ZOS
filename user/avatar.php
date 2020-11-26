@@ -10,6 +10,7 @@
     }
 
     $page = new \Page\PageClear();
+    $page->classBodySpecial = "hold-transition register-page vh-100";    
 
     // ak uživateľ nieje prihlásený, presmeruje ho na prihlásenie
     if ( $page->levelUser <= 2 ){

@@ -47,18 +47,21 @@
     // zapnutie session
     session_start();
 
-
     // automatické odhlásenie po 30 minútach bez aktivity na stránke. Pri vývoji 24 hodín.
-    if (VYVOJ) { $logoutTime = 24*60*60; } else { $logoutTime = 30*60; }
-    if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > $logoutTime)) {
-        // last request was more than 30 minutes ago
-        session_unset();     // unset $_SESSION variable for the run-time 
-        session_destroy();   // destroy session data in storage
-        //$odhlasenie = true;
-        $_SESSION['ALERT'] = ' "Bohužiaľ ste boli neaktívny viac ako 30 minút." + "\n\n" + "Prihláste sa znovu." ';
+    defined("TIME_OUT") or define("TIME_OUT", 30);
+    if (VYVOJ) { $logoutTime = 24*60*60; } else { $logoutTime = TIME_OUT*60; }
+
+    if ( ( isset($_SESSION['LAST_ACTIVITY']) AND ((time() - $_SESSION['LAST_ACTIVITY']) > $logoutTime) ) ) {
+        $user = $_SESSION['LoginUser'];
+        $meno = $_SESSION['userNameShort'];
+        session_unset();
+        $_SESSION['LoginUser'] = $user;
+        $_SESSION['userNameShort'] = $meno;
+        header("Location: /user/lock");
+        exit();
     }
 
     // resetnutie času pre automaticke odhlásenie
-    if (isset($_SESSION['LoginUser'])) {
+    if ( isset($_SESSION['Login']) AND $_SESSION['Login'] == 'true' ) {
         $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
     }

@@ -1,15 +1,16 @@
 <?php
     require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
     
-    // spustenie aktualizacie tabulky users s databazy max4
+    // spustenie aktualizácie tabuliek "Users" z databázy max4 cez DSN:MAXDATA kde sú v tabuľke maxdata.uoscis dáta s dochádzkového systému
     AktualizujMAX();
     
     // todo spraviť tlačítka v menu na ručné spustenie týchto funkcií
     // spustenie synchronizácia dát v tabuľke USERS. Spúšťa sa vrámci predchádzajúceho programu, ale pri vývoji vždy.
-    if (VYVOJ) { AktualizujUSERS(); }
+    //if (VYVOJ) { AktualizujUSERS(); }
 
     $page = new \Page\PageClear();
-    
+    $page->classBodySpecial = "hold-transition register-page vh-100";
+
     $v = new \Validator\Validator();
 
     if (isset($_POST['submit'])) {
@@ -26,6 +27,7 @@
             
             $row = $db->query('SELECT * FROM `50_sys_users` WHERE `OsobneCislo` = ?', $user )->fetchArray();
             $userID = $row['ID50'];
+            $_SESSION['Login'] = 'true';
             $_SESSION['LoginUser'] = $user;
             $_SESSION['userNameShort'] = (isset($row['Titul']) ? $row['Titul']." " : "" ) . $row['Meno'] . " " . $row['Priezvisko'];
             $_SESSION['userName'] = "[" . $row['OsobneCislo'] . "] " . $_SESSION['userNameShort'];
@@ -38,7 +40,9 @@
             }
 
             // konto je aktivované - pokračuj v prihlásení
-            session_regenerate_id(); // ochrana pred útokom Session Fixation (tip č. 825 z knihy 1001 tipu a triku pro PHP)
+            // ochrana pred útokom Session Fixation (tip č. 825 z knihy 1001 tipu a triku pro PHP)
+            // vypol som to, lebo mi vytvára TMP súbory a nemaže ich - treba urobiť cleaner a potom to zapnúť.
+            //session_regenerate_id();
             
             if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
                 $ip = $_SERVER['HTTP_CLIENT_IP'];

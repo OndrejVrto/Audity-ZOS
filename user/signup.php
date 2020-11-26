@@ -2,6 +2,7 @@
     require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
     
     $page = new \Page\PageClear();
+    $page->classBodySpecial = "hold-transition register-page vh-100";
 
     $v = new \Validator\Validator();
     
@@ -32,6 +33,7 @@
 
             $row = $db->query('SELECT * FROM `50_sys_users` WHERE `OsobneCislo` = ?', $user)->fetchArray();
 
+            $_SESSION['Login'] = 'true';
             $_SESSION['LoginUser'] = $user;
             $_SESSION['userNameShort'] = (isset($row['Titul']) ? $row['Titul']." " : "" ) . $row['Meno'] . " " . $row['Priezvisko'];
             $_SESSION['userName'] = "[" . $row['OsobneCislo'] . "] " . $_SESSION['userNameShort'];
