@@ -13,7 +13,10 @@
         
         $db->query('UPDATE `33_zoznam_typ_externych_zisteni` SET `KtoVykonalZmenu` = ? WHERE `ID33` = ?', $user, $id);
         $db->query('DELETE FROM `33_zoznam_typ_externych_zisteni` WHERE `ID33` = ?', $id);
-        
+
+        SetSearchData ('DELETE', 33, $id, 'NazovExternehoZistenia');
+        SetSearchData ('DELETE', 33, $id, 'Poznamka');
+
         header("Location: $page->linkZoznam");  
         exit();
     }
@@ -53,16 +56,16 @@ ob_start();  // Začiatok definície hlavného obsahu -> 5x a 6x tabulátor
         
         $data = $db->query('SELECT * FROM `33_zoznam_typ_externych_zisteni` WHERE ID33 = ?', $id)->fetchArray();
 
-        $oblast = htmlspecialchars($data['OblastAuditovania']);
-        $poznamka = htmlspecialchars($data['Poznamka']);
+        $NazovExternehoZistenia = htmlspecialchars($data['NazovExternehoZistenia']);
+        $Poznamka = htmlspecialchars($data['Poznamka']);
 ?>
 
                         <div>
                             Si si istý, že chceš zmazať položku 
-                            <span class="h5 text-danger"><?= $oblast ?></span>
+                            <span class="h5 text-danger"><?= $NazovExternehoZistenia ?></span>
                             ?
                             <div class="mt-3"><u>Bližšie informácie o položke:</u></div>
-                            <p class="pl-4"><strong>Poznámka:</strong> <?= $poznamka ?></p>
+                            <p class="pl-4"><strong>Poznámka:</strong> <?= $Poznamka ?></p>
                         </div>
 
 <?php

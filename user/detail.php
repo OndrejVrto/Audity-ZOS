@@ -103,7 +103,7 @@ ob_start();  // Začiatok definície hlavného obsahu
                     <div class="card">
                         <div class="card-header p-2">
                             <ul class="nav nav-pills">
-                                <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Activita</a></li>
+                                <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Aktivita</a></li>
                                 <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Nastavenia</a></li>
                             </ul>
                         </div><!-- /.card-header -->

@@ -2,28 +2,23 @@
 
     // funkcia AktualizujUsersMAX načíta dáta z databázy max4 cez prihlásenie ODBC s názvom MAXMAST nastavené na počítačoch ŽOS
     // následne tieto dáta uloží do lokálnej tabuľky č.51, porovná s pracovnými dátami v tabuľke č.50 a aktualizuje ich
-    function AktualizujMAX (){
+    function AktualizujMAX () {
 
         global $dbhost, $dbuserCRON, $dbpassCRON, $dbname;
 
         // dočasné prihlásenie do databázy pod účtom CRON, ktorý má prístup len k dvom tabuľkám s obmedzenými právami
         $dbCRON = new db($dbhost, $dbuserCRON, $dbpassCRON, $dbname);
-        
-        $row = $dbCRON->query("SELECT `PoslednaAktualizacia` FROM `52_sys_cache_cron_and_clean` WHERE `NazovCACHE` = 'UPDATE maxdata.uoscis';")->fetchArray();
-        
-        // dátum poslednej úspešnej aktualizácie
-        $poslednaAktualizacia = date_create(date("d-m-Y H:i:s", strtotime($row['PoslednaAktualizacia'])));
-        // dátum terajší pre porovnanie
-        $teraz = date_create(date("d-m-Y H:i:s",time()));
-        // rozdiel dátumov v dňoch
-        $rozdiel = date_diff($teraz, $poslednaAktualizacia)->format("%a");
-        // ak bola posledná aktualizácia urobená pred menej ako 1 dňom, ukončí sa skript
-        if ($rozdiel < 1 ) {
+
+        $row = $dbCRON->query("SELECT TIMESTAMPDIFF( HOUR, PoslednaAktualizacia, NOW() ) AS Rozdiel 
+                            FROM `52_sys_cache_cron_and_clean` 
+                            WHERE `NazovCACHE` = 'UPDATE maxdata.uoscis';")->fetchArray();
+
+        // ak bola posledná aktualizácia urobená pred menej ako 12 hodinami, ukončí sa skript
+        if ($row['Rozdiel'] < 12 ) {
             // uzavrie toto dočasné pripojenie do databazy
             $dbCRON->close();
             return;
         }
-
 
         try {
             $pdo = new PDO('odbc:MAXDATA', '', '');
@@ -34,7 +29,7 @@
             // uzavrie toto dočasné pripojenie do databazy
             $dbCRON->close();
             return;
-            //echo "Connection failed: " . trim(iconv('Windows-1250', 'UTF-8', $e->getMessage()));
+            echo "Connection failed: " . trim(iconv('Windows-1250', 'UTF-8', $e->getMessage()));
         }
 
         $stmt = $pdo->prepare("SELECT * FROM maxmast.uoscis");
@@ -64,7 +59,7 @@
             $sql .= PHP_EOL . "('$osCislo', '$meno', '$priezvisko', '$titul', '$strediskoCislo', '$stredisko', '$firma', '$nastup', '$vystup'),";
 
         }
-
+        
         // odstráni poslednú čiarku a vloží bodkočiarku(koniec dotazu)
         $sql = substr($sql, 0, -1) . ';';
 
@@ -77,14 +72,17 @@
         $dbCRON->query($sql);
         // zapíše do logu poslednú aktualizáciu
         $dbCRON->query("UPDATE `52_sys_cache_cron_and_clean` 
-                    SET `PoslednaAktualizacia` = NOW()
-                    WHERE `NazovCACHE` = 'UPDATE maxdata.uoscis';");
+                        SET `PoslednaAktualizacia` = NOW()
+                        WHERE `NazovCACHE` = 'UPDATE maxdata.uoscis';");
         
         // uzavrie toto dočasné pripojenie do databazy
         $dbCRON->close();
 
-        if (!VYVOJ) { AktualizujUSERS(); }
-
+        if (VYVOJ) {
+            echo AktualizujUSERS();    
+        } else {
+            AktualizujUSERS();
+        }
     }
 
 
@@ -101,19 +99,19 @@
     // ! zmena stavu po prepustení so ŽOS v stĺpci NEPOUZIVAT na 1
     // * vyber záznamy kde je osobné číslo rovnaké v obidvoch tabuľkách ale je rozdiel v hodnote offdate
     
-    function AktualizujUSERS (){
-
-        global $db;
+    function AktualizujUSERS () {
         
-        if (VYVOJ) {echo '<u><strong>Štatistika</u></strong><br>';}
-        if (VYVOJ) {
-            // kompletný zoznam nájdených záznamov
-            $db->query("SELECT `ucislo`, `utitul`, `umeno`, `upriezv`, `ustred`, `nazstred`, `ondate`, `offdate`
-                        FROM `51_sys_users_maxmast_uoscis`
-                        WHERE `offdate` > NOW() AND `firma` LIKE '%ŽOS%' AND `ucislo` REGEXP '^[0-9]{4,5}$' AND `umeno` IS NOT NULL 
-                        ORDER BY ondate ASC;");
-            echo "SELECT: " . $db->numRows() . PHP_EOL . "<br>";
-        }
+        global $db;
+        $html = '';
+
+        $html .= '<u><strong>Štatistika</u></strong><br>' . PHP_EOL;
+        // kompletný zoznam nájdených záznamov
+        $db->query("SELECT `ucislo`, `utitul`, `umeno`, `upriezv`, `ustred`, `nazstred`, `ondate`, `offdate`
+                    FROM `51_sys_users_maxmast_uoscis`
+                    WHERE `offdate` > NOW() AND `firma` LIKE '%ŽOS%' AND `ucislo` REGEXP '^[0-9]{4,5}$' AND `umeno` IS NOT NULL 
+                    ORDER BY ondate ASC;");
+        $html .=  "SELECT: " . $db->numRows() . PHP_EOL . "<br>" . PHP_EOL;
+
         // aktualizácia existujúcich záznamov
         $db->query("UPDATE `50_sys_users` AS A INNER JOIN
                     (SELECT * FROM `51_sys_users_maxmast_uoscis`) AS B
@@ -126,7 +124,7 @@
                         A.`Zamestnany_OD` = B.`ondate`,
                         A.`Zamestnany_DO` = B.`offdate`
                     ;");
-        if (VYVOJ) {echo "UPDATE: " . $db->affectedRows() . PHP_EOL . "<br>";}
+        $html .= "UPDATE: " . $db->affectedRows() . PHP_EOL . "<br>" . PHP_EOL;
 
         // aktualizácia existujúcich záznamov - prepustený zamestnanaci
         $db->query("UPDATE `50_sys_users` AS A INNER JOIN
@@ -134,7 +132,7 @@
                     ON A.`OsobneCislo` = B.`ucislo`
                     SET A.`ID53_sys_levels` = 3
                     ;");
-        if (VYVOJ) {echo "OFF: " . $db->affectedRows() . PHP_EOL . "<br>";}
+        $html .= "OFF: " . $db->affectedRows() . PHP_EOL . "<br>" . PHP_EOL;
 
         // aktualizácia existujúcich záznamov - znovu prijatý zamestnanaci
         $db->query("UPDATE `50_sys_users` AS A INNER JOIN
@@ -143,7 +141,7 @@
                     SET A.`ID53_sys_levels` = 3
                     WHERE A.`ID53_sys_levels` = 2
                     ;");
-        if (VYVOJ) {echo "ON: " . $db->affectedRows() . PHP_EOL . "<br>";}
+        $html .= "ON: " . $db->affectedRows() . PHP_EOL . "<br>" . PHP_EOL;
 
         // vloženie nových záznamov
         $db->query("INSERT INTO `50_sys_users` (`ID53_sys_levels`, `OsobneCislo`, `Titul`, `Meno`, `Priezvisko`, `Stredisko`, `NazovStrediska`, `Zamestnany_OD`, `Zamestnany_DO` )
@@ -156,7 +154,7 @@
                     ON A.`ucislo` = B.`OsobneCislo`
                     WHERE B.`OsobneCislo` IS NULL
                     ;");
-        if (VYVOJ) {echo "INSERT: " . $db->affectedRows() . PHP_EOL . "<br>";}
+        $html .= "INSERT: " . $db->affectedRows() . PHP_EOL . "<br>" . PHP_EOL;
 
         // pridanie náhodného hesla tým zamestnancom kde je prázdne pole Password_OLD
         // POZOR: treba viackrát zopakovať ak je veľa záznamov naraz
@@ -184,12 +182,13 @@
                         '0','1','2','3','4','5','6','7','8','9')
                         )
                     WHERE `Password_OLD` IS NULL;");
-        if (VYVOJ) {echo "PASS: " . $db->affectedRows() . PHP_EOL . "<br>";}
+        $html .= "PASS: " . $db->affectedRows() . PHP_EOL . "<br>" . PHP_EOL;
 
         // zapíše do logu poslednú aktualizáciu
         $db->query("UPDATE `52_sys_cache_cron_and_clean` 
                     SET `PoslednaAktualizacia` = NOW()
                     WHERE `NazovCACHE` = 'UPDATE users';");
-        if (VYVOJ) {echo "LOG: " . $db->affectedRows() . PHP_EOL . "<br>";}
+        $html .= "LOG: " . $db->affectedRows() . PHP_EOL . "<br>" . PHP_EOL;
 
+        return $html;
     }

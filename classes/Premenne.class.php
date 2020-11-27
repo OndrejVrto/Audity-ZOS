@@ -34,10 +34,10 @@ class Premenne
                         $this->levelStranky = $value['LEVEL'];
                     }
                     if (isset($value['Title'])) {
-                        $this->titulokStranky = $value['Title'];
+                        $this->titulokStranky = $value['Title'] . " | Audity ŽOS Zvolen";
                     }
                     if (isset($value['Description'])) {
-                        $this->popisStranky = $value['Description'];
+                        $this->popisStranky =  "Audity ŽOS Zvolen - " . $value['Description'];
                     }
                     if (isset($value['Nadpis'])) {
                         $this->nadpisPrvejSekcie = $value['Nadpis'];

@@ -5,7 +5,15 @@
 
     // spustenie synchronizácie dát v tabuľke USERS.
     // Spúšťa sa v rámci procesu LOGIN 1x za deň
-    AktualizujUSERS();
+    try {
+        AktualizujMAX();
+        AktualizujUSERS();
+    } catch (\Throwable $th) {
+        //throw $th;
+        $_SESSION['ALERT'] = ' "!!!  POZOR  !!!  Niečo sa pokazilo." ';
+        header("Location: /");
+        exit;
+    }
     
     $_SESSION['ALERT'] = ' "Aktualizácia prebehla" ';
 

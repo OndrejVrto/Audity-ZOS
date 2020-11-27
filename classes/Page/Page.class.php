@@ -553,18 +553,13 @@ class Page
     public function displayFooter()
     {
     $cas = $this->endtime - $this->starttime;
-    // celkový počet vykonaných dotazov do databazy
-    global $db;
-    $dotazov = $db->query_count;
-
 ?>
     <footer class="main-footer">
         <strong>Copyright &copy; 2020-2021 <a href="#">Ing. Ondrej VRŤO, IWE</a></strong>
         All rights reserved.
         <div class="float-right d-none d-sm-inline-block">
             <!-- <b>Version</b> 0.0.9 -->
-            <b>Zobrazenie trvalo:</b> <?= round($cas, 4) ?>s
-<?php if ( VYVOJ OR $this->levelUser >= 20 ) { echo "\t\t\t".'<b class="ml-2">Dotazov do databázy:</b> ' . $dotazov; } ?>
+            <b>Zobrazenie trvalo:</b> <?= round($cas, 4) ?>s<br>
         </div>
     </footer>
 <?php
@@ -824,8 +819,20 @@ class Page
         'HTTP_CLIENT_IP') ;
         
         echo "\n\n". '<!--  LEN Pre potreby vývoja tejto stránky. Po vývoji ZMAZať !!!!!!!!!  -->' ;
+        echo "\n\n". '<div>';
+        // celkový počet vykonaných dotazov do databazy
+        global $db;
+        $dotazov = $db->query_count;
+        $data = $db->query("SELECT *, TIMESTAMPDIFF( MINUTE, PoslednaAktualizacia, NOW() ) AS Rozdiel FROM `52_sys_cache_cron_and_clean`;")->fetchAll();
 
-        echo "\n\n". '<hr><footer class="main-footer pt-5"> <h3 class="text-success">Vývoj: VZORY</h3>' ;
+        echo "\n\n". '<footer class="main-footer pt-5"> <h3 class="text-warning">Vývoj: Štatistika</h3>' ;
+        echo "\n\t".'<b>Dotazov do databázy:</b> ' . $dotazov . '<br><br>';
+        foreach ($data as $key => $value) {
+            echo "\n\t".'Posledná aktualizácia <b>' . $value['NazovCACHE'] . '</b> pred <b>' . $value['Rozdiel'] . '</b> minútami ( ' . $value['PoslednaAktualizacia'] . ' )' . '<br>';
+        }
+        echo "\n".'</footer>' ;
+
+        echo "\n\n". '<footer class="main-footer"> <h3 class="text-success">Vývoj: VZORY</h3>' ;
             echo '<a href="/_vzor/index.html">audity.zoszv.adminlte/_vzor</a>';
         echo '</footer>' ;
         
@@ -872,7 +879,9 @@ class Page
         $caskonecny = microtime(true) - $this->starttime;
         echo "\n\n". '<footer class="main-footer"> <h3 class="text-warning">Vývoj: Presný ČAS spracovania stránky</h3>';
             print_r(round($caskonecny, 4)); echo "s";
-        echo '</footer>' ; 
+        echo '</footer>' ;
+
+        echo "\n\n". '</div><hr>' . "\n\n";
     }
 
     // funkcia  upravLink  vymaže posledný podadresár z cesty

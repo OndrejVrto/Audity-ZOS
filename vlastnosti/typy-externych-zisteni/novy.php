@@ -18,11 +18,17 @@
         // ak validacia skonci TRUE --> vlož dáta do databázy
         if ($v->validateForm()) {
             $user = $page->userName;
-            $typ = $_POST['typ-externych-zisteni'];
-            $poznamka = $_POST['typ-externych-zisteni--poznamka'];
+            $NazovExternehoZistenia = $_POST['typ-externych-zisteni'];
+            $Poznamka = $_POST['typ-externych-zisteni--poznamka'];
 
             $db->query('INSERT INTO `33_zoznam_typ_externych_zisteni` (`NazovExternehoZistenia`, `Poznamka`, `KtoVykonalZmenu`) 
-                        VALUES (?,?,?)', $typ, $poznamka, $user);
+                        VALUES (?,?,?)', $NazovExternehoZistenia, $Poznamka, $user);
+
+            $id = $db->lastInsertID();
+            SetSearchData ('INSERT', 33, $id, 'NazovExternehoZistenia', $NazovExternehoZistenia,
+                            $Link = $page->linkCisty . "detail", $user, $ID72_Nasobitel = 7, $url = TRUE, $PriponaSuboru = NULL);
+            SetSearchData ('INSERT', 33, $id, 'Poznamka', $Poznamka,
+                            $Link = $page->linkCisty . "detail", $user, $ID72_Nasobitel = 9, $url = TRUE, $PriponaSuboru = NULL);
 
             header("Location: $page->linkZoznam");
             exit();

@@ -20,12 +20,17 @@
         // ak validacia skonci TRUE (1) --> zktualizuj dáta v databáze
         if ($v->validateForm()) {
             $user = $page->userName;
-            $typ = $_POST['typ-externych-zisteni'];
-            $poznamka = $_POST['typ-externych-zisteni--poznamka'];
+            $NazovExternehoZistenia = $_POST['typ-externych-zisteni'];
+            $Poznamka = $_POST['typ-externych-zisteni--poznamka'];
 
             $db->query('UPDATE `33_zoznam_typ_externych_zisteni` 
                         SET `NazovExternehoZistenia` = ?, `Poznamka` = ? , `KtoVykonalZmenu` = ? 
-                        WHERE `ID33` = ?', $typ, $poznamka, $user, $id);
+                        WHERE `ID33` = ?', $NazovExternehoZistenia, $Poznamka, $user, $id);
+
+            SetSearchData ('UPDATE', 33, $id, 'NazovExternehoZistenia', $NazovExternehoZistenia,
+                            $Link = $page->linkCisty . "detail", $user, $ID72_Nasobitel = 7, $url = TRUE, $PriponaSuboru = NULL);
+            SetSearchData ('UPDATE', 33, $id, 'Poznamka', $Poznamka,
+                            $Link = $page->linkCisty . "detail", $user, $ID72_Nasobitel = 9, $url = TRUE, $PriponaSuboru = NULL);
 
             header("Location: $page->linkZoznam");
             exit();

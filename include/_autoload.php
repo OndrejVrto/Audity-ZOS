@@ -41,6 +41,9 @@
     defined("TAB9") or define("TAB9", "\t\t\t\t\t\t\t\t\t");
     defined("TAB10") or define("TAB10", "\t\t\t\t\t\t\t\t\t\t");
 
+    defined("TRUE") or define("TRUE", 1);
+    defined("FALSE") or define("FALSE", 0);
+
     // Set Time Zone
     date_default_timezone_set('Europe/Bratislava');
     
