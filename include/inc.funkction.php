@@ -30,7 +30,7 @@ function gramatika($vstup){
         'o'=>'o', 'O'=>'O', 'o'=>'o', 'O'=>'O', 'ő'=>'o', 'Ő'=>'O', 'ř'=>'r', 'Ř'=>'R', 'ŕ'=>'r', 'Ŕ'=>'R',
         'š'=>'s', 'Š'=>'S', 'ś'=>'s', 'Ś'=>'S', 'ť'=>'t', 'Ť'=>'T', 'ú'=>'u', 'Ú'=>'U', 'ů'=>'u', 'Ů'=>'U',
         'ü'=>'u', 'Ü'=>'U', 'u'=>'u', 'U'=>'U', 'u'=>'u', 'U'=>'U', 'u'=>'u', 'U'=>'U', 'ý'=>'y', 'Ý'=>'Y',
-        'ž'=>'z', 'Ž'=>'Z', 'ź'=>'z', 'Ź'=>'Z', ','=>'',  '.'=>'-',
+        'ž'=>'z', 'Ž'=>'Z', 'ź'=>'z', 'Ź'=>'Z', ','=>'',  '.'=>'-', 'ˇ'=>'' , '´'=>''
         );
 
 	if ( $vstup == '' or $vstup == NULL ){
@@ -44,10 +44,10 @@ function gramatika($vstup){
 		$vystup_gramatika = preg_replace("/( ){2,}/", " ", $vystup_gramatika);
 		// nahradí pevnú medzeru za normálnu
 		$vystup_gramatika = preg_replace("/\xC2\xA0/", " ", $vystup_gramatika);
-		// odstráni prázdne miesto na konci a na začiatku
-		$vystup_gramatika = trim($vystup_gramatika);
 		// odstráni diakritiku
 		$vystup_bez_gramatiky = strtr($vystup_gramatika, $prevodni_tabulka);
+        // odstráni prázdne miesto na konci a na začiatku
+		$vystup_gramatika = trim($vystup_gramatika);
 		// všetky znaky malé
 		$vystup_bez_gramatiky = strtolower($vystup_bez_gramatiky);
 		//navratova hodnota v poli

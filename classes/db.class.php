@@ -131,6 +131,11 @@ class db
         }
     }
 
+    public function escapeString($hodnota)
+    {
+        return $this->connection->real_escape_string($hodnota);
+    }
+
     private function _gettype($var)
     {
         if (is_string($var)) return 's';

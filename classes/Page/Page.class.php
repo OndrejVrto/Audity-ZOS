@@ -22,13 +22,14 @@ class Page
     public $skriptySpecial = '';
     public $todo = false;
     public $alert = false;
-
+    public $searchValue = FALSE;
+    
     protected $_nazovstranky;
     protected $link;
     
+
     private $aktivnemenu = false;
     private $levelStranky;
-    private $searchValue;
     private $starttime;
     private $endtime;
 
