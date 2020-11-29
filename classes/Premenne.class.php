@@ -79,6 +79,13 @@ class Premenne
         ),
         array(
             "LEVEL" => 0,
+            "Link" => "/timeline",
+            "Title" => "Časová os",
+            "Description" => "stránka sumarizuje akcie v aplikácii",
+            "Nadpis" => "Časová os",
+        ),
+        array(
+            "LEVEL" => 0,
             "Link" => false,
             "NazovMENU" => "Uživateľ",
             "SUBMENU" => array(

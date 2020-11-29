@@ -257,6 +257,9 @@ class Page
                 <a href="/" class="nav-link">Domov</a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
+                <a href="/timeline" class="nav-link">Časová os</a>
+            </li>
+            <li class="nav-item d-none d-sm-inline-block">
                 <a href="#" class="nav-link">Kontakt</a>
             </li>
         </ul>
@@ -354,7 +357,7 @@ class Page
 
             <!-- Sidebar Menu -->
             <nav class="mt-2 pb-5">
-                <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent nav-compact" data-widget="treeview" role="menu" data-accordion="false">
+                <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent nav-compact" data-widget="treeview" role="menu" data-accordion="true" data-animation-speed="200">
                     <!-- Add icons to the links using the .nav-icon class
                         with font-awesome or any other icon font library -->
 <?php
