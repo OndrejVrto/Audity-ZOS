@@ -27,6 +27,7 @@
     require_once $pathInclude . 'inc.dBconnect.php';
     // Globálne funkcie
     require_once $pathInclude . 'inc.funkction.php';
+    require_once $pathInclude . 'inc.Paginate.php';
     require_once $pathInclude . 'inc.cron.php';
 
     // derfinície Konštant
