@@ -25,10 +25,20 @@
                         VALUES (?,?,?)', $NazovExternehoZistenia, $Poznamka, $user);
 
             $id = $db->lastInsertID();
-            SetSearchData ('INSERT', 33, $id, 'NazovExternehoZistenia', $NazovExternehoZistenia,
-                            $Link = $page->linkCisty . "detail", $user, $ID72_Nasobitel = 7, $url = TRUE, $PriponaSuboru = NULL);
-            SetSearchData ('INSERT', 33, $id, 'Poznamka', $Poznamka,
-                            $Link = $page->linkCisty . "detail", $user, $ID72_Nasobitel = 9, $url = TRUE, $PriponaSuboru = NULL);
+
+            $search = new Vyhladavanie($page->userName);
+            $search->Tabulka_Cislo = 33;
+            $search->Tabulka_ID = $id;
+            $search->Link = $page->linkCisty . "detail";
+            $search->url = TRUE;
+
+            $search->Tabulka_Stlpec = 'NazovExternehoZistenia';
+            $search->Hodnota = $NazovExternehoZistenia;
+            $search->insertSearch();
+            $search->Tabulka_Stlpec = 'Poznamka';
+            $search->Hodnota = $Poznamka;
+            $search->Nasobitel = 9;
+            $search->insertSearch();
 
             header("Location: $page->linkZoznam");
             exit();

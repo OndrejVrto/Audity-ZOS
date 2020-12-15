@@ -7,11 +7,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
     $page->zobrazitTlacitka = false;
     $page->pagination = true;
     $page->info = true;
-    $page->riadkov = 50;
+    $page->riadkov = 25;
 
-    $data = $db->query('SELECT * FROM `51_sys_users_maxmast_uoscis` ORDER BY ondate ASC')->fetchAll();
-
-ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
+    ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 ?>
 
                         <thead>
@@ -34,45 +32,30 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 
 <?php
     $poradie = 1;
-    foreach ($data as $key => $value):
-        $osCislo = $id  = htmlspecialchars($value['ucislo']);
-        $meno           = htmlspecialchars($value['umeno']);
-        $priezvisko     = htmlspecialchars($value['upriezv']);
-        $titul          = htmlspecialchars($value['utitul']);
-        $strediskoCislo = htmlspecialchars($value['ustred']);
-        $stredisko      = htmlspecialchars($value['nazstred']);
-        $firma          = htmlspecialchars($value['firma']);
-        $nastup         = htmlspecialchars($value['ondate']);
-        $vystup         = htmlspecialchars($value['offdate']);
+    $data = $db->query('SELECT * FROM `51_sys_users_maxmast_uoscis` ORDER BY ondate ASC')->fetchAll();
+    foreach ($data as $key => $value) 
+    {
 ?>
-                            <tr id='<?= $id ?>'>
+                            <tr id='<?= htmlspecialchars($value['ucislo']) ?>'>
                                 <td><?= $poradie ?>.</td>
-                                <td><?= $osCislo ?></td>
-                                <td><?= $meno ?></td>
-                                <td><?= $priezvisko ?></td>
-                                <td><?= $titul ?></td>
-                                <td><?= $strediskoCislo ?></td>
-                                <td><?= $stredisko ?></td>
-                                <td><?= $firma ?></td>
-                                <td><?= $nastup ?></td>
-                                <td><?= $vystup ?></td>
+                                <td><?= htmlspecialchars($value['ucislo']) ?></td>
+                                <td><?= htmlspecialchars($value['umeno']) ?></td>
+                                <td><?= htmlspecialchars($value['upriezv']) ?></td>
+                                <td><?= htmlspecialchars($value['utitul']) ?></td>
+                                <td><?= htmlspecialchars($value['ustred']) ?></td>
+                                <td><?= htmlspecialchars($value['nazstred']) ?></td>
+                                <td><?= htmlspecialchars($value['firma']) ?></td>
+                                <td><?= htmlspecialchars($value['ondate']) ?></td>
+                                <td><?= htmlspecialchars($value['offdate']) ?></td>
                             </tr>
 <?php
         $poradie += 1;
-    endforeach;
+    }
 ?>
 
                         </tbody>
 
 <?php
 $page->content = ob_get_clean();  // Koniec hlavného obsahu
-
-ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
-?>
-    <script>
-
-    </script>
-<?php
-$page->skriptySpecial = ob_get_clean();
 
 $page->display();  // vykreslenie stranky

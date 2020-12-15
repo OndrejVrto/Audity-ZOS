@@ -73,7 +73,7 @@ class Page
         $this->userName = ( isset($_SESSION['userName']) ) ? $_SESSION['userName'] : "" ;
 
         $this->list = (isset($_GET['p'])) ? $_GET['p'] : "1" ;
-        $this->searchValue = (isset($_POST['hladanyRetazec'])) ? $_POST['hladanyRetazec'] : "" ;
+        $this->searchValue = (isset($_GET['search'])) ? $_GET['search'] : "" ;
         
         if (isset($_SESSION['ALERT'])) {
             $this->alert = $_SESSION['ALERT'];
@@ -265,9 +265,9 @@ class Page
         </ul>
 
         <!-- SEARCH FORM -->
-        <form class="form-inline ml-3" action="/vyhladavanie" method="POST">
+        <form class="form-inline ml-3" action="/vyhladavanie" method="GET">
             <div class="input-group input-group-sm">
-                <input name="hladanyRetazec" value="<?= $this->searchValue ?>" class="form-control form-control-navbar" type="search" placeholder="Hľadaj ..." aria-label="Search">
+                <input name="search" value="<?= $this->searchValue ?>" class="form-control form-control-navbar" type="search" placeholder="Hľadaj ..." aria-label="Search">
                 <div class="input-group-append">
                     <button class="btn btn-navbar" type="submit">
                         <i class="fas fa-search"></i>

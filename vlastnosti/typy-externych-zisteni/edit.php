@@ -26,11 +26,20 @@
             $db->query('UPDATE `33_zoznam_typ_externych_zisteni` 
                         SET `NazovExternehoZistenia` = ?, `Poznamka` = ? , `KtoVykonalZmenu` = ? 
                         WHERE `ID33` = ?', $NazovExternehoZistenia, $Poznamka, $user, $id);
+            
+            $search = new Vyhladavanie($page->userName);
+            $search->Tabulka_Cislo = 33;
+            $search->Tabulka_ID = $id;
+            $search->Link = $page->linkCisty . "detail";
+            $search->url = TRUE;
 
-            SetSearchData ('UPDATE', 33, $id, 'NazovExternehoZistenia', $NazovExternehoZistenia,
-                            $Link = $page->linkCisty . "detail", $user, $ID72_Nasobitel = 7, $url = TRUE, $PriponaSuboru = NULL);
-            SetSearchData ('UPDATE', 33, $id, 'Poznamka', $Poznamka,
-                            $Link = $page->linkCisty . "detail", $user, $ID72_Nasobitel = 9, $url = TRUE, $PriponaSuboru = NULL);
+            $search->Tabulka_Stlpec = 'NazovExternehoZistenia';
+            $search->Hodnota = $NazovExternehoZistenia;
+            $search->updateSearch();
+            $search->Tabulka_Stlpec = 'Poznamka';
+            $search->Hodnota = $Poznamka;
+            $search->Nasobitel = 9;
+            $search->updateSearch();
 
             header("Location: $page->linkZoznam");
             exit();

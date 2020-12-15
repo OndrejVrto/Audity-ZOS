@@ -9,11 +9,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
     $page->info = true;
     $page->riadkov = 25;
 
-    $data = $db->query("SELECT `ucislo`, `utitul`, `umeno`, `upriezv`, `ustred`, `nazstred`, `ondate`
-                        FROM `51_sys_users_maxmast_uoscis`
-                        WHERE `offdate` > NOW() AND `firma` LIKE '%ŽOS%' AND `ucislo` REGEXP '^[0-9]{4,5}$' AND `umeno` IS NOT NULL 
-                        ORDER BY ondate ASC;")->fetchAll();
-
 ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 ?>
 
@@ -35,7 +30,14 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 
 <?php
     $poradie = 1;
-    foreach ($data as $key => $value):
+    
+    $data = $db->query("SELECT `ucislo`, `utitul`, `umeno`, `upriezv`, `ustred`, `nazstred`, `ondate`
+    FROM `51_sys_users_maxmast_uoscis`
+    WHERE `offdate` > NOW() AND `firma` LIKE '%ŽOS%' AND `ucislo` REGEXP '^[0-9]{4,5}$' AND `umeno` IS NOT NULL 
+    ORDER BY ondate ASC;")->fetchAll();
+
+    foreach ($data as $key => $value)
+    {
         $osCislo = $id  = htmlspecialchars($value['ucislo']);
         $meno           = htmlspecialchars($value['umeno']);
         $priezvisko     = htmlspecialchars($value['upriezv']);
@@ -56,20 +58,12 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
                             </tr>
 <?php
         $poradie += 1;
-    endforeach;
+    }
 ?>
 
                         </tbody>
 
 <?php
 $page->content = ob_get_clean();  // Koniec hlavného obsahu
-
-ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
-?>
-    <script>
-
-    </script>
-<?php
-$page->skriptySpecial = ob_get_clean();
 
 $page->display();  // vykreslenie stranky

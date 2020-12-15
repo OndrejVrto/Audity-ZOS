@@ -14,8 +14,13 @@
         $db->query('UPDATE `33_zoznam_typ_externych_zisteni` SET `KtoVykonalZmenu` = ? WHERE `ID33` = ?', $user, $id);
         $db->query('DELETE FROM `33_zoznam_typ_externych_zisteni` WHERE `ID33` = ?', $id);
 
-        SetSearchData ('DELETE', 33, $id, 'NazovExternehoZistenia');
-        SetSearchData ('DELETE', 33, $id, 'Poznamka');
+        $search = new Vyhladavanie($page->userName);
+        $search->Tabulka_Cislo = 33;
+        $search->Tabulka_ID = $id;
+        $search->Tabulka_Stlpec = 'NazovExternehoZistenia';
+        $search->deleteSearch();
+        $search->Tabulka_Stlpec = 'Poznamka';
+        $search->deleteSearch();
 
         header("Location: $page->linkZoznam");  
         exit();
