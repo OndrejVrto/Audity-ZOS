@@ -39,6 +39,7 @@ class Page
     public $userNameShort;
     public $userName;
     public $suborAvatara;
+    public $typKonta;
 
     public $bodyClassExtended = ''; //premenna sa používa v odvodených triedach
     public $bodyWidthExtended = ''; //premenna sa používa v odvodených triedach
@@ -103,8 +104,10 @@ class Page
 
         // prebratie pripojenia na databazu z globálnej premennej
         global $db;
-        
-        $row = $db->query('SELECT `AvatarFILE` FROM `50_sys_users` WHERE `OsobneCislo` = ?', $this->LoginUser)->fetchArray();
+        $row = $db->query('SELECT * FROM `50_sys_users`, `53_sys_levels` 
+                            WHERE `OsobneCislo` = ? AND `ID53_sys_levels` = `ID53`',
+                            $this->LoginUser)->fetchArray();
+        $this->typKonta = $row['NazovCACHE'];
         $this->suborAvatara = "/dist/avatar/" . $row['AvatarFILE'];
         if ( is_null($row['AvatarFILE']) OR !file_exists($_SERVER['DOCUMENT_ROOT'] . $this->suborAvatara) ) {
             $this->suborAvatara = "/dist/img/ avatar-clear.svg";
@@ -140,7 +143,7 @@ class Page
         $this->displayTopMenu();
         
         $this->displayLeftMenuHeader();
-        echo $this->displayLeftMenuSitebar($this->hlavneMenu);
+        echo $this->displayLeftMenuSitebar($this->hlavneMenu, $this->odsadenie);
         $this->displayLeftMenuFooter();
         
         if ($this->zobrazitBublinky) {
@@ -308,21 +311,16 @@ class Page
 
     public function displayLogin()
     {
-?>
-<?php if ($this->levelUser >= 3): 
-    // TODO dorobiť s prepojením na databázu
-    $typKonta = "";
-    if ($this->levelUser > 2 AND $this->levelUser <= 15) {
-        $typKonta = '<span class="text-danger ml-2 align-top"><small>[EDIT]</small></span>';
-    } elseif ($this->levelUser >= 16) {
-        $typKonta = '<span class="text-danger ml-2 align-top"><small>[ADMIN-EXTRA]</small></span>';
-    }
+
+    if ($this->levelUser >= 3): 
 ?>
             <div class="image">
                 <img src="<?= $this->suborAvatara ?>" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="/user/detail" class="d-block text-warning"><?= htmlspecialchars($this->userNameShort) . $typKonta ?></a>
+                <a href="/user/detail" class="d-block text-warning"><?= htmlspecialchars($this->userNameShort) ?>
+                    <span class="text-danger ml-2 align-top"><small>[ <?= htmlspecialchars($this->typKonta) ?> ]</small></span>
+                </a>
             </div>
 <?php else: ?>
             <div class="image">
@@ -331,11 +329,10 @@ class Page
             <div class="info">
                 <a href="/user/login" class="d-block text-warning">NEPRIHLASENÝ</a>
             </div>
-<?php endif; ?>
-
-<?php
+<?php endif;
     }
 
+    
     public function displayLeftMenuHeader()
     {
 ?>
@@ -363,10 +360,10 @@ class Page
 <?php
     }
 
-    public function displayLeftMenuSitebar($vstup)
+    public function displayLeftMenuSitebar($vstup, $odsadenie)
     {
 
-        $odsad = str_repeat("\t", $this->odsadenie );
+        $odsad = str_repeat("\t", $odsadenie );
         $html = '';
         $this->aktivnemenu = false;
 
@@ -384,7 +381,7 @@ class Page
             } else {
                 if (is_array($value['SUBMENU'])) {
                     // rekurzívna funkcia - volá sama seba pri každej ďalšej vrste Menu !!!
-                    $submenu = $this->displayLeftMenuSitebar($value['SUBMENU']);
+                    $submenu = $this->displayLeftMenuSitebar($value['SUBMENU'], $odsadenie + 2);
 
                     $html .= "\n".$odsad.'<li class="nav-item has-treeview'.(($this->aktivnemenu === true) ? ' menu-open' : '' ).'">';
                     $html .= "\n\t".$odsad.'<a href="'. (($value['Link'] === false) ? '#' : $value['Link'] ).'" ';
@@ -404,7 +401,8 @@ class Page
                     
                     $html .= $submenu;
 
-                    $html .= "\n\t".$odsad.'</ul>';
+                    $html .= "\t".$odsad.'</ul>';
+                    $html .= "\n".$odsad.'</li>';
 
                 } else {
                     if ($value['Link'] == $this->link || $value['Link'] == $this->linkZoznam) {
@@ -430,6 +428,7 @@ class Page
                 }
             }
         }
+        $html .= "\n";
         return $html;
     }
 

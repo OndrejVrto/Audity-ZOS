@@ -130,7 +130,7 @@
         $db->query("UPDATE `50_sys_users` AS A INNER JOIN
                     (SELECT * FROM `51_sys_users_maxmast_uoscis` WHERE `offdate` < NOW() ) AS B
                     ON A.`OsobneCislo` = B.`ucislo`
-                    SET A.`ID53_sys_levels` = 3
+                    SET A.`ID53_sys_levels` = 2
                     ;");
         $html .= "OFF: " . $db->affectedRows() . PHP_EOL . "<br>" . PHP_EOL;
 
