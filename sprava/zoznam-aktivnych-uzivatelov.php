@@ -3,7 +3,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
 
     $page = new \Page\Zoznam\Zoznam();
     $page->bodyClassExtended = 'col-12';
-    $page->bodyWidthExtended = 'max-width: 1200px;';
+    $page->bodyWidthExtended = 'max-width: 1400px;';
     $page->zobrazitTlacitka = false;
     $page->pagination = true;
     $page->info = false;
@@ -17,9 +17,11 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
                             <tr>
                                 <th>P.č.</th>
                                 <th>Avatar</th>
+                                <th>Typ konta</th>
                                 <th>Meno</th>
                                 <th>Stredisko</th>
                                 <th>Posledné prihlásenie</th>
+                                <th>IP</th>
                                 <th>E-mail</th>
                                 <th>Telefón</th>
                             </tr>
@@ -33,11 +35,15 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
     $data = $db->query("SELECT *
                         FROM `50_sys_users`
                         LEFT JOIN 
-                            (SELECT `ID50_sys_users`, MAX(`DatumCas`) AS PoslednePrihlasenie 
+                            (SELECT *, MAX(`DatumCas`) AS PoslednePrihlasenie 
                             FROM `60_log_prihlasenie` 
                             GROUP BY `ID50_sys_users`) AS X 
                         ON ID50 = X.`ID50_sys_users`
+                        LEFT JOIN 
+                            53_sys_levels AS Y 
+                        ON `ID53_sys_levels` = Y.`ID53`
                         WHERE `ID53_sys_levels` >= 3 
+                            AND `ID53_sys_levels` < 12 
                             AND `ID50` > 4
                             AND `Datum_Inicializacie_Konta` IS NOT NULL
                         ORDER BY PoslednePrihlasenie DESC;")->fetchAll();
@@ -45,24 +51,23 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
     foreach ($data as $key => $value)
     {
         $osCislo = $id  = htmlspecialchars($value['OsobneCislo']);
-        
-        $meno           = htmlspecialchars($value['Meno']);
-        $priezvisko     = htmlspecialchars($value['Priezvisko']);
-        $titul          = htmlspecialchars($value['Titul']);
         $avatar         = htmlspecialchars($value['AvatarFILE']);
-        $strediskoCislo = htmlspecialchars($value['Stredisko']);
-        $stredisko      = htmlspecialchars($value['NazovStrediska']);
+        $TypKonta       = htmlspecialchars(add_leading_zero($value['ID53']) .' - '. $value['NazovCACHE']);
+        $meno           = htmlspecialchars("[".$osCislo."] ".(isset($value['Titul']) ? $value['Titul'] . " " : "" ) . $value['Meno'] . " " . $value['Priezvisko']);
+        $stredisko      = htmlspecialchars($value['Stredisko'] . ' ' . $value['NazovStrediska']);
         $aktivacia      = htmlspecialchars($value['PoslednePrihlasenie']);
+        $IPadresa       = htmlspecialchars($value['IP']);
         $email          = htmlspecialchars($value['Email']);
         $telefon        = htmlspecialchars($value['TelefonneCislo']);
-
 ?>
                             <tr id='<?= $id ?>'>
                                 <td class="text-center"><?= $poradie ?>.</td>
                                 <td class="text-center"><img alt="Avatar" class="img-circle elevation-2" width="30" src="/dist/avatar/<?= $avatar ?>"></td>
-                                <td><?= "[".$osCislo."] ".(isset($titul) ? $titul." " : "" ) . $meno . " " . $priezvisko; ?></td>
-                                <td><?= $strediskoCislo . ' ' . $stredisko ?></td>
+                                <td><?= $TypKonta ?></td>
+                                <td><?= $meno ?></td>
+                                <td><?= $stredisko ?></td>
                                 <td><?= $aktivacia ?></td>
+                                <td><?= $IPadresa ?></td>
                                 <td><?= $email ?></td>
                                 <td><?= $telefon ?></td>
                             </tr>

@@ -14,8 +14,6 @@
         $custom_validator = new \Validator\Login();
         $v->AddCustomValidator($custom_validator);
 
-        // TODO   Kontrola hesiel nefunguje
-
         // ak validacia skonci TRUE (1) --> reditect page to Index
         if ($v->validateForm()) {
 
