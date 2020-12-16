@@ -8,6 +8,7 @@ class Vyhladavanie {
 
     private $Hodnota_orginal;
     private $Hodnota_cista;
+    private $Titulok;
 
     private $user;
 
@@ -82,7 +83,8 @@ class Vyhladavanie {
             
             $sql = 'SELECT DISTINCT 
                         LEFT(X.`Hodnota_ORGINAL`, 150) AS TEXT, 
-                        X.`Link`
+                        X.`Link`,
+                        X.`Titulok`
                     FROM (' . $sql_3 . ') AS X';
 
             $this->SQLprikaz = $sql;
@@ -118,7 +120,7 @@ class Vyhladavanie {
             $i++) { 
             
             $html .= '<div class="card py-2 px-3 mb-2">';
-            $html .= '<a class="h5" href="'.$this->VysledokHladania[$i]['Link'].'" title="">'.($i+1).'</a>';
+            $html .= '<a class="h5" href="'.$this->VysledokHladania[$i]['Link'].'" title="'.($i+1).'">'.$this->VysledokHladania[$i]['Titulok'].'</a>';
             $html .= '<a class="text-decoration-none text-success" href="'.$this->VysledokHladania[$i]['Link'].'">';
             $html .= $this->VysledokHladania[$i]['Link'].'</a>';
             $html .= '<span class="text-break">'.$this->VysledokHladania[$i]['TEXT'].'</span>';
@@ -172,11 +174,11 @@ class Vyhladavanie {
     {
         global $db;
         $db->query('INSERT INTO `70_search_search` (`Tabulka_Cislo`, `Tabulka_ID`, `Tabulka_Stlpec`, 
-                        `Hodnota_ORGINAL`, `Hodnota_CISTA`, `ID72_search_nasobitel`, 
+                        `Hodnota_ORGINAL`, `Hodnota_CISTA`, `ID72_search_nasobitel`, `Titulok`,
                         `PriponaSuboru`, `Link`, `KtoVykonalZmenu`) 
-                    VALUES (?,?,?,?,?,?,?,?,?)',
+                    VALUES (?,?,?,?,?,?,?,?,?,?)',
                     $this->Tabulka_Cislo, $this->Tabulka_ID, $this->Tabulka_Stlpec, 
-                    $this->Hodnota_orginal,  $this->Hodnota_cista, $this->Nasobitel,
+                    $this->Hodnota_orginal,  $this->Hodnota_cista, $this->Nasobitel, $this->Titulok,
                     $this->PriponaSuboru, $this->Link, $this->user);
     }
 
@@ -184,12 +186,17 @@ class Vyhladavanie {
     {
         global $db;
         $db->query("UPDATE `70_search_search` 
-                    SET `Hodnota_ORGINAL` = ?, `Hodnota_CISTA` = ?, `ID72_search_nasobitel` = ?, 
+                    SET `Hodnota_ORGINAL` = ?, `Hodnota_CISTA` = ?, `ID72_search_nasobitel` = ?, `Titulok` = ?, 
                         `PriponaSuboru` = ?, `Link` = ?, `KtoVykonalZmenu` = ? 
                     WHERE `Tabulka_Cislo` = ? AND `Tabulka_ID` = ? AND `Tabulka_Stlpec` = ?",
-                    $this->Hodnota_orginal, $this->Hodnota_cista, $this->Nasobitel,
+                    $this->Hodnota_orginal, $this->Hodnota_cista, $this->Nasobitel, $this->Titulok,
                     $this->PriponaSuboru, $this->Link, $this->user,
                     $this->Tabulka_Cislo, $this->Tabulka_ID, $this->Tabulka_Stlpec);
+
+        // v prípade predvyplnenej hodnoty v databáze sa táto vloží ako nová hodnota
+        if ($db->affectedRows() == 0) {
+            $this->insertSearch();
+        }
     }
 
     public function deleteSearch()

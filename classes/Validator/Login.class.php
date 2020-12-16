@@ -29,7 +29,7 @@ class Login extends \Validator\Validator
                     }
 
                     // uživateľovi bolo odobraté právo sa prihlásiť - záznam sa aktualizuje automaticky s MAXu
-                    if ($row['ID53_sys_levels'] === 1) {
+                    if ($row['ID53_sys_levels'] === 2 OR $row['ID53_sys_levels'] === 1) {
                         $error_hash['login-osobne-cislo'] = $this->PurifiText($row['Meno']." ".$row['Priezvisko']) ." už v ŽOS nepracuje.";
                         $vysledok = false;
                         break;
@@ -49,7 +49,7 @@ class Login extends \Validator\Validator
 
                 }
 
-/*                 case 'signup-osobne-cislo': {
+            /*      case 'signup-osobne-cislo': {
                     $user = $formars['signup-osobne-cislo'];
                     $row = $db->query('SELECT * FROM `50_sys_users` WHERE `OsobneCislo` = ?', $user )->fetchArray();
                     if ( ! empty($row) ) {

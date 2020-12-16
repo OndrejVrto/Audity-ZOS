@@ -32,12 +32,26 @@
                         WHERE `OsobneCislo` = ?', $TelefonneCislo, $Email, $Password_NEW, $user);
 
             $row = $db->query('SELECT * FROM `50_sys_users` WHERE `OsobneCislo` = ?', $user)->fetchArray();
-
+            
+            $userID = $row['ID50'];
             $_SESSION['Login'] = 'true';
             $_SESSION['LoginUser'] = $user;
             $_SESSION['userNameShort'] = (isset($row['Titul']) ? $row['Titul']." " : "" ) . $row['Meno'] . " " . $row['Priezvisko'];
             $_SESSION['userName'] = "[" . $row['OsobneCislo'] . "] " . $_SESSION['userNameShort'];
             $_SESSION['LEVEL'] = $row['ID53_sys_levels'];
+
+            if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+                $ip = $_SERVER['HTTP_CLIENT_IP'];
+            } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+            } else {
+                $ip = $_SERVER['REMOTE_ADDR'];
+            }
+            $prehliadac = $_SERVER['HTTP_USER_AGENT'];
+            // logovanie prihlásenia
+            $db->query('INSERT INTO `60_log_prihlasenie` (`ID50_sys_users`, `DatumCas`, `IP`, `Prehliadac`) 
+                        VALUES (?, now(), ?, ? )', 
+                        $userID, $ip, $prehliadac);
 
             if ( is_null($row['AvatarFILE']) ) {
                 // konto nieje aktivované kým nieje zvolený avatar - presmeruje sa na stránku avatara

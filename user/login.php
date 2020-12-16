@@ -49,7 +49,9 @@
             }
             $prehliadac = $_SERVER['HTTP_USER_AGENT'];
             // logovanie prihlásenia
-            $db->query('INSERT INTO `60_log_prihlasenie` (`ID50_sys_users`, `DatumCas`, `IP`, `Prehliadac`) VALUES (?, now(), ?, ? )', $userID, $ip, $prehliadac);
+            $db->query('INSERT INTO `60_log_prihlasenie` (`ID50_sys_users`, `DatumCas`, `IP`, `Prehliadac`) 
+                        VALUES (?, now(), ?, ? )', 
+                        $userID, $ip, $prehliadac);
 
             // konto nemá prideleného avatara - presmeruje sa na stránku avatar
             if ( is_null($row['AvatarFILE']) ) {

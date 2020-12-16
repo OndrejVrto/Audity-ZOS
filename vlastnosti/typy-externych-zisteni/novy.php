@@ -31,6 +31,7 @@
             $search->Tabulka_ID = $id;
             $search->Link = $page->linkCisty . "detail";
             $search->url = TRUE;
+            $search->Titulok = "Typ externého zistenia";
 
             $search->Tabulka_Stlpec = 'NazovExternehoZistenia';
             $search->Hodnota = $NazovExternehoZistenia;
