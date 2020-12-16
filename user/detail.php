@@ -42,7 +42,9 @@ ob_start();  // Začiatok definície hlavného obsahu
                     <div class="card card-warning card-outline">
                         <div class="card-body box-profile">
                             <div class="text-center">
-                                <img src="<?= $page->suborAvatara ?>" class="profile-user-img img-fluid img-circle" alt="User Image Avatar">
+                                <a href="/user/avatar">
+                                    <img src="<?= $page->suborAvatara ?>" class="profile-user-img img-fluid img-circle" alt="User Image Avatar">
+                                </a>
                             </div>
 
                             <h3 class="profile-username text-center"><?= $page->userNameShort ?></h3>

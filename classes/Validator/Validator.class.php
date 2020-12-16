@@ -425,7 +425,7 @@ class Validator
                 }
 
             case 'alnum': {
-                    $vysledok = $this->test_datatype($input_value, "[^A-Za-z0-9]");
+                    $vysledok = $this->test_datatype($input_value, "/^[A-Za-z0-9]+$/");
                     if (false == $vysledok) {
                         $default_error_message = sprintf(E_VAL_ALNUM_CHECK_FAILED, $variable_name);
                     }
@@ -433,7 +433,7 @@ class Validator
                 }
 
             case 'alnum_s': {
-                    $vysledok = $this->test_datatype($input_value, "[^A-Za-z0-9 ]");
+                    $vysledok = $this->test_datatype($input_value, "/^[A-Za-z0-9 ]+$/");
                     if (false == $vysledok) {
                         $default_error_message = sprintf(E_VAL_ALNUM_S_CHECK_FAILED, $variable_name);
                     }
@@ -442,7 +442,7 @@ class Validator
 
             case 'num':
             case 'numeric': {
-                    $vysledok = $this->test_datatype($input_value, "/^([0-9]+)$/");
+                    $vysledok = $this->test_datatype($input_value, "/^[0-9]+$/");
                     if (false == $vysledok) {
                         $default_error_message = sprintf(E_VAL_NUM_CHECK_FAILED, $variable_name);
                     }
@@ -450,14 +450,14 @@ class Validator
                 }
 
             case 'alpha': {
-                    $vysledok = $this->test_datatype($input_value, "[^A-Za-z]");
+                    $vysledok = $this->test_datatype($input_value, "/^[A-Za-z]+$/");
                     if (false == $vysledok) {
                         $default_error_message = sprintf(E_VAL_ALPHA_CHECK_FAILED, $variable_name);
                     }
                     break;
                 }
             case 'alpha_s': {
-                    $vysledok = $this->test_datatype($input_value, "[^A-Za-z ]");
+                    $vysledok = $this->test_datatype($input_value, "/^[A-Za-z ]+$/");
                     if (false == $vysledok) {
                         $default_error_message = sprintf(E_VAL_ALPHA_S_CHECK_FAILED, $variable_name);
                     }

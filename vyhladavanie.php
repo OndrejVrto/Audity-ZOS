@@ -23,7 +23,7 @@ ob_start();  // Začiatok definície hlavného obsahu
             </form>
             <?= $search->zobrazVysledok() ?>
         </div>
-        <?= (VYVOJ) ? $search->zobrazVyvoj() : '' ?>
+        <?= ( VYVOJ OR $page->levelUser >= 20 ) ? $search->zobrazVyvoj() : '' ?>
 <?php
 $page->content = ob_get_clean();  // Koniec hlavného obsahu
 

@@ -84,7 +84,7 @@ ob_start();  // Začiatok definície hlavného obsahu
             <!-- lockscreen credentials (contains the form) -->
             <form class="lockscreen-credentials" action="<?= $page->link ?>" method="POST">
                 <div class="input-group">
-                    <input type="hidden" name="login-pasword" value="<?= $page->LoginUser ?>">
+                    <input type="hidden" name="login-osobne-cislo" value="<?= $page->LoginUser ?>">
                     <input type="password" name="login-pasword" class="form-control" placeholder="Heslo">
 
                     <div class="input-group-append">

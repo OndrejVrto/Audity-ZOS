@@ -2,8 +2,14 @@
     require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
     
     // ak uživateľ prišiel na stránku inak ako so stránky LOGIN alebo SIGNUP
-    if (isset($_SERVER['HTTP_REFERER']) AND (substr($_SERVER['HTTP_REFERER'], -6, 6) === "signup" OR substr($_SERVER['HTTP_REFERER'], -5, 5) === "login") ) {
-        // pokračuj
+    if ( isset($_SERVER['HTTP_REFERER']) AND 
+        (substr($_SERVER['HTTP_REFERER'], -6, 6) === "signup" OR substr($_SERVER['HTTP_REFERER'], -5, 5) === "login") 
+        ) {
+        $referer = "/";
+    } elseif ( isset($_SERVER['HTTP_REFERER']) AND 
+            (substr($_SERVER['HTTP_REFERER'], -11, 11) === "user/detail") 
+            ) {
+        $referer = "/user/detail";
     } else {
         header("Location: /");
         exit;
@@ -19,7 +25,6 @@
     }
 
     $user = $page->LoginUser;
-    $referer = "/";
 
 ob_start();  // Začiatok definície hlavného obsahu
 ?>
