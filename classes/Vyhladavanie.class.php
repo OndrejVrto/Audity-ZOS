@@ -123,7 +123,7 @@ class Vyhladavanie {
             $html .= '<a class="h5" href="'.$this->VysledokHladania[$i]['Link'].'" title="'.($i+1).'">'.$this->VysledokHladania[$i]['Titulok'].'</a>';
             $html .= '<a class="text-decoration-none text-success" href="'.$this->VysledokHladania[$i]['Link'].'">';
             $html .= $this->VysledokHladania[$i]['Link'].'</a>';
-            $html .= '<span class="text-break">'.$this->VysledokHladania[$i]['TEXT'].'</span>';
+            $html .= '<span class="text-break text-truncate">'.$this->VysledokHladania[$i]['TEXT'].'</span>';
             $html .= '</div>';
             
         }
