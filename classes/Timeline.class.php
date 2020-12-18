@@ -20,46 +20,43 @@ class Timeline
 
     public function ZobrazTimeLine ()
     {
+
+        global $db;
+        $datumy = $db->query(
+            'SELECT DISTINCT DATE(`DatumCas`) AS Datum
+            FROM `80_timeline_zaznamy`
+            ORDER BY `ID80` DESC;'
+            )->fetchAll();
+
         ob_start(); // spustenie nahravania Cache
 
         $this->TimeLine_Begin();
 
-        $this->TimeLine_Label_Datum (
-            $datum = '2020-12-10'
-            );
-        $this->TimeLine_Prispevok(
-            $ikona = 'fas fa-envelope',
-            $farbaPozadia = 'bg-blue', 
-            $cas = '2020-12-17 13:31:00',
-            $header = array("Link" =>"#", 
-                            "Meno" => "Support Team",
-                            "Text" => "sent you an email"), 
-            $body = 'Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles,
-                weebly ning heekya handango imeem plugg dopplr jibjab, movity
-                jajah plickers sifteo edmodo ifttt zimbra. Babblely odeo kaboodle
-                quora plaxo ideeli hulu weebly balihoo...', 
-            $footer = '<a class="btn btn-primary btn-sm">Read more</a>
-                <a class="btn btn-danger btn-sm">Delete</a>'
-            );
-        $this->TimeLine_Prispevok(
-            $ikona = 'fas fa-user',
-            $farbaPozadia = 'bg-green', 
-            $cas = '2020-12-16 13:31:00',
-            $header = array("Link" =>"#", 
-                            "Meno" => "Sarah Young",
-                            "Text" => "accepted your friend request")
-            );
-        $this->TimeLine_Prispevok(
-            $ikona = 'fas fa-comments',
-            $farbaPozadia = 'bg-yellow', 
-            $cas = '2020-12-17 15:31:00',
-            $header = array("Link" =>"#", 
-                            "Meno" => "Jay White",
-                            "Text" => "commented on your post"),
-            $body = 'Take me to your leader!
-                Switzerland is small and neutral!
-                We are more like Germany, ambitious and misunderstood!'
-            );
+        foreach ($datumy as $key => $value) {
+
+            $this->TimeLine_Label_Datum ($value['Datum']);
+            $dataTimeline = $db->query(
+                'SELECT * 
+                FROM `80_timeline_zaznamy`
+                LEFT JOIN `50_sys_users`
+                ON `ID50` = `ID50_sys_users`
+                WHERE DATE(`DatumCas`) = ?
+                ORDER BY ID80 DESC;',
+                $value['Datum'] )->fetchAll();
+            
+            foreach ($dataTimeline as $key => $value) {
+                $this->TimeLine_Prispevok(
+                    $ikona = 'fas fa-envelope',
+                    $farbaPozadia = 'bg-blue', 
+                    $cas = $value['DatumCas'],
+                    $header = array("Link" => $value['OsobneCislo'], 
+                                    "Meno" => $value['Meno'].' '.$value['Priezvisko'],
+                                    "Text" => $value['TypPrispevku'].' - '.$value['Header_Text']), 
+                    $body = $value['Body_Text'], 
+                    $footer = $value['Footer_Text']
+                    );
+            }
+        }
 
         $this->TimeLine_EndIcon();
         $this->TimeLine_END();
@@ -97,7 +94,7 @@ class Timeline
 
     <!-- TimeLine Date Label -->
     <div class="time-label">
-        <span class="px-2 <?= $farba ?>"><?= $datum ?> <small>(<?= $den ?>)</small></span>
+        <span class="px-2 <?= $farba ?>"><?= $datum ?><small class="pl-2">(<?= $den ?>)</small></span>
     </div>
     <!-- END TimeLine Date Label -->
 <?php
@@ -109,30 +106,30 @@ class Timeline
         if ($footer == null) $footer = false;
 ?>
 
-    <!-- TimeLine položka -->
-    <div>
-        <i class="<?= htmlspecialchars($ikona.' '.$farbaPozadia) ?>"></i>
-        <div class="timeline-item">
-            <span class="time"><i class="fas fa-clock"></i> <?= $this->dateDiff($cas) ?></span>
-            <h3 class="timeline-header<?= ($body AND $footer) ? '' : ' no-border' ?>">
-                <a href="<?= $header['Link'] ?>"><?= $header['Meno'] ?></a> <?= $header['Text'] . PHP_EOL ?>
-            </h3>
+        <!-- TimeLine položka -->
+        <div>
+            <i class="<?= htmlspecialchars($ikona.' '.$farbaPozadia) ?>"></i>
+            <div class="timeline-item">
+                <span class="time"><i class="fas fa-clock"></i> <?= $this->dateDiff($cas) ?></span>
+                <h3 class="timeline-header<?= ($body AND $footer) ? '' : ' no-border' ?>">
+                    <a href="<?= $header['Link'] ?>"><?= $header['Meno'] ?></a> <?= $this->htmlAntiPurify($header['Text']) . PHP_EOL ?>
+                </h3>
 <?php
     if ($body) {
 ?>
-            <div class="timeline-body">
-                <?= $body . PHP_EOL ?>
-            </div>
+                <div class="timeline-body">
+                    <?= $this->htmlAntiPurify($body) . PHP_EOL ?>
+                </div>
 <?php }
     if ($footer) {
 ?>
-            <div class="timeline-footer">
-                <?= $footer . PHP_EOL ?>
-            </div>
+                <div class="timeline-footer">
+                    <?= $this->htmlAntiPurify($footer) . PHP_EOL ?>
+                </div>
 <?php } ?>
+            </div>
         </div>
-    </div>
-    <!-- END TimeLine položka -->
+        <!-- END TimeLine položka -->
 <?php
     }
 

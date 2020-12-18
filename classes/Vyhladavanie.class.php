@@ -62,7 +62,7 @@ class Vyhladavanie {
             $sql_1 = 'SELECT *, 
                     LOCATE("?", Hodnota_CISTA) AS poloha,
                     MATCH(Hodnota_CISTA) AGAINST("?" IN NATURAL LANGUAGE MODE WITH QUERY EXPANSION) as score
-                    FROM 70_search_search
+                    FROM 70_search_zaznamy
                     WHERE MATCH(Hodnota_CISTA) AGAINST("?" IN NATURAL LANGUAGE MODE WITH QUERY EXPANSION)';
             // nahradí všetky otázniky v dotaze hľadanou hodnotou
             $sql_1 = sprintf(str_replace('?','%1$s', $sql_1 ), $this->hladanaHodnota);
@@ -70,7 +70,7 @@ class Vyhladavanie {
             $sql_2 = 'SELECT *,
                     LOCATE("' . $this->hladanaHodnotaPole[0] . '", Hodnota_CISTA) AS poloha,
                     0.1 as score
-                    FROM 70_search_search
+                    FROM 70_search_zaznamy
                     WHERE ';
             foreach ($this->hladanaHodnotaPole as $value) {
                 $sql_2 .= 'Hodnota_CISTA LIKE "%' . $value . '%" AND ';
@@ -173,7 +173,7 @@ class Vyhladavanie {
     public function insertSearch ()
     {
         global $db;
-        $db->query('INSERT INTO `70_search_search` (`Tabulka_Cislo`, `Tabulka_ID`, `Tabulka_Stlpec`, 
+        $db->query('INSERT INTO `70_search_zaznamy` (`Tabulka_Cislo`, `Tabulka_ID`, `Tabulka_Stlpec`, 
                         `Hodnota_ORGINAL`, `Hodnota_CISTA`, `ID72_search_nasobitel`, `Titulok`,
                         `PriponaSuboru`, `Link`, `KtoVykonalZmenu`) 
                     VALUES (?,?,?,?,?,?,?,?,?,?)',
@@ -185,7 +185,7 @@ class Vyhladavanie {
     public function updateSearch()
     {
         global $db;
-        $db->query("UPDATE `70_search_search` 
+        $db->query("UPDATE `70_search_zaznamy` 
                     SET `Hodnota_ORGINAL` = ?, `Hodnota_CISTA` = ?, `ID72_search_nasobitel` = ?, `Titulok` = ?, 
                         `PriponaSuboru` = ?, `Link` = ?, `KtoVykonalZmenu` = ? 
                     WHERE `Tabulka_Cislo` = ? AND `Tabulka_ID` = ? AND `Tabulka_Stlpec` = ?",
@@ -202,7 +202,7 @@ class Vyhladavanie {
     public function deleteSearch()
     {
         global $db;
-        $db->query("DELETE FROM `70_search_search` 
+        $db->query("DELETE FROM `70_search_zaznamy` 
                     WHERE `Tabulka_Cislo` = ? AND `Tabulka_ID` = ? AND `Tabulka_Stlpec` = ?",
                     $this->Tabulka_Cislo, $this->Tabulka_ID, $this->Tabulka_Stlpec);
     }
