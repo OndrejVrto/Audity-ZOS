@@ -25,7 +25,7 @@ class Page
     public $searchValue = FALSE;
     
     protected $_nazovstranky;
-    protected $link;
+    public $link;
     
 
     private $aktivnemenu = false;
@@ -265,6 +265,9 @@ class Page
             <li class="nav-item d-none d-sm-inline-block">
                 <a href="#" class="nav-link">Kontakt</a>
             </li>
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="/kalkulacka" class="nav-link">Kalkulačka</a>   <!--  http://www.dematte.at/calculator/#download  -->
+            </li>            
         </ul>
 
         <!-- SEARCH FORM -->
@@ -665,6 +668,12 @@ class Page
             case "summernote":
                 $cssLink = '/plugins/summernote/summernote-bs4';
             break;
+            case "CalcSS3":
+                $cssLink = '/plugins/CalcSS3/CalcSS3';
+            break;
+            case "CalcSS3-index":
+                $cssLink = '/plugins/CalcSS3/index';
+            break;
         }
 
         $this->stylyArray[] = ($cssComment != '' ? '<!-- '.$cssComment.' -->'.PHP_EOL.TAB1 : '').'<link rel="stylesheet" href="'.$cssLink.($min ? '.min' : '').'.css">';
@@ -719,6 +728,9 @@ class Page
             case "DataTables-Buttons-HTML5":
                 $jsComment = '';                
                 $jsLink = '/plugins/datatables-buttons/js/buttons.html5';
+            break;
+            case "CalcSS3":
+                $jsLink = '/plugins/CalcSS3/CalcSS3';
             break;
         }
 
