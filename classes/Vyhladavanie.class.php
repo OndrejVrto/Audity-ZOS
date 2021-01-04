@@ -113,17 +113,27 @@ class Vyhladavanie {
             return '<p class="mx-5 mb-3 mt-n3">Hľadaný výraz nepriniesol žiadne výsledky ...</p>';
         }
 
+        // trieda na zvyraznovanie textu v ramci ineho textu
+        $zvyraznovac = new KeywordsHighlighter([
+			"opening_tag" => '<mark class="px-0">',
+			"closing_tag" => '</mark>'
+        ]);;
+
         $html = '<p class="mx-5 mb-3 mt-n3">Počet výsledkov: <span class="font-weight-bold">' . $this->pocetVysledkov . '</span></p>';
 
         for ($i = ($this->stranka - 1) * $this->zaznamov; 
             $i < min($this->stranka * $this->zaznamov, $this->pocetVysledkov); 
             $i++) { 
-            
+
+            $text = $zvyraznovac->highlight($this->VysledokHladania[$i]['TEXT'], $this->hladanaHodnota);
+            $link = $this->VysledokHladania[$i]['Link'];
+            $titulok = $this->VysledokHladania[$i]['Titulok'];
+
             $html .= '<div class="card py-2 px-3 mb-2">';
-            $html .= '<a class="h5" href="'.$this->VysledokHladania[$i]['Link'].'" title="'.($i+1).'">'.$this->VysledokHladania[$i]['Titulok'].'</a>';
-            $html .= '<a class="text-decoration-none text-success" href="'.$this->VysledokHladania[$i]['Link'].'">';
-            $html .= $this->VysledokHladania[$i]['Link'].'</a>';
-            $html .= '<span class="text-break text-truncate">'.$this->VysledokHladania[$i]['TEXT'].'</span>';
+            $html .= '<a class="h5" href="'.$link.'" title="'.($i+1).'">'.$titulok.'</a>';
+            $html .= '<a class="text-decoration-none text-success" href="'.$link.'">';
+            $html .= $link.'</a>';
+            $html .= '<span class="text-break text-truncate">'.$text.'</span>';
             $html .= '</div>';
             
         }

@@ -177,7 +177,9 @@ class Page
             echo '<script>alert(' . (string)$this->alert . ');</script>' . PHP_EOL;
         }
         $this->displayScripts();
-        $this->displayScriptsTime();
+        if ( strlen($this->LoginUser) > 1 ) {
+            $this->displayScriptsTime();
+        }
         echo $this->skriptySpecial;
 
         ( VYVOJ OR $this->levelUser >= 20 ) ? $this->VYVOJ() : '';
