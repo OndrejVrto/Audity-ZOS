@@ -1,6 +1,7 @@
 <?php
 
-class Vyhladavanie {
+class Vyhladavanie
+{
 
     private $Tabulka_Cislo;
     private $Tabulka_ID;
@@ -24,12 +25,14 @@ class Vyhladavanie {
     private $stranka;
     private $zaznamov = 5;
 
+    private $odsadenie = 4;
+
     public function __set($name, $value)
     {
         if ($name == 'Hodnota') {
             $this->Hodnota_orginal = $this->gramatika($value)['sGramatikou'];
             $this->Hodnota_cista = $this->gramatika($value)['bezGramatiky'];
-        } elseif ($name == 'url' AND $value == TRUE) {
+        } elseif ($name == 'url' and $value == TRUE) {
             $this->Link = $this->Link . "?id=" . $this->Tabulka_ID;
         } else {
             $this->$name = $value;
@@ -65,7 +68,7 @@ class Vyhladavanie {
                     FROM 70_search_zaznamy
                     WHERE MATCH(Hodnota_CISTA) AGAINST("?" IN NATURAL LANGUAGE MODE WITH QUERY EXPANSION)';
             // nahradí všetky otázniky v dotaze hľadanou hodnotou
-            $sql_1 = sprintf(str_replace('?','%1$s', $sql_1 ), $this->hladanaHodnota);
+            $sql_1 = sprintf(str_replace('?', '%1$s', $sql_1), $this->hladanaHodnota);
 
             $sql_2 = 'SELECT *,
                     LOCATE("' . $this->hladanaHodnotaPole[0] . '", Hodnota_CISTA) AS poloha,
@@ -80,7 +83,7 @@ class Vyhladavanie {
 
             $sql_3 = '(' . $sql_1 . ') UNION ALL (' . $sql_2 . ') 
                     ORDER BY score DESC';
-            
+
             $sql = 'SELECT DISTINCT 
                         LEFT(X.`Hodnota_ORGINAL`, 150) AS TEXT, 
                         X.`Link`,
@@ -103,57 +106,68 @@ class Vyhladavanie {
     }
 
     public function zobrazVysledok()
-    {   
+    {
 
-        if ( $this->hladanaHodnota == NULL) {
-            return '<p class="mx-5 mb-3 mt-n3">Ak chcete vyhľadávať, musíte niečo napísať do poľa.</p>';
+        if ($this->hladanaHodnota == NULL) {
+            return PHP_EOL . '<p class="mx-5 mb-3 mt-n3">Ak chcete vyhľadávať, musíte niečo napísať do poľa.</p>';
         }
-        
-        if ( $this->VysledokHladania == false) {
-            return '<p class="mx-5 mb-3 mt-n3">Hľadaný výraz nepriniesol žiadne výsledky ...</p>';
+
+        if ($this->VysledokHladania == false) {
+            return PHP_EOL . '<p class="mx-5 mb-3 mt-n3">Hľadaný výraz nepriniesol žiadne výsledky ...</p>';
         }
 
         // trieda na zvyraznovanie textu v ramci ineho textu
         $zvyraznovac = new KeywordsHighlighter([
-			"opening_tag" => '<mark class="px-0">',
-			"closing_tag" => '</mark>'
-        ]);;
+            "opening_tag" => '<mark class="px-0">',
+            "closing_tag" => '</mark>'
+        ]);
 
-        $html = '<p class="mx-5 mb-3 mt-n3">Počet výsledkov: <span class="font-weight-bold">' . $this->pocetVysledkov . '</span></p>';
-
-        for ($i = ($this->stranka - 1) * $this->zaznamov; 
-            $i < min($this->stranka * $this->zaznamov, $this->pocetVysledkov); 
-            $i++) { 
-
-            $text = $zvyraznovac->highlight($this->VysledokHladania[$i]['TEXT'], $this->hladanaHodnota);
-            $link = $this->VysledokHladania[$i]['Link'];
+        $html = PHP_EOL . '<p class="mx-5 mb-3 mt-n3">Počet výsledkov: <span class="font-weight-bold">' . $this->zaznamov . '</span> z <span class="font-weight-bold">' . $this->pocetVysledkov . '</span></p>' . PHP_EOL;
+        $html .= PHP_EOL . '<!--  Výsledky hľadania -->';
+        for (
+            $i = ($this->stranka - 1) * $this->zaznamov;
+            $i < min($this->stranka * $this->zaznamov, $this->pocetVysledkov);
+            $i++
+        ) {
             $titulok = $this->VysledokHladania[$i]['Titulok'];
+            $link = $this->VysledokHladania[$i]['Link'];
+            $text = $zvyraznovac->highlight($this->VysledokHladania[$i]['TEXT'], $this->hladanaHodnota);
 
-            $html .= '<div class="card py-2 px-3 mb-2">';
-            $html .= '<a class="h5" href="'.$link.'" title="'.($i+1).'">'.$titulok.'</a>';
-            $html .= '<a class="text-decoration-none text-success" href="'.$link.'">';
-            $html .= $link.'</a>';
-            $html .= '<span class="text-break text-truncate">'.$text.'</span>';
-            $html .= '</div>';
-            
+            $html .= PHP_EOL . '<div class="card py-2 px-3 mb-2">';
+            $html .= PHP_EOL . TAB1 . '<a class="h5" href="' . $link . '" title="' . ($i + 1) . '">' . $titulok . '</a>';
+            $html .= PHP_EOL . TAB1 . '<a class="text-decoration-none text-success" href="' . $link . '">' . $link . '</a>';
+            $html .= PHP_EOL . TAB1 . '<span class="text-break text-truncate">' . $text . '</span>';
+            $html .= PHP_EOL . '</div>';
         }
+        $html .= PHP_EOL . '<!--  END Výsledky hľadania -->' . PHP_EOL;
 
-        $html .= pagination_vrto($this->stranka, ceil($this->pocetVysledkov / $this->zaznamov),"/vyhladavanie/", '/'.$this->hladanaHodnota);
+        $html .= PHP_EOL . '<!--  START Pagination -->';
+        $html .= pagination_vrto(
+            $aktivnaStranka = $this->stranka,
+            $pocetStran = ceil($this->pocetVysledkov / $this->zaznamov),
+            $url_zaciatok = "/vyhladavanie/",
+            $url_koniec = '/' . $this->hladanaHodnota,
+            $opacneCislovanie = false,
+            $velkost = 0,
+            $odsadenie = 0,
+            $urlPrazdne = false
+        );
+        $html .= '<!--  END Pagination -->' . PHP_EOL;
 
-        return $html;
+        return $this->pridaj_tabulator_html($html, $this->odsadenie);
     }
 
-
-
-
-    public function zobrazVyvoj ()
+    public function zobrazVyvoj()
     {
-        $html = PHP_EOL . PHP_EOL . '<!--  pre vývoj -->' . PHP_EOL;
-        $html .= '<hr class="pt-3"><div>' . PHP_EOL;
-        $html .= $this->SQLinHTML() . PHP_EOL . PHP_EOL;
-        $html .= $this->DATAinHTML() . PHP_EOL . PHP_EOL;
-        $html .= '</div>' . PHP_EOL;
-        return $html;
+        $html = PHP_EOL . PHP_EOL . '<!--  START pre vývoj -->';
+        $html .= PHP_EOL . '<hr class="pt-3">';
+        $html .= PHP_EOL . '<div>';
+        $html .= PHP_EOL . $this->SQLinHTML() . PHP_EOL;
+        $html .= PHP_EOL . $this->DATAinHTML() . PHP_EOL;
+        $html .= PHP_EOL . '</div>';
+        $html .= PHP_EOL . '<!--  END pre vývoj -->';
+
+        return $this->pridaj_tabulator_html($html, $this->odsadenie - 1);
     }
 
     public function SQLinHTML()
@@ -168,7 +182,7 @@ class Vyhladavanie {
         $html .= "</pre>";
         $html .= '<pre class="bg-dark text-white">';
         $html .= print_r($this->VysledokHladania, true);
-
+        $html .= "</pre>";
         return $html;
     }
 
@@ -180,28 +194,46 @@ class Vyhladavanie {
                     VALUES (?,?,NOW(),?)', $this->hladanaHodnota, $this->pocetVysledkov, $this->user);
     }
 
-    public function insertSearch ()
+    public function insertSearch()
     {
         global $db;
-        $db->query('INSERT INTO `70_search_zaznamy` (`Tabulka_Cislo`, `Tabulka_ID`, `Tabulka_Stlpec`, 
+        $db->query(
+            'INSERT INTO `70_search_zaznamy` (`Tabulka_Cislo`, `Tabulka_ID`, `Tabulka_Stlpec`, 
                         `Hodnota_ORGINAL`, `Hodnota_CISTA`, `ID72_search_nasobitel`, `Titulok`,
                         `PriponaSuboru`, `Link`, `KtoVykonalZmenu`) 
                     VALUES (?,?,?,?,?,?,?,?,?,?)',
-                    $this->Tabulka_Cislo, $this->Tabulka_ID, $this->Tabulka_Stlpec, 
-                    $this->Hodnota_orginal,  $this->Hodnota_cista, $this->Nasobitel, $this->Titulok,
-                    $this->PriponaSuboru, $this->Link, $this->user);
+            $this->Tabulka_Cislo,
+            $this->Tabulka_ID,
+            $this->Tabulka_Stlpec,
+            $this->Hodnota_orginal,
+            $this->Hodnota_cista,
+            $this->Nasobitel,
+            $this->Titulok,
+            $this->PriponaSuboru,
+            $this->Link,
+            $this->user
+        );
     }
 
     public function updateSearch()
     {
         global $db;
-        $db->query("UPDATE `70_search_zaznamy` 
+        $db->query(
+            "UPDATE `70_search_zaznamy` 
                     SET `Hodnota_ORGINAL` = ?, `Hodnota_CISTA` = ?, `ID72_search_nasobitel` = ?, `Titulok` = ?, 
                         `PriponaSuboru` = ?, `Link` = ?, `KtoVykonalZmenu` = ? 
                     WHERE `Tabulka_Cislo` = ? AND `Tabulka_ID` = ? AND `Tabulka_Stlpec` = ?",
-                    $this->Hodnota_orginal, $this->Hodnota_cista, $this->Nasobitel, $this->Titulok,
-                    $this->PriponaSuboru, $this->Link, $this->user,
-                    $this->Tabulka_Cislo, $this->Tabulka_ID, $this->Tabulka_Stlpec);
+            $this->Hodnota_orginal,
+            $this->Hodnota_cista,
+            $this->Nasobitel,
+            $this->Titulok,
+            $this->PriponaSuboru,
+            $this->Link,
+            $this->user,
+            $this->Tabulka_Cislo,
+            $this->Tabulka_ID,
+            $this->Tabulka_Stlpec
+        );
 
         // v prípade predvyplnenej hodnoty v databáze sa táto vloží ako nová hodnota
         if ($db->affectedRows() == 0) {
@@ -212,29 +244,32 @@ class Vyhladavanie {
     public function deleteSearch()
     {
         global $db;
-        $db->query("DELETE FROM `70_search_zaznamy` 
+        $db->query(
+            "DELETE FROM `70_search_zaznamy` 
                     WHERE `Tabulka_Cislo` = ? AND `Tabulka_ID` = ? AND `Tabulka_Stlpec` = ?",
-                    $this->Tabulka_Cislo, $this->Tabulka_ID, $this->Tabulka_Stlpec);
+            $this->Tabulka_Cislo,
+            $this->Tabulka_ID,
+            $this->Tabulka_Stlpec
+        );
     }
-
 
     public function gramatika($vstup)
     {
-	
-        $prevodni_tabulka = Array(
-            'ä'=>'a', 'Ä'=>'A', 'á'=>'a', 'Á'=>'A', 'a'=>'a', 'A'=>'A', 'a'=>'a', 'A'=>'A', 'â'=>'a', 'Â'=>'A',
-            'č'=>'c', 'Č'=>'C', 'ć'=>'c', 'Ć'=>'C', 'ď'=>'d', 'Ď'=>'D', 'ě'=>'e', 'Ě'=>'E', 'é'=>'e', 'É'=>'E',
-            'ë'=>'e', 'Ë'=>'E', 'e'=>'e', 'E'=>'E', 'e'=>'e', 'E'=>'E', 'í'=>'i', 'Í'=>'I', 'i'=>'i', 'I'=>'I',
-            'i'=>'i', 'I'=>'I', 'î'=>'i', 'Î'=>'I', 'ľ'=>'l', 'Ľ'=>'L', 'ĺ'=>'l', 'Ĺ'=>'L', 'ń'=>'n', 'Ń'=>'N',
-            'ň'=>'n', 'Ň'=>'N', 'n'=>'n', 'N'=>'N', 'ó'=>'o', 'Ó'=>'O', 'ö'=>'o', 'Ö'=>'O', 'ô'=>'o', 'Ô'=>'O',
-            'o'=>'o', 'O'=>'O', 'o'=>'o', 'O'=>'O', 'ő'=>'o', 'Ő'=>'O', 'ř'=>'r', 'Ř'=>'R', 'ŕ'=>'r', 'Ŕ'=>'R',
-            'š'=>'s', 'Š'=>'S', 'ś'=>'s', 'Ś'=>'S', 'ť'=>'t', 'Ť'=>'T', 'ú'=>'u', 'Ú'=>'U', 'ů'=>'u', 'Ů'=>'U',
-            'ü'=>'u', 'Ü'=>'U', 'u'=>'u', 'U'=>'U', 'u'=>'u', 'U'=>'U', 'u'=>'u', 'U'=>'U', 'ý'=>'y', 'Ý'=>'Y',
-            'ž'=>'z', 'Ž'=>'Z', 'ź'=>'z', 'Ź'=>'Z', ','=>'',  '.'=>'-', 'ˇ'=>'' , '´'=>''
-            );
-    
-        if ( $vstup == '' or $vstup == NULL ){
-            return array( 'sGramatikou'=>NULL , 'bezGramatiky'=>NULL );
+
+        $prevodni_tabulka = array(
+            'ä' => 'a', 'Ä' => 'A', 'á' => 'a', 'Á' => 'A', 'a' => 'a', 'A' => 'A', 'a' => 'a', 'A' => 'A', 'â' => 'a', 'Â' => 'A',
+            'č' => 'c', 'Č' => 'C', 'ć' => 'c', 'Ć' => 'C', 'ď' => 'd', 'Ď' => 'D', 'ě' => 'e', 'Ě' => 'E', 'é' => 'e', 'É' => 'E',
+            'ë' => 'e', 'Ë' => 'E', 'e' => 'e', 'E' => 'E', 'e' => 'e', 'E' => 'E', 'í' => 'i', 'Í' => 'I', 'i' => 'i', 'I' => 'I',
+            'i' => 'i', 'I' => 'I', 'î' => 'i', 'Î' => 'I', 'ľ' => 'l', 'Ľ' => 'L', 'ĺ' => 'l', 'Ĺ' => 'L', 'ń' => 'n', 'Ń' => 'N',
+            'ň' => 'n', 'Ň' => 'N', 'n' => 'n', 'N' => 'N', 'ó' => 'o', 'Ó' => 'O', 'ö' => 'o', 'Ö' => 'O', 'ô' => 'o', 'Ô' => 'O',
+            'o' => 'o', 'O' => 'O', 'o' => 'o', 'O' => 'O', 'ő' => 'o', 'Ő' => 'O', 'ř' => 'r', 'Ř' => 'R', 'ŕ' => 'r', 'Ŕ' => 'R',
+            'š' => 's', 'Š' => 'S', 'ś' => 's', 'Ś' => 'S', 'ť' => 't', 'Ť' => 'T', 'ú' => 'u', 'Ú' => 'U', 'ů' => 'u', 'Ů' => 'U',
+            'ü' => 'u', 'Ü' => 'U', 'u' => 'u', 'U' => 'U', 'u' => 'u', 'U' => 'U', 'u' => 'u', 'U' => 'U', 'ý' => 'y', 'Ý' => 'Y',
+            'ž' => 'z', 'Ž' => 'Z', 'ź' => 'z', 'Ź' => 'Z', ',' => '',  '.' => '-', 'ˇ' => '', '´' => ''
+        );
+
+        if ($vstup == '' or $vstup == NULL) {
+            return array('sGramatikou' => NULL, 'bezGramatiky' => NULL);
         } else {
             // odstráni všetky tabulátory a konce riadkov
             $vystup_gramatika = str_replace(array("\n\r", "\n", "\r", "\t"), " ", $vstup);
@@ -251,8 +286,14 @@ class Vyhladavanie {
             // všetky znaky malé
             $vystup_bez_gramatiky = strtolower($vystup_bez_gramatiky);
             //navratova hodnota v poli
-            return array( 'sGramatikou'=>(string)$vystup_gramatika , 'bezGramatiky'=>(string)$vystup_bez_gramatiky );
+            return array('sGramatikou' => (string)$vystup_gramatika, 'bezGramatiky' => (string)$vystup_bez_gramatiky);
         }
     }
 
+    // pridá ku každému riadku niekoľko tabulátorov
+    function pridaj_tabulator_html($code, $num)
+    {
+        $tabs = str_repeat("\t", $num); // or spaces if you want
+        return $tabs . str_replace("\n", "\n$tabs", $code) . PHP_EOL;
+    }
 }

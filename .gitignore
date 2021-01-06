@@ -19,6 +19,10 @@
 !sprava
 !sprava/*
 
+!spravca-suborov
+!spravca-suborov/*
+!translation.json
+
 !personal
 !personal/*
 
@@ -29,6 +33,11 @@
 
 !.gitignore
 !.htaccess
+
+!dist
+!dist/*
+!dist/css/*
+!adminlite.css
 
 # nakoniec som zakázal jednotlivé súbory ktoré nechcem zverejňovať
 inc.dBconnect.php

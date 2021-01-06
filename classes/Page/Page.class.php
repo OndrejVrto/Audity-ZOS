@@ -270,6 +270,9 @@ class Page
             <li class="nav-item d-none d-sm-inline-block">
                 <a href="/kalkulacka" class="nav-link">Kalkulačka</a>   <!--  http://www.dematte.at/calculator/#download  -->
             </li>            
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="/spravca-suborov/" class="nav-link">Správca súborov</a>   <!--  https://github.com/prasathmani/tinyfilemanager  a  https://tinyfilemanager.github.io/docs/#line2  -->
+            </li>
         </ul>
 
         <!-- SEARCH FORM -->
