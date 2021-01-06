@@ -108,6 +108,12 @@ class Vyhladavanie
     public function zobrazVysledok()
     {
 
+        // trieda na zvyraznovanie textu v ramci ineho textu
+        $zvyraznovac = new KeywordsHighlighter([
+            "opening_tag" => '<mark class="px-0">',
+            "closing_tag" => '</mark>'
+        ]);
+
         if ($this->hladanaHodnota == NULL) {
             return PHP_EOL . '<p class="mx-5 mb-3 mt-n3">Ak chcete vyhľadávať, musíte niečo napísať do poľa.</p>';
         }
@@ -116,13 +122,14 @@ class Vyhladavanie
             return PHP_EOL . '<p class="mx-5 mb-3 mt-n3">Hľadaný výraz nepriniesol žiadne výsledky ...</p>';
         }
 
-        // trieda na zvyraznovanie textu v ramci ineho textu
-        $zvyraznovac = new KeywordsHighlighter([
-            "opening_tag" => '<mark class="px-0">',
-            "closing_tag" => '</mark>'
-        ]);
+        $pocetStran = (integer)ceil($this->pocetVysledkov / $this->zaznamov);
+        if ($this->stranka == $pocetStran) {
+            $x = $this->pocetVysledkov - ($this->zaznamov * ($pocetStran - 1));
+        } else {
+            $x = $this->zaznamov;
+        }
+        $html = PHP_EOL . '<p class="mx-5 mb-3 mt-n3">Počet výsledkov: <span class="font-weight-bold">' . $x . '</span> z <span class="font-weight-bold">' . $this->pocetVysledkov . '</span></p>' . PHP_EOL;
 
-        $html = PHP_EOL . '<p class="mx-5 mb-3 mt-n3">Počet výsledkov: <span class="font-weight-bold">' . $this->zaznamov . '</span> z <span class="font-weight-bold">' . $this->pocetVysledkov . '</span></p>' . PHP_EOL;
         $html .= PHP_EOL . '<!--  Výsledky hľadania -->';
         for (
             $i = ($this->stranka - 1) * $this->zaznamov;
@@ -131,7 +138,7 @@ class Vyhladavanie
         ) {
             $titulok = $this->VysledokHladania[$i]['Titulok'];
             $link = $this->VysledokHladania[$i]['Link'];
-            $text = $zvyraznovac->highlight($this->VysledokHladania[$i]['TEXT'], $this->hladanaHodnota);
+            $text = $zvyraznovac->highlight($this->VysledokHladania[$i]['TEXT'], $this->hladanaHodnota);  // zvýraznenie hľadaných slov
 
             $html .= PHP_EOL . '<div class="card py-2 px-3 mb-2">';
             $html .= PHP_EOL . TAB1 . '<a class="h5" href="' . $link . '" title="' . ($i + 1) . '">' . $titulok . '</a>';
@@ -144,7 +151,7 @@ class Vyhladavanie
         $html .= PHP_EOL . '<!--  START Pagination -->';
         $html .= pagination_vrto(
             $aktivnaStranka = $this->stranka,
-            $pocetStran = ceil($this->pocetVysledkov / $this->zaznamov),
+            $pocetStran,
             $url_zaciatok = "/vyhladavanie/",
             $url_koniec = '/' . $this->hladanaHodnota,
             $opacneCislovanie = false,
@@ -166,8 +173,9 @@ class Vyhladavanie
         $html .= PHP_EOL . $this->DATAinHTML() . PHP_EOL;
         $html .= PHP_EOL . '</div>';
         $html .= PHP_EOL . '<!--  END pre vývoj -->';
-
-        return $this->pridaj_tabulator_html($html, $this->odsadenie - 1);
+        
+        //return $this->pridaj_tabulator_html($html, $this->odsadenie - 1);
+        return $html;
     }
 
     public function SQLinHTML()

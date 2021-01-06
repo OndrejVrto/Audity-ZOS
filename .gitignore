@@ -21,7 +21,10 @@
 
 !spravca-suborov
 !spravca-suborov/*
-!translation.json
+!spravca-suborov/dist/*
+!spravca-suborov/dist/css/*
+!spravca-suborov/dist/js/*
+!spravca-suborov/dist/fonts/*
 
 !personal
 !personal/*

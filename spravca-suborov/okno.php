@@ -3,11 +3,17 @@
 $CONFIG = '{"lang":"sk","error_reporting":false,"show_hidden":false,"hide_Cols":true,"calc_folder":false}';
 
 //doplnil Vrťo
-// + zakomentoval som niektoré časti kódu, ktoré mi neboli treba
-// + prepísal som skripty a stýly tak, aby sa sťahovali lokálne a nie z CDN
+// vypol som tlacitko s nastaveniami, pretože sa ukladajú priamo do tohoto skriptu. Tak by si jednotliví uživatelia prepisovali nastavenia navzájom.
+// + zakomentoval som niektoré časti kódu, ktoré mi neboli treba ako modálne okná search, help, ...
+//TODO + prepísal som skripty a stýly tak, aby sa sťahovali lokálne a nie z CDN
+
 require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
 $page = new \Page\Page();
+
 if ($page->levelUser >= 20) {
+
+    // ADMIN God
+
     define('FM_READONLY', false);
     // Enable ace.js (https://ace.c9.io/) on view's page
     $edit_files = true;
@@ -15,7 +21,14 @@ if ($page->levelUser >= 20) {
     // use absolute path of directory i.e: '/var/www/folder' or $_SERVER['DOCUMENT_ROOT'].'/folder'
     $root_path = $_SERVER['DOCUMENT_ROOT'];
     $CONFIG = '{"lang":"sk","error_reporting":false,"show_hidden":true,"hide_Cols":true,"calc_folder":true}';
+    // Files and folders to excluded from listing
+    // e.g. array('myfile.html', 'personal-folder', '*.php', ...)
+    $exclude_items = array();
+
 } elseif ($page->levelUser >= 12) {
+
+    // uživateľ EDIT
+
     define('FM_READONLY', false);
     // Enable ace.js (https://ace.c9.io/) on view's page
     $edit_files = true;
@@ -23,13 +36,23 @@ if ($page->levelUser >= 20) {
     // use absolute path of directory i.e: '/var/www/folder' or $_SERVER['DOCUMENT_ROOT'].'/folder'
     $root_path = $_SERVER['DOCUMENT_ROOT'] . "/#UploadFiles";
     $CONFIG = '{"lang":"sk","error_reporting":false,"show_hidden":true,"hide_Cols":true,"calc_folder":false}';
+    // Files and folders to excluded from listing
+    // e.g. array('myfile.html', 'personal-folder', '*.php', ...)
+    $exclude_items = array('*.php','*.js');
+
 } else {
+
+    // bežný uživateľ
+
     define('FM_READONLY', true);
     // Enable ace.js (https://ace.c9.io/) on view's page
     $edit_files = false;
     // Root path for file manager
     // use absolute path of directory i.e: '/var/www/folder' or $_SERVER['DOCUMENT_ROOT'].'/folder'
     $root_path = $_SERVER['DOCUMENT_ROOT'] . "/#UploadFiles";
+    // Files and folders to excluded from listing
+    // e.g. array('myfile.html', 'personal-folder', '*.php', ...)
+    $exclude_items = array('*.php','*.js');
 }
 define('FM_EMBED', true);
 //doplnil Vrťo
@@ -113,10 +136,6 @@ $allowed_upload_extensions = '';
 // full path, e.g http://example.com/favicon.png
 // local path, e.g images/icons/favicon.png
 $favicon_path = '?img=favicon';
-
-// Files and folders to excluded from listing
-// e.g. array('myfile.html', 'personal-folder', '*.php', ...)
-$exclude_items = array();
 
 // Online office Docs Viewer
 // Availabe rules are 'google', 'microsoft' or false
@@ -1194,7 +1213,8 @@ if (isset($_GET['upload']) && !FM_READONLY) {
     }
     ?>
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.css" rel="stylesheet">
+    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.css" rel="stylesheet"> -->
+    <link href="dist/css/dropzone-5.5.1.min.css" rel="stylesheet">
     <div class="path">
 
         <div class="card mb-2 fm-upload-wrapper <?php echo fm_get_theme(); ?>">
@@ -1238,7 +1258,8 @@ if (isset($_GET['upload']) && !FM_READONLY) {
             </div>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js"></script> -->
+    <script src="dist/js/dropzone-5.5.1.min.js"></script>
     <script>
         Dropzone.options.fileUploader = {
             timeout: 120000,
@@ -2421,7 +2442,7 @@ function fm_get_parent_path($path)
 function fm_is_exclude_items($file)
 {
     $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-    if (!in_array($file, FM_EXCLUDE_ITEMS) && !in_array("*.$ext", FM_EXCLUDE_ITEMS)) {
+    if (!in_array($file, FM_EXCLUDE_ITEMS) && !in_array(strtolower("*.$ext"), FM_EXCLUDE_ITEMS)) {
         return true;
     }
     return false;
@@ -3615,11 +3636,21 @@ function fm_show_header_login()
         <meta name="googlebot" content="noindex">
         <link rel="icon" href="<?php //echo fm_enc($favicon_path) ?>" type="image/png">
         <title><?php //echo fm_enc(APP_TITLE) ?></title> -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css" />
+        
+        <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"> -->
+        <link rel="stylesheet" href="dist/css/bootstrap-4.5.0.min.css">
+        
+        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+        <link rel="stylesheet" href="dist/css/font-awesome-4.7.0.min.css">
+        
+        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css" /> -->
+        <link rel="stylesheet" href="dist/css/ekko-lightbox-5.3.0.min.css" />
+
+
         <?php if (FM_USE_HIGHLIGHTJS) : ?>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/<?php echo FM_HIGHLIGHTJS_STYLE ?>.min.css">
+            <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/<?php //echo FM_HIGHLIGHTJS_STYLE ?>.min.css"> -->
+            <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/vs.min.css"> -->
+            <link rel="stylesheet" href="dist/css/highlight.js-10.0.3-vs.min.css">
         <?php endif; ?>
         <style>
             body {
@@ -4341,12 +4372,22 @@ function fm_show_header_login()
     {
         ?>
         </div>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-        <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.min.js"></script>
+        <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+        <script src="dist/js/jquery-3.5.1.min.js"></script>
+
+        <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script> -->
+        <script src="dist/js/bootstrap-4.5.0.min.js"></script>
+
+        <!-- <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script> -->
+        <script src="dist/js/jquery.dataTables.1.10.21.min.js"></script>
+
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.min.js"></script> -->
+        <script src="dist/js/ekko-lightbox-5.3.0.min.js"></script>
+
         <?php if (FM_USE_HIGHLIGHTJS) : ?>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/highlight.min.js"></script>
+            <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/highlight.min.js"></script> -->
+            <script src="dist/js/highlight.js-10.0.3-vs.min.js"></script>
+
             <script>
                 hljs.initHighlightingOnLoad();
                 var isHighlightingEnabled = true;
@@ -4376,7 +4417,7 @@ function fm_show_header_login()
                 });
             });
             //TFM Config
-            window.curi = "https://tinyfilemanager.github.io/config.json", window.config = null;
+            window.curi = "dist/config.json", window.config = null;
 
             function fm_get_config() {
                 if (!!window.name) {
@@ -4724,7 +4765,8 @@ function fm_show_header_login()
             $ext = "javascript";
             $ext = pathinfo($_GET["edit"], PATHINFO_EXTENSION);
         ?>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.1/ace.js"></script>
+            <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.1/ace.js"></script> -->
+            <script src="dist/js/ace-1.4.1.min.js"></script>
             <script>
                 var editor = ace.edit("editor");
                 editor.getSession().setMode({
