@@ -14,13 +14,16 @@ if ($page->levelUser >= 20) {
 
     // ADMIN God
 
+    $CONFIG = '{"lang":"sk","error_reporting":false,"show_hidden":true,"hide_Cols":true,"calc_folder":true}';
     define('FM_READONLY', false);
     // Enable ace.js (https://ace.c9.io/) on view's page
     $edit_files = true;
     // Root path for file manager
     // use absolute path of directory i.e: '/var/www/folder' or $_SERVER['DOCUMENT_ROOT'].'/folder'
     $root_path = $_SERVER['DOCUMENT_ROOT'];
-    $CONFIG = '{"lang":"sk","error_reporting":false,"show_hidden":true,"hide_Cols":true,"calc_folder":true}';
+    // Root url for links in file manager.Relative to $http_host. Variants: '', 'path/to/subfolder'
+    // Will not working if $root_path will be outside of server document root
+    $root_url = '';    
     // Files and folders to excluded from listing
     // e.g. array('myfile.html', 'personal-folder', '*.php', ...)
     $exclude_items = array();
@@ -29,13 +32,16 @@ if ($page->levelUser >= 20) {
 
     // uživateľ EDIT
 
+    $CONFIG = '{"lang":"sk","error_reporting":false,"show_hidden":true,"hide_Cols":true,"calc_folder":false}';
     define('FM_READONLY', false);
     // Enable ace.js (https://ace.c9.io/) on view's page
     $edit_files = true;
+    // Root url for links in file manager.Relative to $http_host. Variants: '', 'path/to/subfolder'
+    // Will not working if $root_path will be outside of server document root
+    $root_url = '/#UploadFiles';
     // Root path for file manager
     // use absolute path of directory i.e: '/var/www/folder' or $_SERVER['DOCUMENT_ROOT'].'/folder'
-    $root_path = $_SERVER['DOCUMENT_ROOT'] . "/#UploadFiles";
-    $CONFIG = '{"lang":"sk","error_reporting":false,"show_hidden":true,"hide_Cols":true,"calc_folder":false}';
+    $root_path = $_SERVER['DOCUMENT_ROOT'] . $root_url;
     // Files and folders to excluded from listing
     // e.g. array('myfile.html', 'personal-folder', '*.php', ...)
     $exclude_items = array('*.php','*.js');
@@ -44,12 +50,16 @@ if ($page->levelUser >= 20) {
 
     // bežný uživateľ
 
+    $CONFIG = '{"lang":"sk","error_reporting":false,"show_hidden":false,"hide_Cols":true,"calc_folder":false}';
     define('FM_READONLY', true);
     // Enable ace.js (https://ace.c9.io/) on view's page
     $edit_files = false;
+    // Root url for links in file manager.Relative to $http_host. Variants: '', 'path/to/subfolder'
+    // Will not working if $root_path will be outside of server document root
+    $root_url = '/#UploadFiles';
     // Root path for file manager
     // use absolute path of directory i.e: '/var/www/folder' or $_SERVER['DOCUMENT_ROOT'].'/folder'
-    $root_path = $_SERVER['DOCUMENT_ROOT'] . "/#UploadFiles";
+    $root_path = $_SERVER['DOCUMENT_ROOT'] . $root_url;
     // Files and folders to excluded from listing
     // e.g. array('myfile.html', 'personal-folder', '*.php', ...)
     $exclude_items = array('*.php','*.js');
@@ -105,10 +115,6 @@ $highlightjs_style = 'vs';
 // Default timezone for date() and time()
 // Doc - http://php.net/manual/en/timezones.php
 $default_timezone = 'Etc/UTC'; // UTC
-
-// Root url for links in file manager.Relative to $http_host. Variants: '', 'path/to/subfolder'
-// Will not working if $root_path will be outside of server document root
-$root_url = '';
 
 // Server hostname. Can set manually if wrong
 $http_host = $_SERVER['HTTP_HOST'];
@@ -2120,7 +2126,7 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
         </table>
     </div>
 
-    <div class="row">
+    <div class="row pb-4">
         <?php if (!FM_READONLY) : ?>
             <div class="col-xs-12 col-sm-9">
                 <ul class="list-inline footer-action">
@@ -2934,7 +2940,7 @@ function fm_get_onlineViewer_exts()
 
 function fm_get_file_mimes($extension)
 {
-    $fileTypes['swf'] = 'application/x-shockwave-flash';
+/*     $fileTypes['swf'] = 'application/x-shockwave-flash';
     $fileTypes['pdf'] = 'application/pdf';
     $fileTypes['exe'] = 'application/octet-stream';
     $fileTypes['zip'] = 'application/zip';
@@ -2946,6 +2952,7 @@ function fm_get_file_mimes($extension)
     $fileTypes['jpeg'] = 'image/jpg';
     $fileTypes['jpg'] = 'image/jpg';
     $fileTypes['rar'] = 'application/rar';
+    $fileTypes['svg'] = 'image/svg+xml';
 
     $fileTypes['ra'] = 'audio/x-pn-realaudio';
     $fileTypes['ram'] = 'audio/x-pn-realaudio';
@@ -2971,7 +2978,85 @@ function fm_get_file_mimes($extension)
 
     $fileTypes['php'] = ['application/x-php'];
     $fileTypes['html'] = ['text/html'];
-    $fileTypes['txt'] = ['text/plain'];
+    $fileTypes['txt'] = ['text/plain']; */
+
+    // úprava Vrťo
+    //  https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
+    $fileTypes['epub'] = 'application/epub+zip';     //Electronic publication (EPUB)
+    $fileTypes['gz'] = 'application/gzip';     //GZip Compressed Archive
+    $fileTypes['jar'] = 'application/java-archive';     //Java Archive (JAR)
+    $fileTypes['json'] = 'application/json';     //JSON format
+    $fileTypes['jsonld'] = 'application/ld+json';     //JSON-LD format
+    $fileTypes['doc'] = 'application/msword';     //Microsoft Word
+    $fileTypes['bin'] = 'application/octet-stream';     //Any kind of binary data
+    $fileTypes['ogx'] = 'application/ogg';     //OGG
+    $fileTypes['pdf'] = 'application/pdf';     //Adobe Portable Document Format (PDF)
+    $fileTypes['rtf'] = 'application/rtf';     //Rich Text Format (RTF)
+    $fileTypes['azw'] = 'application/vnd.amazon.ebook';     //Amazon Kindle eBook format
+    $fileTypes['mpkg'] = 'application/vnd.apple.installer+xml';     //Apple Installer Package
+    $fileTypes['xul'] = 'application/vnd.mozilla.xul+xml';     //XUL
+    $fileTypes['xls'] = 'application/vnd.ms-excel';     //Microsoft Excel
+    $fileTypes['eot'] = 'application/vnd.ms-fontobject';     //MS Embedded OpenType fonts
+    $fileTypes['ppt'] = 'application/vnd.ms-powerpoint';     //Microsoft PowerPoint
+    $fileTypes['odp'] = 'application/vnd.oasis.opendocument.presentation';     //OpenDocument presentation document
+    $fileTypes['ods'] = 'application/vnd.oasis.opendocument.spreadsheet';     //OpenDocument spreadsheet document
+    $fileTypes['odt'] = 'application/vnd.oasis.opendocument.text';     //OpenDocument text document
+    $fileTypes['pptx'] = 'application/vnd.openxmlformats-officedocument.presentationml.presentation';     //Microsoft PowerPoint (OpenXML)
+    $fileTypes['xlsx'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';     //Microsoft Excel (OpenXML)
+    $fileTypes['docx'] = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';     //Microsoft Word (OpenXML)
+    $fileTypes['rar'] = 'application/vnd.rar';     //RAR archive
+    $fileTypes['vsd'] = 'application/vnd.visio';     //Microsoft Visio
+    $fileTypes['7z'] = 'application/x-7z-compressed';     //7-zip archive
+    $fileTypes['abw'] = 'application/x-abiword';     //AbiWord document
+    $fileTypes['bz'] = 'application/x-bzip';     //BZip archive
+    $fileTypes['bz2'] = 'application/x-bzip2';     //BZip2 archive
+    $fileTypes['csh'] = 'application/x-csh';     //C-Shell script
+    $fileTypes['arc'] = 'application/x-freearc';     //Archive document (multiple files embedded)
+    $fileTypes['xhtml'] = 'application/xhtml+xml';     //XHTML
+    $fileTypes['php'] = 'application/x-httpd-php';     //Hypertext Preprocessor (Personal Home Page)
+    $fileTypes['sh'] = 'application/x-sh';     //Bourne shell script
+    $fileTypes['swf'] = 'application/x-shockwave-flash';     //Small web format (SWF) or Adobe Flash document
+    $fileTypes['tar'] = 'application/x-tar';     //Tape Archive (TAR)
+    $fileTypes['zip'] = 'application/zip';     //ZIP archive
+    $fileTypes['aac'] = 'audio/aac';     //AAC audio
+    $fileTypes['mid'] = 'audio/midi audio/x-midi';     //Musical Instrument Digital Interface (MIDI)
+    $fileTypes['midi'] = 'audio/midi audio/x-midi';     //Musical Instrument Digital Interface (MIDI)
+    $fileTypes['mp3'] = 'audio/mpeg';     //MP3 audio
+    $fileTypes['oga'] = 'audio/ogg';     //OGG audio
+    $fileTypes['opus'] = 'audio/opus';     //Opus audio
+    $fileTypes['wav'] = 'audio/wav';     //Waveform Audio Format
+    $fileTypes['weba'] = 'audio/webm';     //WEBM audio
+    $fileTypes['otf'] = 'font/otf';     //OpenType font
+    $fileTypes['ttf'] = 'font/ttf';     //TrueType Font
+    $fileTypes['woff'] = 'font/woff';     //Web Open Font Format (WOFF)
+    $fileTypes['woff2'] = 'font/woff2';     //Web Open Font Format (WOFF)
+    $fileTypes['bmp'] = 'image/bmp';     //Windows OS/2 Bitmap Graphics
+    $fileTypes['gif'] = 'image/gif';     //Graphics Interchange Format (GIF)
+    $fileTypes['jpeg'] = 'image/jpeg';     //JPEG images
+    $fileTypes['jpg'] = 'image/jpeg';     //JPEG images
+    $fileTypes['png'] = 'image/png';     //Portable Network Graphics
+    $fileTypes['svg'] = 'image/svg+xml';     //Scalable Vector Graphics (SVG)
+    $fileTypes['tif'] = 'image/tiff';     //Tagged Image File Format (TIFF)
+    $fileTypes['tiff'] = 'image/tiff';     //Tagged Image File Format (TIFF)
+    $fileTypes['ico'] = 'image/vnd.microsoft.icon';     //Icon format
+    $fileTypes['webp'] = 'image/webp';     //WEBP image
+    $fileTypes['ics'] = 'text/calendar';     //iCalendar format
+    $fileTypes['css'] = 'text/css';     //Cascading Style Sheets (CSS)
+    $fileTypes['csv'] = 'text/csv';     //Comma-separated values (CSV)
+    $fileTypes['htm'] = 'text/html';     //HyperText Markup Language (HTML)
+    $fileTypes['html'] = 'text/html';     //HyperText Markup Language (HTML)
+    $fileTypes['mjs'] = 'text/javascript';     //JavaScript module
+    $fileTypes['js'] = 'text/javascript, per the following specifications:';     //JavaScript
+    $fileTypes['txt'] = 'text/plain';     //Text, (generally ASCII or ISO 8859-n)
+    $fileTypes['xml'] = 'text/xml ';     //XML
+    $fileTypes['3gp'] = 'video/3gpp';     //3GPP audio/video container
+    $fileTypes['3g2'] = 'video/3gpp2';     //3GPP2 audio/video container
+    $fileTypes['ts'] = 'video/mp2t';     //MPEG transport stream
+    $fileTypes['mpeg'] = 'video/mpeg';     //MPEG Video
+    $fileTypes['ogv'] = 'video/ogg';     //OGG video
+    $fileTypes['webm'] = 'video/webm';     //WEBM video
+    $fileTypes['avi'] = 'video/x-msvideo';     //AVI: Audio Video Interleave
+
     return $fileTypes[$extension];
 }
 
@@ -3021,7 +3106,7 @@ function fm_download_file($fileLocation, $fileName, $chunkSize  = 1024)
     $contentType = fm_get_file_mimes($extension);
     header("Cache-Control: public");
     header("Content-Transfer-Encoding: binary\n");
-    header('Content-Type: $contentType');
+    header("Content-Type: $contentType");
 
     $contentDisposition = 'attachment';
 
