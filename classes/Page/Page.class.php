@@ -259,20 +259,28 @@ class Page
                 <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
-                <a href="/" class="nav-link">Domov</a>
+                <a href="/" class="nav-link"><i class="nav-icon mr-1 fa fa-home"></i>Domov</a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
-                <a href="/timeline" class="nav-link">Časová os</a>
+                <a href="#" class="nav-link"><i class="nav-icon mr-1 fas fa-at"></i>Kontakt</a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
-                <a href="#" class="nav-link">Kontakt</a>
+                <a href="/kalkulacka" class="nav-link"><i class="nav-icon mr-1 fas fa-calculator"></i>Kalkulačka</a>   <!--  http://www.dematte.at/calculator/#download  -->
             </li>
             <li class="nav-item d-none d-sm-inline-block">
-                <a href="/kalkulacka" class="nav-link">Kalkulačka</a>   <!--  http://www.dematte.at/calculator/#download  -->
-            </li>            
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="/spravca-suborov/" class="nav-link">Správca súborov</a>   <!--  https://github.com/prasathmani/tinyfilemanager  a  https://tinyfilemanager.github.io/docs/#line2  -->
+                <a href="/kalendar/rocny-kalendar" class="nav-link"><i class="nav-icon mr-1 far fa-calendar-alt"></i>Kalendár</a>
             </li>
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="/kalendar/kalendar-udalosti" class="nav-link"><i class="nav-icon mr-1 far fa-calendar-alt"></i>Udalosti</a>
+            </li>
+<?php if (VYVOJ OR $this->levelUser >= 2 ) { ?>
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="/timeline" class="nav-link"><i class="nav-icon mr-1 fas fa-hourglass-start"></i>Časová os</a>
+            </li>
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="/spravca-suborov/" class="nav-link"><i class="nav-icon mr-1 fas fa-folder-open"></i>Správca súborov</a>   <!--  https://github.com/prasathmani/tinyfilemanager  a  https://tinyfilemanager.github.io/docs/#line2  -->
+            </li>
+<?php } ?>
         </ul>
 
         <!-- SEARCH FORM -->
@@ -287,7 +295,7 @@ class Page
             </div>
         </form>
 <?php if (VYVOJ OR $this->levelUser >= 20 ) { ?>
-        <ul class="ml-4 navbar-nav">
+        <ul class="ml-4 pl-4 navbar-nav">
             <li class="nav-item d-none d-sm-inline-block">
                 <a href="#" class="nav-link"><small>Level stranka: </small><span class="text-warning h5 ml-1"><?= $this->levelStranky ?></span></a>
             </li>
@@ -295,7 +303,7 @@ class Page
                 <a href="#" class="nav-link"><small>Level user: </small><span class="text-warning h5 ml-1"><?= $this->levelUser ?></span></a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
-                <a href="/include/rucna-aktualizacia-databazy" class="nav-link">Aktualizuj Databázu</a>
+                <a href="/include/rucna-aktualizacia-databazy" class="nav-link"><i class="nav-icon mr-1 fas fa-database"></i>Aktualizuj Databázu</a>
             </li>
         </ul>
 <?php } ?>

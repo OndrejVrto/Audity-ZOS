@@ -85,6 +85,27 @@ class Premenne
             "Nadpis" => "Časová os",
         ),
         array(
+            "LEVEL" => 2,
+            "Link" => "/spravca-suborov/",
+            "Title" => "Správca súborov",
+            "Description" => "Podprogram v ktorom sa dajú spravovať súbory na disku servera",
+            "Nadpis" => null,
+        ),
+        array(
+            "LEVEL" => 0,
+            "Link" => "/kalkulacka",
+            "Title" => "Kalkulačka",
+            "Description" => "Podprogram kalkulačky pre potreby rýchleho výpočtu",
+            "Nadpis" => "Kalkulačka",
+        ),
+        array(
+            "LEVEL" => 0,
+            "Link" => "/kalendar/rocny-kalendar",
+            "Title" => "Kalendár",
+            "Description" => "Kalendár celého roka",
+            "Nadpis" => "Kalendár na rok xxx",  //vyplním na stránke
+        ),
+        array(
             "LEVEL" => 0,
             "Link" => false,
             "NazovMENU" => "Uživateľ",

@@ -7,9 +7,7 @@
 !*.php
 
 !classes
-!classes/*
-!classes/Page/*
-!classes/Validator/*
+!classes/**
 
 !errorpages
 
@@ -20,11 +18,10 @@
 !sprava/*
 
 !spravca-suborov
-!spravca-suborov/*
-!spravca-suborov/dist/*
-!spravca-suborov/dist/css/*
-!spravca-suborov/dist/js/*
-!spravca-suborov/dist/fonts/*
+!spravca-suborov/**
+
+!kalendar
+!kalendar/**
 
 !personal
 !personal/*

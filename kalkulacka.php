@@ -2,7 +2,7 @@
     require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
 
     $page = new \Page\Page();
-
+    $page->zobrazitBublinky = false;
     $page->addStyles("CalcSS3", false);
     //$page->addStyles("CalcSS3-index", false);
     $page->addScripts("CalcSS3", false);

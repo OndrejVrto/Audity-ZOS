@@ -13,7 +13,7 @@ ob_start();
                 }
             </script>
 
-            <iframe src="/spravca-suborov/okno" class="w-100" frameborder="0" scrolling="no" onload='resizeIframe(this);' ></iframe>
+            <iframe src="/spravca-suborov/okno" class="w-100" frameborder="0" scrolling="no" onload='resizeIframe(this);' style="min-height: 1000px !important;"></iframe>
 <?php
 $page->content = ob_get_clean();  // Koniec hlavného obsahu
 
