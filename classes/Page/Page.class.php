@@ -27,7 +27,7 @@ class Page
     protected $_nazovstranky;
     public $link;
     
-
+    private $zbalHTML = false;
     private $aktivnemenu = false;
     private $levelStranky;
     private $starttime;
@@ -129,6 +129,8 @@ class Page
 
     public function display()
     {
+        ob_start(); // celá stránka sa načíta najskôr do pamäte pre potreby minimalizácie na konci tejto funkcie 
+
         $this->PredvyplnenieKonstant(); // pre potreby odvodených tried
         $this->displayBegin();
         $this->displayTitle();
@@ -184,6 +186,12 @@ class Page
 
         ( VYVOJ OR $this->levelUser >= 20 ) ? $this->VYVOJ() : '';
         echo "\n</body>\n</html>";
+        
+        // vloží kompletnú stránku s buferu do premennej
+        $CelaStranka = ob_get_clean();
+        // aktivuje triedu na minimalizáciu kódu
+        echo ( VYVOJ OR $this->levelUser >= 20 OR !$this->zbalHTML) ? $CelaStranka : \Minifier\Minify::html($CelaStranka);
+
     }
 
     protected function PredvyplnenieKonstant(){} // pre potreby odvodených tried
