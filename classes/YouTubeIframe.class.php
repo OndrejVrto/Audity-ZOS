@@ -1,5 +1,11 @@
 <?php
 
+    //* Example
+    // $url = 'https://www.youtube.com/watch?v=A3eWSytd8og';
+    // $video = new YouTubeIframe;
+    // $video->SirkaVidea = 720;
+    // echo $video->getYouTubeIframe($url);
+
 Class YouTubeIframe {
 
     public $SirkaVidea = 560;
