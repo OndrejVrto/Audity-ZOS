@@ -204,32 +204,23 @@ class Timeline
 
     // vráti názov dňa z dátumu v slovenčine
     public function denTyzdna ($datum) {
-        switch (date_format(date_create($datum), "N")) {
-            case 1: $den = 'pondelok'; break;
-            case 2: $den = 'utorok'; break;
-            case 3: $den = 'streda'; break;
-            case 4: $den = 'štvrtok'; break;
-            case 5: $den = 'piatok'; break;
-            case 6: $den = 'sobota'; break;
-            case 7: $den = 'nedeľa'; break;
-            default: $den = ''; break;
-        }
-        return $den;
+        $den = array(1 => 'pondelok', 'utorok', 'streda', 'štvrtok', 'piatok', 'sobota', 'nedeľa');
+        return $den[date_format(date_create($datum), "N")];
     }
 
     // vráti farbu dňa pre TimeLine
-    public function FarbaDna ($datum) {
-        switch (date_format(date_create($datum), "N")) {
-            case 1: $farba = 'bg-primary'; break;
-            case 2: $farba = 'bg-success'; break;
-            case 3: $farba = 'bg-warning text-dark'; break;
-            case 4: $farba = 'bg-danger'; break;
-            case 5: $farba = 'bg-info'; break;
-            case 6: $farba = 'bg-dark'; break;
-            case 7: $farba = 'bg-secondary'; break;
-            default: $farba = 'bg-white text-dark'; break;
-        }
-        return $farba;
+    public function FarbaDna($datum)
+    {
+        $farba = array(
+            1 => 'bg-primary',
+            2 => 'bg-success',
+            3 => 'bg-warning text-dark',
+            4 => 'bg-danger',
+            5 => 'bg-info',
+            6 => 'bg-dark',
+            7 => 'bg-secondary'
+        );
+        return $farba[date_format(date_create($datum), "N")];
     }
 
     // pridá ku každému riadku niekoľko tabulátorov
