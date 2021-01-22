@@ -1,11 +1,13 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700");
+
 #calendar_div>* {
     outline   : none;
     box-sizing: border-box;
 }
 
-html {
+/* html {
     font-size: 100%;
-}
+} */
 
 /*body {
   height: 100%;
@@ -45,7 +47,7 @@ html {
 .calendar-contain {
     -webkit-font-smoothing: antialiased;
     text-rendering        : optimizeLegibility;
-    font-family           : -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, Oxygen, Ubuntu, "Helvetica Neue", sans-serif;
+    font-family           : Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
     position              : relative;
     left                  : 0;
     right                 : 0;

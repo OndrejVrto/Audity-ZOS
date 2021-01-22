@@ -49,6 +49,7 @@ function getCalender($year = '', $month = '')
                     <?php echo getMonthList($dateMonth); ?>
                 </select>
             </div>
+            <a href="javascript:void(0);" class="title-bar__prev today-button" onclick="getCalendar('calendar_div','<?php echo date("Y"); ?>','<?php echo date("m"); ?>');"></a>
             <div class="title-bar__year">
                 <select class="year-dropdown">
                     <?php echo getYearList($dateYear); ?>
@@ -106,7 +107,7 @@ function getCalender($year = '', $month = '')
                         echo ' 
                 <div class="calendar__day no-event" onclick="getEvents(\'' . $currentDate . '\');"> 
                     <span class="calendar__date">' . $dayCount . '</span> 
-                    <span class="calendar__task">' . $eventNum . ' Udalostí</span> 
+                    <!-- <span class="calendar__task">' . $eventNum . ' Udalostí</span> -->
                 </div> 
                             ';
                     }
@@ -122,7 +123,7 @@ function getCalender($year = '', $month = '')
                     echo ' 
                 <div class="calendar__day inactive"> 
                     <span class="calendar__date">' . $inactiveCalendarDay . '</span> 
-                    <span class="calendar__task">' . $inactiveLabel . '</span> 
+                    <!-- <span class="calendar__task">' . $inactiveLabel . '</span>  -->
                 </div> 
                         ';
                 }
@@ -162,6 +163,10 @@ function getCalender($year = '', $month = '')
             });
             $('.year-dropdown').on('change', function() {
                 getCalendar('calendar_div', $('.year-dropdown').val(), $('.month-dropdown').val());
+            });
+            $('.today-button').on('click', function(){
+                var d = new Date();
+                getCalendar('calendar_div', d.getFullYear() , d.getMonth());
             });
         });
     </script>

@@ -281,6 +281,9 @@ class Page
             <li class="nav-item d-none d-sm-inline-block">
                 <a href="/kalendar/kalendar-udalosti" class="nav-link"><i class="nav-icon mr-1 far fa-calendar-alt"></i>Udalosti</a>
             </li>
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="/kalendar/kalendar-udalosti-2" class="nav-link"><i class="nav-icon mr-1 far fa-calendar-alt"></i>Udalosti 2</a>
+            </li>
 <?php if (VYVOJ OR $this->levelUser >= 2 ) { ?>
             <li class="nav-item d-none d-sm-inline-block">
                 <a href="/timeline" class="nav-link"><i class="nav-icon mr-1 fas fa-hourglass-start"></i>Časová os</a>

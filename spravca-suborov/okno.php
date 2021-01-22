@@ -38,7 +38,7 @@ if ($page->levelUser >= 20) {
     $edit_files = true;
     // Root url for links in file manager.Relative to $http_host. Variants: '', 'path/to/subfolder'
     // Will not working if $root_path will be outside of server document root
-    $root_url = '/#UploadFiles';
+    $root_url = '/_UploadFiles';
     // Root path for file manager
     // use absolute path of directory i.e: '/var/www/folder' or $_SERVER['DOCUMENT_ROOT'].'/folder'
     $root_path = $_SERVER['DOCUMENT_ROOT'] . $root_url;
@@ -56,7 +56,7 @@ if ($page->levelUser >= 20) {
     $edit_files = false;
     // Root url for links in file manager.Relative to $http_host. Variants: '', 'path/to/subfolder'
     // Will not working if $root_path will be outside of server document root
-    $root_url = '/#UploadFiles';
+    $root_url = '/_UploadFiles';
     // Root path for file manager
     // use absolute path of directory i.e: '/var/www/folder' or $_SERVER['DOCUMENT_ROOT'].'/folder'
     $root_path = $_SERVER['DOCUMENT_ROOT'] . $root_url;
@@ -148,7 +148,7 @@ $favicon_path = '?img=favicon';
 // google => View documents using Google Docs Viewer
 // microsoft => View documents using Microsoft Web Apps Viewer
 // false => disable online doc viewer
-$online_viewer = 'google';
+$online_viewer = 'false';
 
 // Sticky Nav bar
 // true => enable sticky header
