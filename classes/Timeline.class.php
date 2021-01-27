@@ -5,9 +5,11 @@ class Timeline {
     use Funkcie;
 
     private $odsadenie = 5;
+    
     private $user;
     private $datum_Od;
     private $datum_Do;
+    private $limit_days = 5;
 
     function __construct() {
     }
@@ -29,7 +31,7 @@ class Timeline {
 
         $this->TimeLine_Begin();
 
-        foreach ($datumy as $key => $value) {
+        foreach ($datumy as $value) {
 
             $this->TimeLine_Label_Datum($value['Datum']);
             $dataTimeline = $db->query(
@@ -42,7 +44,7 @@ class Timeline {
                 $value['Datum']
             )->fetchAll();
 
-            foreach ($dataTimeline as $key => $value) {
+            foreach ($dataTimeline as $value) {
                 $this->TimeLine_Prispevok(
                     $ikona = 'fas fa-envelope',
                     $farbaPozadia = 'bg-blue',
