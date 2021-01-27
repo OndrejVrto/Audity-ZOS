@@ -13,6 +13,9 @@
         error_reporting(0);
     }
 
+    // trait roznych funkcií používaných v triedach
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/classes/Funkcie.trait.php';
+    
     // funkcia na automaticke registrovanie tried
     // prehľadá adresáre uvedené v poli
     spl_autoload_register ( function ($class) {
@@ -29,6 +32,7 @@
     require_once $pathInclude . 'inc.funkction.php';
     require_once $pathInclude . 'inc.Paginate.php';
     require_once $pathInclude . 'inc.cron.php';
+
 
     // derfinície Konštant
     defined("TAB1") or define("TAB1", "\t");
