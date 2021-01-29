@@ -56,16 +56,11 @@ class Page
     {
         $this->starttime = microtime(true); // Začiatok merania času
 
-        header('Content-Type: text/html; charset=utf-8');
+        // header('Content-Type: text/html; charset=utf-8');
 
         $this->link = $_SERVER['REQUEST_URI'];
         $this->linkCisty = $this->upravLink($this->link);
         $this->linkZoznam = $this->linkCisty . "zoznam";
-
-        if (!isset($_SESSION['Login']) AND $this->link <> '/user/lock') {
-            // vymaže session ak sa uživateľ nenaloguje cez Lock scrreen
-            session_unset();
-        }
 
         // priradenie všetkých SESSION premenných do vlastností triedy
         $this->LoginUser = ( isset($_SESSION['LoginUser']) ) ? $_SESSION['LoginUser'] : "" ;
@@ -266,29 +261,42 @@ class Page
             <li class="nav-item">
                 <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
             </li>
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="/" class="nav-link"><i class="nav-icon mr-1 fa fa-home"></i>Domov</a>
+            <li class="nav-item d-none d-sm-inline-block text-nowrap">
+                <a href="/kontakt" class="nav-link"><i class="nav-icon mr-1 fas fa-at"></i>Kontakt</a>
             </li>
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="#" class="nav-link"><i class="nav-icon mr-1 fas fa-at"></i>Kontakt</a>
-            </li>
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="/kalkulacka" class="nav-link"><i class="nav-icon mr-1 fas fa-calculator"></i>Kalkulačka</a>   <!--  http://www.dematte.at/calculator/#download  -->
-            </li>
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="/kalendar/rocny-kalendar" class="nav-link"><i class="nav-icon mr-1 far fa-calendar-alt"></i>Kalendár</a>
-            </li>
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="/kalendar/kalendar-udalosti" class="nav-link"><i class="nav-icon mr-1 far fa-calendar-alt"></i>Udalosti</a>
-            </li>
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="/kalendar/kalendar-udalosti-2" class="nav-link"><i class="nav-icon mr-1 far fa-calendar-alt"></i>Udalosti 2</a>
+            <li class="nav-item dropdown d-none d-sm-inline-block text-nowrap">
+                <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">
+                    <i class="nav-icon mr-1 fas fa-box-open"></i>Doplnky
+                </a>
+                <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
+                    <li>
+                        <a href="/kalkulacka" class="dropdown-item">
+                            <i class="nav-icon mr-1 fas fa-calculator"></i>Kalkulačka
+                        </a>   <!--  http://www.dematte.at/calculator/#download  -->
+                    </li>
+                    <li class="dropdown-divider"></li>
+                    <li>
+                        <a href="/kalendar/rocny-kalendar" class="dropdown-item">
+                            <i class="nav-icon mr-1 far fa-calendar-alt"></i>Celoročný kalendár
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/kalendar/kalendar-udalosti" class="dropdown-item">
+                            <i class="nav-icon mr-1 fas fa-calendar-week"></i>Udalosti 1
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/kalendar/kalendar-udalosti-2" class="dropdown-item">
+                            <i class="nav-icon mr-1 fas fa-calendar"></i>Udalosti 2
+                        </a>
+                    </li>
+                </ul>
             </li>
 <?php if (VYVOJ OR $this->levelUser >= 2 ) { ?>
-            <li class="nav-item d-none d-sm-inline-block">
+            <li class="nav-item d-none d-sm-inline-block text-nowrap">
                 <a href="/timeline" class="nav-link"><i class="nav-icon mr-1 fas fa-hourglass-start"></i>Časová os</a>
             </li>
-            <li class="nav-item d-none d-sm-inline-block">
+            <li class="nav-item d-none d-sm-inline-block text-nowrap">
                 <a href="/spravca-suborov/" class="nav-link"><i class="nav-icon mr-1 fas fa-folder-open"></i>Správca súborov</a>   <!--  https://github.com/prasathmani/tinyfilemanager  a  https://tinyfilemanager.github.io/docs/#line2  -->
             </li>
 <?php } ?>
@@ -307,14 +315,20 @@ class Page
         </form>
 <?php if (VYVOJ OR $this->levelUser >= 20 ) { ?>
         <ul class="ml-4 pl-4 navbar-nav">
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="#" class="nav-link"><small>Level stranka: </small><span class="text-warning h5 ml-1"><?= $this->levelStranky ?></span></a>
+            <li class="nav-item d-none d-sm-inline-block text-nowrap">
+                <a href="#" class="nav-link">
+                    <small>Level stranka: </small><span class="text-warning h5 ml-1"><?= $this->levelStranky ?></span>
+                </a>
             </li>
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="#" class="nav-link"><small>Level user: </small><span class="text-warning h5 ml-1"><?= $this->levelUser ?></span></a>
+            <li class="nav-item d-none d-sm-inline-block text-nowrap">
+                <a href="#" class="nav-link">
+                    <small>Level user: </small><span class="text-warning h5 ml-1"><?= $this->levelUser ?></span>
+                </a>
             </li>
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="/include/rucna-aktualizacia-databazy" class="nav-link"><i class="nav-icon mr-1 fas fa-database"></i>Aktualizuj Databázu</a>
+            <li class="nav-item d-none d-sm-inline-block text-nowrap">
+                <a href="/include/rucna-aktualizacia-databazy" class="nav-link">
+                    <i class="nav-icon mr-1 fas fa-database"></i>Aktualizuj Databázu
+                </a>
             </li>
         </ul>
 <?php } ?>
@@ -325,9 +339,9 @@ class Page
 <?php if ( $this->levelUser >= 3): 
     $time = strftime("%M:%S", TIME_OUT*60);
 ?>
-				<a href="/user/logout" class="btn btn-warning" type="submit">Odhlásiť<span class="ml-2 small text-secondary" id="time"><?= $time ?></span></a>
+				<a href="/user/logout" class="btn btn-warning ml-2" type="submit">Odhlásiť<span class="ml-2 small text-secondary" id="time"><?= $time ?></span></a>
 <?php else: ?>
-				<a class="btn btn-danger" href="/user/login">Login</a>
+				<a class="btn btn-danger ml-2" href="/user/login">Login</a>
 <?php endif; ?>
             </li>
         </ul>
@@ -585,7 +599,7 @@ class Page
     $cas = $this->endtime - $this->starttime;
 ?>
     <footer class="main-footer">
-        <strong>Copyright &copy; 2020-2021 <a href="#">Ing. Ondrej VRŤO, IWE</a></strong>
+        <strong>Copyright &copy; 2020-<?= date("Y") ?><a href="mailto:ondrej.vrto&#64;gmail.com" class="mx-3">Ing. Ondrej VRŤO, IWE</a></strong>
         All rights reserved.
         <div class="float-right d-none d-sm-inline-block">
             <!-- <b>Version</b> 0.0.9 -->

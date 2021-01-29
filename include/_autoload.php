@@ -52,6 +52,9 @@
     // Set Time Zone
     date_default_timezone_set('Europe/Bratislava');
     
+    // nastavenie znakovej sady
+    header('Content-Type: text/html; charset=utf-8');
+
     // zapnutie session
     session_start();
 
