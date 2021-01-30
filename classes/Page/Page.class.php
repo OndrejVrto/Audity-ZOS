@@ -265,18 +265,18 @@ class Page
 
             <li class="nav-item dropdown d-none d-sm-inline-block text-nowrap">
                 <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">
-                    <i class="nav-icon mr-1 fas fa-at"></i>Kontakty
+                    <i class="nav-icon mr-2 fas fa-address-book"></i>Kontakty
                 </a>
                 <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
                     <li>
                         <a href="/kontakt" class="dropdown-item">
-                            <i class="nav-icon mr-1 fas fa-map-marker-alt"></i>Základné údaje firmy
+                            <i class="nav-icon mr-3 fas fa-info-circle"></i>Základné údaje firmy
                         </a>
                     </li>
                     <li class="dropdown-divider"></li>
                     <li>
                         <a href="/klapky" class="dropdown-item">
-                            <i class="nav-icon mr-1 fas fa-tty"></i>Interné klapky ŽOS
+                            <i class="nav-icon mr-3 fas fa-tty"></i>Interné klapky ŽOS
                         </a>
                     </li>
                 </ul>
@@ -284,28 +284,28 @@ class Page
 
             <li class="nav-item dropdown d-none d-sm-inline-block text-nowrap">
                 <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">
-                    <i class="nav-icon mr-1 fas fa-box-open"></i>Doplnky
+                    <i class="nav-icon mr-2 fas fa-box-open"></i>Doplnky
                 </a>
                 <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
                     <li>
                         <a href="/kalkulacka" class="dropdown-item">
-                            <i class="nav-icon mr-1 fas fa-calculator"></i>Kalkulačka
+                            <i class="nav-icon mr-3 fas fa-calculator"></i>Kalkulačka
                         </a>   <!--  http://www.dematte.at/calculator/#download  -->
                     </li>
                     <li class="dropdown-divider"></li>
                     <li>
                         <a href="/kalendar/rocny-kalendar" class="dropdown-item">
-                            <i class="nav-icon mr-1 far fa-calendar-alt"></i>Celoročný kalendár
+                            <i class="nav-icon mr-3 far fa-calendar-alt"></i>Celoročný kalendár
                         </a>
                     </li>
                     <li>
                         <a href="/kalendar/kalendar-udalosti" class="dropdown-item">
-                            <i class="nav-icon mr-1 fas fa-calendar-week"></i>Udalosti 1
+                            <i class="nav-icon mr-3 fas fa-calendar-week"></i>Udalosti 1
                         </a>
                     </li>
                     <li>
                         <a href="/kalendar/kalendar-udalosti-2" class="dropdown-item">
-                            <i class="nav-icon mr-1 fas fa-calendar"></i>Udalosti 2
+                            <i class="nav-icon mr-3 fas fa-calendar"></i>Udalosti 2
                         </a>
                     </li>
                 </ul>
@@ -313,11 +313,11 @@ class Page
 
 <?php if (VYVOJ OR $this->levelUser >= 2 ) { ?>
             <li class="nav-item d-none d-sm-inline-block text-nowrap">
-                <a href="/timeline" class="nav-link"><i class="nav-icon mr-1 fas fa-hourglass-start"></i>Časová os</a>
+                <a href="/timeline" class="nav-link"><i class="nav-icon mr-2 fas fa-hourglass-start"></i>Časová os</a>
             </li>
 
             <li class="nav-item d-none d-sm-inline-block text-nowrap">
-                <a href="/spravca-suborov/" class="nav-link"><i class="nav-icon mr-1 fas fa-folder-open"></i>Správca súborov</a>   <!--  https://github.com/prasathmani/tinyfilemanager  a  https://tinyfilemanager.github.io/docs/#line2  -->
+                <a href="/spravca-suborov/" class="nav-link"><i class="nav-icon mr-2 fas fa-folder-open"></i>Správca súborov</a>   <!--  https://github.com/prasathmani/tinyfilemanager  a  https://tinyfilemanager.github.io/docs/#line2  -->
             </li>
 <?php } ?>
         </ul>
@@ -347,7 +347,7 @@ class Page
             </li>
             <li class="nav-item d-none d-sm-inline-block text-nowrap">
                 <a href="/include/rucna-aktualizacia-databazy" class="nav-link">
-                    <i class="nav-icon mr-1 fas fa-database"></i>Aktualizuj Databázu
+                    <i class="nav-icon mr-2 fas fa-database"></i>Aktualizuj Databázu
                 </a>
             </li>
         </ul>
@@ -619,7 +619,7 @@ class Page
     $cas = $this->endtime - $this->starttime;
 ?>
     <footer class="main-footer bg-gradient-dark">
-        <strong>Copyright &copy; 2020-<?= date("Y") ?><a href="mailto:ondrej.vrto&#64;gmail.com" class="mx-3">Ing. Ondrej VRŤO, IWE</a></strong>
+        <strong>Copyright <i class="far fa-copyright"></i> 2020-<?= date("Y") ?><a href="mailto:ondrej.vrto&#64;gmail.com" class="mx-3">Ing. Ondrej VRŤO, IWE</a></strong>
         All rights reserved.
         <div class="float-right d-none d-sm-inline-block">
             <!-- <b>Version</b> 0.0.9 -->

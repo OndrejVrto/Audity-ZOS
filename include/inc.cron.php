@@ -211,6 +211,7 @@ function import_LotusTelefonnyZoznam(){
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
             curl_setopt($ch, CURLOPT_TIMEOUT, 2);  //čaká na stránku 2 sekundy a potom pokračuje
+            //todo Odkomentuj tento riadok vo firme.
             //$res = curl_exec($ch);
             $curl_errno = curl_errno($ch);
             $curl_error = curl_error($ch);
