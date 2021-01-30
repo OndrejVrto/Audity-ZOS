@@ -245,7 +245,7 @@ class Page
 ?>
 </head>
 
-<body class="hold-transition sidebar-mini layout-navbar-fixed layout-fixed">
+<body class="hold-transition sidebar-mini layout-navbar-fixed layout-fixed layout-footer-fixed">
 <div class="wrapper">
 <?php
     }
@@ -598,7 +598,7 @@ class Page
     {
     $cas = $this->endtime - $this->starttime;
 ?>
-    <footer class="main-footer">
+    <footer class="main-footer bg-gradient-dark">
         <strong>Copyright &copy; 2020-<?= date("Y") ?><a href="mailto:ondrej.vrto&#64;gmail.com" class="mx-3">Ing. Ondrej VRŤO, IWE</a></strong>
         All rights reserved.
         <div class="float-right d-none d-sm-inline-block">
@@ -930,7 +930,7 @@ class Page
         echo "</footer>\n\n";
         
         $caskonecny = microtime(true) - $this->starttime;
-        echo "\n\n". '<footer class="main-footer"> <h3 class="text-warning">Presný ČAS spracovania stránky</h3>';
+        echo "\n\n". '<footer class="main-footer pb-5"> <h3 class="text-warning">Presný ČAS spracovania stránky</h3>';
             print_r(round($caskonecny, 4)); echo "s";
         echo '</footer>' ;
 

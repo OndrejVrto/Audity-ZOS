@@ -191,3 +191,134 @@ function AktualizujUSERS() {
 
     return $html;
 }
+
+
+function import_LotusTelefonnyZoznam(){
+
+    $poleKonecne = [];
+
+    //* lokálna uri LOTUS servera s klapkami ŽOS Zvolen - Na konci url nutné pridať číslo listu od 1 do 9
+    for ($i = 1; $i < 10; $i++) {
+
+        //* vytvorenie kópie HTML stránky
+        try {
+            $url = 'https://192.168.1.3/Zos/TelZoz.nsf/53e14671a6569f9ec12566a6001ad139?OpenView&Start=1&Count=1000&Expand=' . $i;
+            
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 2);  //čaká na stránku 2 sekundy a potom pokračuje
+            //$res = curl_exec($ch);
+            $curl_errno = curl_errno($ch);
+            $curl_error = curl_error($ch);
+
+            if ($curl_errno > 0) {
+                //echo "cURL: $url\nError ($curl_errno): $curl_error\n";
+                continue;
+            }
+        } catch (Exception $e) {
+            //echo 'Caught exception: ',  $e->getMessage(), "\n";
+            curl_close($ch);
+            return false;
+        }
+
+        //* pre vývoj mám statické kópie dvoch stránok v súbore
+        if ($i > 2) continue;
+        $res = file_get_contents("vstup/TelZoznamLOTUS-" . $i . ".html");
+
+        try {
+            
+            //* rozparsovanie DOm dokumentu stránky
+            $dom = new DomDocument();
+            $dom->loadHTML($res);
+            $xpath = new DomXpath($dom);
+            $data = $xpath->query('//td[@nowrap and not(@colspan)]');
+
+            //* vytvorí s objektu Nodelist pole
+            $pole = [];
+            foreach ($data as $rowNode) {
+                $pole[] = trim(utf8_decode($rowNode->nodeValue));
+            }
+
+            //* rozdelí pole po 10 položkách
+            $poleKonecne = array_chunk($pole, 10);
+
+        } catch (Exception $e) {
+            //echo 'Caught exception: ',  $e->getMessage(), "\n";
+            return false;
+        } finally {
+            unset($dom);
+            unset($xpath);
+            $pole = null;
+        }
+    }
+    
+    //print_r($poleKonecne);
+    return $poleKonecne;
+}
+
+
+// funkcia AktualizujKlapky načíta dáta z URL (server Lotus Notes ŽOS Zvolen - vis)
+// následne tieto dáta uloží do lokálnej tabuľky v databáze
+function AktualizujKlapky($rucnaAktualizacia = false) {
+
+    global $dbhost, $dbuserCRON, $dbpassCRON, $dbname;
+
+    // dočasné prihlásenie do databázy pod účtom CRON, ktorý má prístup len k dvom tabuľkám s obmedzenými právami
+    $dbCRON = new db($dbhost, $dbuserCRON, $dbpassCRON, $dbname);
+
+    // Ak je zapnutá ručná aktualizácia na TRUE tak sa aktualizuje vždy
+    if (!$rucnaAktualizacia) {
+        $row = $dbCRON->query("SELECT TIMESTAMPDIFF( HOUR, PoslednaAktualizacia, NOW() ) AS Rozdiel 
+                        FROM `52_sys_cache_cron_and_clean` 
+                        WHERE `NazovCACHE` = 'IMPORT Lotus Klapky';")->fetchArray();
+
+        // ak bola posledná aktualizácia urobená pred menej ako 48 hodinami, ukončí sa skript
+        if ($row['Rozdiel'] < 48) {
+            // uzavrie toto dočasné pripojenie do databazy
+            $dbCRON->close();
+            return;
+        }
+    }
+
+    $data = import_LotusTelefonnyZoznam();
+    if (!$data) return false;
+
+    // vytvrí SQL dotaz na vloženie nových dát do tabuľky v lokálnej databáze
+    $sql = "INSERT INTO `54_sys_klapky` (`Klapka`, `Priezvisko`, `Meno`, `Titul`, `Prevadzka`, `Cislo_strediska`, `Mobil`, `Poznamka`, `Tarif`) VALUES";
+
+    foreach ($data as $key => $value) {
+
+        $klapka             = $dbCRON->escapeString($value[1]);
+        $priezvisko         = $dbCRON->escapeString($value[2]);
+        $meno               = $dbCRON->escapeString($value[3]);
+        $titul              = $dbCRON->escapeString($value[4]);
+        $prevadzka          = $dbCRON->escapeString($value[5]);
+        $stredisko_cislo    = $dbCRON->escapeString($value[6]);
+        $mobil              = $dbCRON->escapeString($value[7]);
+        $poznamka           = $dbCRON->escapeString($value[8]);
+        $tarif              = $dbCRON->escapeString($value[9]);
+
+        $sql .= PHP_EOL . "('$klapka', '$priezvisko', '$meno', '$titul', '$prevadzka', '$stredisko_cislo', '$mobil', '$poznamka', '$tarif'),";
+    }
+
+    // odstráni poslednú čiarku a vloží bodkočiarku(koniec dotazu)
+    $sql = substr($sql, 0, -1) . ';';
+
+    // vyčistí tabuľku
+    $dbCRON->query("DELETE FROM `54_sys_klapky`;");
+    // nastaví počítadlo od 1
+    $dbCRON->query("ALTER TABLE `54_sys_klapky` AUTO_INCREMENT=1;");
+    // vloží dáta
+    $dbCRON->query($sql);
+    // zapíše do logu poslednú aktualizáciu
+    $dbCRON->query("UPDATE `52_sys_cache_cron_and_clean` 
+                        SET `PoslednaAktualizacia` = NOW()
+                        WHERE `NazovCACHE` = 'IMPORT Lotus Klapky';");
+
+    // uzavrie toto dočasné pripojenie do databazy
+    $dbCRON->close();
+}

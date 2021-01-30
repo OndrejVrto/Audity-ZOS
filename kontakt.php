@@ -3,6 +3,9 @@
 
     $page = new \Page\Zoznam\ZoznamSkripty();
 
+    //!  Spustí aktualizáciu klapiek z VIS-u cez URL
+    AktualizujKlapky();
+
 ob_start();  // Začiatok definície hlavného obsahu
 ?>
             <div class="container pb-5" >
@@ -54,7 +57,7 @@ ob_start();  // Začiatok definície hlavného obsahu
                         <table class='table table-sm hover compact' id='tabulka'>
                             <thead>
                                 <tr>
-                                    <th>Prípojka</th>
+                                    <th>Klapka</th>
                                     <th>Priezvisko</th>
                                     <th>Meno</th>
                                     <th>Titul</th>
@@ -68,33 +71,30 @@ ob_start();  // Začiatok definície hlavného obsahu
 <?php
     $poradie = 1;
     
-    //TODO>  prerobit databazu na klapky
     $data = $db->query("SELECT *
-                        FROM `50_sys_users`
-                        WHERE `ID53_sys_levels` >= 3 AND `ID50` > 4
-                        ORDER BY Zamestnany_OD ASC LIMIT 20;")->fetchAll();
+                        FROM `54_sys_klapky`
+                        ORDER BY Klapka ASC;")->fetchAll();
 
     foreach ($data as $key => $value)
     {
-        $osCislo = $id  = htmlspecialchars($value['OsobneCislo']);
-        $meno           = htmlspecialchars($value['Meno']);
+        $klapka = $id   = htmlspecialchars($value['Klapka']);
         $priezvisko     = htmlspecialchars($value['Priezvisko']);
+        $meno           = htmlspecialchars($value['Meno']);
         $titul          = htmlspecialchars($value['Titul']);
-        $strediskoCislo = htmlspecialchars($value['Stredisko']);
-        $stredisko      = htmlspecialchars($value['NazovStrediska']);
-        $nastup         = htmlspecialchars($value['Zamestnany_OD']);
-        $hesloStare     = htmlspecialchars($value['Password_OLD']);
-        //TODO>  prerobit databazu na klapky
+        $kancelaria     = htmlspecialchars($value['Prevadzka']);
+        $strediskoCislo = htmlspecialchars($value['Cislo_strediska']);
+        $mobil          = htmlspecialchars($value['Mobil']);
+        $poznamka       = htmlspecialchars($value['Poznamka']);
 ?>
                                 <tr id='<?= $id ?>'>
-                                    <td><?= $poradie ?>.</td>
-                                    <td><?= $osCislo ?></td>
-                                    <td><?= $meno ?></td>
+                                    <td><?= $klapka ?></td>
                                     <td><?= $priezvisko ?></td>
+                                    <td><?= $meno ?></td>
                                     <td><?= $titul ?></td>
+                                    <td><?= $kancelaria ?></td>
                                     <td><?= $strediskoCislo ?></td>
-                                    <td><?= $stredisko ?></td>
-                                    <td><?= $stredisko ?></td>
+                                    <td><?= $mobil ?></td>
+                                    <td><?= $poznamka ?></td>
                                 </tr>
 <?php
         $poradie += 1;

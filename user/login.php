@@ -1,7 +1,7 @@
 <?php
     require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
     
-    // spustenie aktualizácie tabuliek "Users" z databázy max4 cez DSN:MAXDATA kde sú v tabuľke maxdata.uoscis dáta s dochádzkového systému
+    //! spustenie aktualizácie tabuliek "Users" z databázy max4 cez DSN:MAXDATA kde sú v tabuľke maxdata.uoscis dáta s dochádzkového systému
     AktualizujMAX();
 
     $page = new \Page\PageClear();
