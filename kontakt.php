@@ -33,6 +33,17 @@ ob_start();  // Začiatok definície hlavného obsahu
                         </dl>
                     </div>
                 </div>
+                                
+                <hr class="my-4">
+                
+                <div class="row">
+                    <div class="col-12">
+                        <h4><i class="fas fa-user-astronaut mr-3"></i>Tvorcovia aplikácie</h4>
+                            <a href="mailto:vrto&#64;zoszv.sk">vrto&#64;zoszv.sk</a> (kl. 181)<br>
+                            <a href="mailto:hancinsky&#64;zoszv.sk">hancinsky&#64;zoszv.sk</a> (kl. 640)<br>
+                    </div>
+                </div>
+
             </div>
 <?php
 $page->content = ob_get_clean();  // Koniec hlavného obsahu
