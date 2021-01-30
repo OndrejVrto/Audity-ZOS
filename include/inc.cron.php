@@ -225,12 +225,16 @@ function import_LotusTelefonnyZoznam(){
             return false;
         }
 
-        //* pre vývoj mám statické kópie dvoch stránok v súbore
-        if ($i > 2) continue;
-        $res = file_get_contents("vstup/TelZoznamLOTUS-" . $i . ".html");
+        try {
+            //* pre vývoj mám statické kópie dvoch stránok v súbore
+            $res = file_get_contents("vstup/TelZoznamLOTUS-" . $i . ".html");
+        } catch (Exception $e) {
+            continue;
+        }
+        
 
         try {
-            
+
             //* rozparsovanie DOm dokumentu stránky
             $dom = new DomDocument();
             $dom->loadHTML($res);
@@ -244,7 +248,9 @@ function import_LotusTelefonnyZoznam(){
             }
 
             //* rozdelí pole po 10 položkách
-            $poleKonecne = array_chunk($pole, 10);
+            $pole = array_chunk($pole, 10);
+            
+            array_push($poleKonecne, $pole);
 
         } catch (Exception $e) {
             //echo 'Caught exception: ',  $e->getMessage(), "\n";
@@ -290,19 +296,20 @@ function AktualizujKlapky($rucnaAktualizacia = false) {
     // vytvrí SQL dotaz na vloženie nových dát do tabuľky v lokálnej databáze
     $sql = "INSERT INTO `54_sys_klapky` (`Klapka`, `Priezvisko`, `Meno`, `Titul`, `Prevadzka`, `Cislo_strediska`, `Mobil`, `Poznamka`, `Tarif`) VALUES";
 
-    foreach ($data as $key => $value) {
+    foreach ($data as $value1) {
+        foreach ($value1 as $value) {
+            $klapka             = $dbCRON->escapeString($value[1]);
+            $priezvisko         = $dbCRON->escapeString($value[2]);
+            $meno               = $dbCRON->escapeString($value[3]);
+            $titul              = $dbCRON->escapeString($value[4]);
+            $prevadzka          = $dbCRON->escapeString($value[5]);
+            $stredisko_cislo    = $dbCRON->escapeString($value[6]);
+            $mobil              = $dbCRON->escapeString($value[7]);
+            $poznamka           = $dbCRON->escapeString($value[8]);
+            $tarif              = $dbCRON->escapeString($value[9]);
 
-        $klapka             = $dbCRON->escapeString($value[1]);
-        $priezvisko         = $dbCRON->escapeString($value[2]);
-        $meno               = $dbCRON->escapeString($value[3]);
-        $titul              = $dbCRON->escapeString($value[4]);
-        $prevadzka          = $dbCRON->escapeString($value[5]);
-        $stredisko_cislo    = $dbCRON->escapeString($value[6]);
-        $mobil              = $dbCRON->escapeString($value[7]);
-        $poznamka           = $dbCRON->escapeString($value[8]);
-        $tarif              = $dbCRON->escapeString($value[9]);
-
-        $sql .= PHP_EOL . "('$klapka', '$priezvisko', '$meno', '$titul', '$prevadzka', '$stredisko_cislo', '$mobil', '$poznamka', '$tarif'),";
+            $sql .= PHP_EOL . "('$klapka', '$priezvisko', '$meno', '$titul', '$prevadzka', '$stredisko_cislo', '$mobil', '$poznamka', '$tarif'),";
+        }
     }
 
     // odstráni poslednú čiarku a vloží bodkočiarku(koniec dotazu)

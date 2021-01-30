@@ -258,12 +258,30 @@ class Page
     <nav class="main-header navbar navbar-expand navbar-dark">
         <!-- Left navbar links -->
         <ul class="navbar-nav">
+
             <li class="nav-item">
                 <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
             </li>
-            <li class="nav-item d-none d-sm-inline-block text-nowrap">
-                <a href="/kontakt" class="nav-link"><i class="nav-icon mr-1 fas fa-at"></i>Kontakt</a>
+
+            <li class="nav-item dropdown d-none d-sm-inline-block text-nowrap">
+                <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">
+                    <i class="nav-icon mr-1 fas fa-at"></i>Kontakty
+                </a>
+                <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
+                    <li>
+                        <a href="/kontakt" class="dropdown-item">
+                            <i class="nav-icon mr-1 fas fa-map-marker-alt"></i>Základné údaje firmy
+                        </a>
+                    </li>
+                    <li class="dropdown-divider"></li>
+                    <li>
+                        <a href="/klapky" class="dropdown-item">
+                            <i class="nav-icon mr-1 fas fa-tty"></i>Interné klapky ŽOS
+                        </a>
+                    </li>
+                </ul>
             </li>
+
             <li class="nav-item dropdown d-none d-sm-inline-block text-nowrap">
                 <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">
                     <i class="nav-icon mr-1 fas fa-box-open"></i>Doplnky
@@ -292,10 +310,12 @@ class Page
                     </li>
                 </ul>
             </li>
+
 <?php if (VYVOJ OR $this->levelUser >= 2 ) { ?>
             <li class="nav-item d-none d-sm-inline-block text-nowrap">
                 <a href="/timeline" class="nav-link"><i class="nav-icon mr-1 fas fa-hourglass-start"></i>Časová os</a>
             </li>
+
             <li class="nav-item d-none d-sm-inline-block text-nowrap">
                 <a href="/spravca-suborov/" class="nav-link"><i class="nav-icon mr-1 fas fa-folder-open"></i>Správca súborov</a>   <!--  https://github.com/prasathmani/tinyfilemanager  a  https://tinyfilemanager.github.io/docs/#line2  -->
             </li>

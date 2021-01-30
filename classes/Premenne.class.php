@@ -115,6 +115,14 @@ class Premenne
         ),
         array(
             "LEVEL" => 0,
+            "Link" => "/klapky",
+            "Title" => "Klapky",
+            "Description" => "Klapky interných telefónov ŽOS Zvolen.",
+            "Nadpis" => "Klapky ŽOS",
+            "NazovMENU" => "Klapky"
+        ),
+        array(
+            "LEVEL" => 0,
             "Link" => false,
             "NazovMENU" => "Uživateľ",
             "SUBMENU" => array(

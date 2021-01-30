@@ -6,11 +6,15 @@
     // spustenie synchronizácie dát v tabuľke USERS.
     // Spúšťa sa v rámci procesu LOGIN 1x za deň
     try {
+        
         AktualizujMAX();
         AktualizujUSERS();
-    } catch (\Throwable $th) {
-        //throw $th;
-        $_SESSION['ALERT'] = ' "!!!  POZOR  !!!  Niečo sa pokazilo." ';
+        //!  Spustí aktualizáciu klapiek z VIS-u cez URL
+        AktualizujKlapky(TRUE);
+
+    } catch (Exception $e) {
+        //echo 'Caught exception: ',  $e->getMessage(), "\n";
+        $_SESSION['ALERT'] = ' "!!!  POZOR  !!!  Niečo sa pokazilo. '.PHP_EOL. $e->getMessage() .'" ';
         header("Location: /");
         exit;
     }
