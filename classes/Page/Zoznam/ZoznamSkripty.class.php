@@ -49,7 +49,7 @@ ob_start();  // Začiatok definície Špeciálnych SKRIPTov pre túto stránku
 ?>
 
     <!-- START - skripty SPECIAL -->
-    <script>
+    <script nonce="<?= $GLOBALS["nonce"] ?>">
     $(document).ready(function() {
         var table = $('#tabulka').DataTable({
 /*             dom: 'Bfrtip',

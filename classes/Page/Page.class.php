@@ -792,14 +792,14 @@ class Page
             break;
         }
 
-        $this->skriptyArray[] = ($jsComment != '' ? '<!-- '.$jsComment.' -->'.PHP_EOL.TAB1 : '').'<script src="'.$jsLink.($min ? '.min' : '').'.js"></script>';
+        $this->skriptyArray[] = ($jsComment != '' ? '<!-- '.$jsComment.' -->'.PHP_EOL.TAB1 : '').'<script src="'.$jsLink.($min ? '.min' : '').'.js" nonce="' . $GLOBALS["nonce"] . '"></script>';
     }
 
     private function displayScriptsTime(){
 ?>
 
     <!-- BEGIN - SCRIPT - TIME LogOut -->
-    <script>
+    <script nonce="<?= $GLOBALS["nonce"] ?>">
         var Timer = function(opts) {
             var self = this;
 

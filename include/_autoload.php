@@ -54,6 +54,10 @@
     
     // nastavenie znakovej sady
     header('Content-Type: text/html; charset=utf-8');
+    
+    // nastavenie Content-Security-Policy
+    $nonce = base64_encode(RandomToken(16));
+    header("Content-Security-Policy: default-src 'self'; script-src 'strict-dynamic' 'nonce-" . $nonce ."'; object-src 'none';");
 
     // zapnutie session
     session_start();
@@ -75,4 +79,20 @@
     // resetnutie času pre automaticke odhlásenie
     if ( isset($_SESSION['Login']) AND $_SESSION['Login'] == 'true' ) {
         $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
+    }
+
+
+    function RandomToken($length = 32){
+        if(!isset($length) || intval($length) <= 8 ){
+            $length = 32;
+        }
+        if (function_exists('random_bytes')) {
+            return bin2hex(random_bytes($length));
+        }
+        if (function_exists('mcrypt_create_iv')) {
+            return bin2hex(mcrypt_create_iv($length, MCRYPT_DEV_URANDOM));
+        }
+        if (function_exists('openssl_random_pseudo_bytes')) {
+            return bin2hex(openssl_random_pseudo_bytes($length));
+        }
     }
