@@ -39,7 +39,7 @@ ob_start();  // Začiatok definície hlavného obsahu
 
     foreach ($data as $key => $value):
 
-        $klapka = $id   = htmlspecialchars($value['Klapka']);
+        $klapka         = htmlspecialchars($value['Klapka']);
         $priezvisko     = htmlspecialchars($value['Priezvisko']);
         $meno           = htmlspecialchars($value['Meno']);
         $titul          = htmlspecialchars($value['Titul']);
@@ -47,15 +47,34 @@ ob_start();  // Začiatok definície hlavného obsahu
         $strediskoCislo = htmlspecialchars($value['Cislo_strediska']);
         $mobil          = htmlspecialchars($value['Mobil']);
         $poznamka       = htmlspecialchars($value['Poznamka']);
+
+        if (!empty($strediskoCislo)) {
+            $strediskoCislo_Cast1 = substr($strediskoCislo, 0, 3);
+            $strediskoCislo_Cast2 = substr($strediskoCislo, 3);
+            $strediskoCisloTEXT = $strediskoCislo_Cast1 . '<span class="ml-1">' . $strediskoCislo_Cast2 . '</span>';
+        }
+        
+        $mobilTEXT = "";
+        if (!empty($mobil)) {
+            $mobil_Cast1 = substr($mobil,-50,-6);
+            $mobil_Cast2 = substr($mobil,-6, -3);
+            $mobil_Cast3 = substr($mobil,-3);
+            if (strlen($mobil_Cast1) > 4) {
+                $mobil_Cast1 = substr($mobil,-9,-6);
+                $mobil_Cast0 = substr($mobil,-50,-9);
+                $mobilTEXT = $mobil_Cast0 . '<span class="ml-1">';
+            }
+            $mobilTEXT .= $mobil_Cast1 . '<span class="ml-1">' . $mobil_Cast2 . '</span><span class="ml-1">' . $mobil_Cast3 . '</span>';
+        }
 ?>
-                                <tr id='<?= $id ?>'>
+                                <tr>
                                     <td class="text-center text-bold"><?= $klapka ?></td>
                                     <td><?= $priezvisko ?></td>
                                     <td><?= $meno ?></td>
                                     <td><?= $titul ?></td>
                                     <td><?= $kancelaria ?></td>
-                                    <td><?= $strediskoCislo ?></td>
-                                    <td><?= $mobil ?></td>
+                                    <td><?= $strediskoCisloTEXT  ?></td>
+                                    <td><?= $mobilTEXT ?></td>
                                     <td><?= $poznamka ?></td>
                                 </tr>
 <?php endforeach; ?>

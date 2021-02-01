@@ -313,7 +313,7 @@ function AktualizujKlapky($rucnaAktualizacia = false) {
             $titul              = !empty($value[4]) ? "'" . $dbCRON->escapeString($value[4]) . "'" : "NULL";
             $prevadzka          = !empty($value[5]) ? "'" . $dbCRON->escapeString($value[5]) . "'" : "NULL";
             $stredisko_cislo    = !empty($value[6]) ? "'" . $dbCRON->escapeString($value[6]) . "'" : "NULL";
-            $mobil              = !empty($value[7]) ? "'" . $dbCRON->escapeString($value[7]) . "'" : "NULL";
+            $mobil              = !empty($value[7]) ? "'" . preg_replace('/\s+/', '', $dbCRON->escapeString($value[7])) . "'" : "NULL";  //odstranenie medzier
             $poznamka           = !empty($value[8]) ? "'" . $dbCRON->escapeString($value[8]) . "'" : "NULL";
             $tarif              = !empty($value[9]) ? "'" . $dbCRON->escapeString($value[9]) . "'" : "NULL";
 
