@@ -11,7 +11,6 @@
                         FROM `52_sys_cache_cron_and_clean` 
                         WHERE `NazovCACHE` = 'IMPORT Lotus Klapky';")->fetchArray();
     $verziaTime = date("d.m.Y \o H:i:s", strtotime($row['PoslednaAktualizacia']));
-    $verziaDiff = $page->dateDiff($row['PoslednaAktualizacia']);
 
 ob_start();  // Začiatok definície hlavného obsahu
 ?>
@@ -65,7 +64,7 @@ ob_start();  // Začiatok definície hlavného obsahu
 
                         <p class="small text-muted">
                             <span class="font-italic font-weight-bold">Aktualizácia z VISu:</span>
-                            <?= $verziaTime ?> (<?= $verziaDiff ?>)
+                            <?= $verziaTime ?>
                         </p>
                     </div>
                 </div>

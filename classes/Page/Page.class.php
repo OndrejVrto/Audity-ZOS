@@ -267,18 +267,24 @@ class Page
 
             <li class="nav-item dropdown d-none d-sm-inline-block text-nowrap">
                 <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">
-                    <i class="nav-icon mr-2 fas fa-address-book"></i>Kontakty
+                    <i class="nav-icon mr-2 fas fa-address-book"></i>About
                 </a>
                 <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
                     <li>
-                        <a href="/kontakt" class="dropdown-item">
-                            <i class="nav-icon mr-3 fas fa-info-circle"></i>Základné údaje firmy
+                        <a href="/kontakty" class="dropdown-item">
+                            <i class="nav-icon mr-3 fas fa-info-circle"></i>Kontakty firmy
                         </a>
                     </li>
                     <li class="dropdown-divider"></li>
                     <li>
                         <a href="/klapky" class="dropdown-item">
                             <i class="nav-icon mr-3 fas fa-tty"></i>Interné klapky ŽOS
+                        </a>
+                    </li>
+                    <li class="dropdown-divider"></li>
+                    <li>
+                        <a href="#" class="dropdown-item">
+                            <i class="nav-icon mr-3 fas fa-award"></i>O tomto programe ..
                         </a>
                     </li>
                 </ul>

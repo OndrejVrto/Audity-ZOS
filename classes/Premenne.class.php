@@ -107,11 +107,11 @@ class Premenne
         ),
         array(
             "LEVEL" => 0,
-            "Link" => "/kontakt",
-            "Title" => "Kontakt",
+            "Link" => "/kontakty",
+            "Title" => "Kontakty",
             "Description" => "Kontakty na tvorcov aplikácie",
-            "Nadpis" => "Kontakt",
-            "NazovMENU" => "Kontakt"
+            "Nadpis" => "Kontakty",
+            "NazovMENU" => "Kontakty"
         ),
         array(
             "LEVEL" => 0,

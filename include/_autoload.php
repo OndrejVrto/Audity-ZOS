@@ -56,8 +56,8 @@
     header('Content-Type: text/html; charset=utf-8');
     
     // nastavenie Content-Security-Policy
-    $nonce = base64_encode(RandomToken(16));
-    header("Content-Security-Policy: default-src 'self'; script-src 'strict-dynamic' 'nonce-" . $nonce ."'; object-src 'none';");
+    //$nonce = base64_encode(RandomToken(16));
+    //header("Content-Security-Policy: default-src 'self'; script-src 'strict-dynamic' 'nonce-" . $nonce ."'; object-src 'none';");
 
     // zapnutie session
     session_start();
