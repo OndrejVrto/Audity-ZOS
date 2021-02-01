@@ -63,8 +63,8 @@ ob_start();  // Začiatok definície Špeciálnych SKRIPTov pre túto stránku
             info: <?php if ($this->info) { echo 'true'; } else { echo 'false'; } ?>,
             pageLength: <?= $this->riadkov ?>,
             lengthMenu: [
-                [ 10, 25, 50, -1 ],
-                [ '10 riadkov', '25 riadkov', '50 riadkov', 'Všetko' ]
+                [ 10, 15, 25, 50, -1 ],
+                [ '10 riadkov', '15 riadkov', '25 riadkov', '50 riadkov', 'Všetko' ]
             ],
             language: {
                 sEmptyTable:     "Nie sú k dispozícii žiadne dáta",

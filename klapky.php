@@ -2,8 +2,7 @@
     require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
 
     $page = new \Page\Zoznam\ZoznamSkripty();
-    $page->riadkov = 25;
-    $page->riadkov = 50;
+    $page->riadkov = 15;
 
     //!  Spustí aktualizáciu klapiek z VIS-u cez URL
     AktualizujKlapky();
@@ -15,9 +14,8 @@
 
 ob_start();  // Začiatok definície hlavného obsahu
 ?>
-            <div class="container pb-5" >
-                <div class="row">
-                    <div class="col-12">
+                <div class="row justify-content-center">
+                    <div style="max-width: 1300px;">
 
                         <table class='table table-sm hover compact' id='tabulka'>
                             <thead>
@@ -36,10 +34,7 @@ ob_start();  // Začiatok definície hlavného obsahu
 <?php
     $data = $db->query("SELECT *
                         FROM `54_sys_klapky`
-                        WHERE `Klapka` IS NOT NULL 
-                            OR `Priezvisko` IS NOT NULL
-                            OR `Meno` IS NOT NULL
-                            OR `Prevadzka` IS NOT NULL
+                        WHERE `Tarif` IS NULL 
                         ORDER BY `Klapka` ASC;")->fetchAll();
 
     foreach ($data as $key => $value):
@@ -67,11 +62,10 @@ ob_start();  // Začiatok definície hlavného obsahu
                             </tbody>
                         </table>
 
-                        <p><em>(Aktualizácia z VISu: <?= $verzia ?>)</em></p>
+                        <p class="small font-italic">(Aktualizácia z VISu: <?= $verzia ?>)</p>
 
                     </div>
                 </div>
-            </div>
 <?php
 $page->content = ob_get_clean();  // Koniec hlavného obsahu
 
