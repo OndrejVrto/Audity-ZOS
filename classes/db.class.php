@@ -42,12 +42,14 @@ class db {
             }
             $this->query->execute();
             if ($this->query->errno) {
-                $this->error('Zlyhal proces vykonania dotazu MySQL (skontroluj svoje parametre) - ' . $this->query->error);
+                $text = "Zlyhal proces vykonania dotazu MySQL (skontroluj svoje parametre)<br>". PHP_EOL;
+                $this->error($text . SqlFormatter::format($query) . PHP_EOL . "<br>" . $this->query->error);
             }
             $this->query_closed = FALSE;
             $this->query_count++;
         } else {
-            $this->error('Zlyhal proces zostavenia parametrického dotazu MySQL (skontroluj syntax dotazu) - ' . $this->connection->error);
+            $text = "Zlyhal proces zostavenia parametrického dotazu MySQL (skontroluj syntax dotazu)<br>". PHP_EOL;
+            $this->error($text . SqlFormatter::format($query) . PHP_EOL . "<br>" . $this->connection->error);
         }
         return $this;
     }
