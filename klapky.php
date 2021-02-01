@@ -3,6 +3,7 @@
 
     $page = new \Page\Zoznam\ZoznamSkripty();
     $page->riadkov = 25;
+    $page->riadkov = 50;
 
     //!  Spustí aktualizáciu klapiek z VIS-u cez URL
     AktualizujKlapky();
@@ -35,7 +36,11 @@ ob_start();  // Začiatok definície hlavného obsahu
 <?php
     $data = $db->query("SELECT *
                         FROM `54_sys_klapky`
-                        ORDER BY Klapka ASC;")->fetchAll();
+                        WHERE `Klapka` IS NOT NULL 
+                            OR `Priezvisko` IS NOT NULL
+                            OR `Meno` IS NOT NULL
+                            OR `Prevadzka` IS NOT NULL
+                        ORDER BY `Klapka` ASC;")->fetchAll();
 
     foreach ($data as $key => $value):
 

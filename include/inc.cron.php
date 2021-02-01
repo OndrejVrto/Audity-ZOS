@@ -207,18 +207,21 @@ function import_LotusTelefonnyZoznam(){
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_NOPROGRESS, true);
+            curl_setopt($ch, CURLOPT_TRANSFERTEXT, true);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 2);  //čaká na stránku 2 sekundy a potom pokračuje
-            //todo Odkomentuj tento riadok vo firme.
-            //$res = curl_exec($ch);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 2);   // čaká na stránku 2 sekundy a potom pokračuje
+            $res = curl_exec($ch);                  //* Odkomentuj tento riadok vo firme.
             $curl_errno = curl_errno($ch);
             $curl_error = curl_error($ch);
 
+           // echo curl_getinfo($ch, CURLINFO_CONTENT_TYPE);die;
+
             if ($curl_errno > 0) {
                 //echo "cURL: $url\nError ($curl_errno): $curl_error\n";
-                continue;
+                break;
             }
         } catch (Exception $e) {
             //echo 'Caught exception: ',  $e->getMessage(), "\n";
@@ -226,26 +229,31 @@ function import_LotusTelefonnyZoznam(){
             return false;
         }
 
-        try {
+/*         try {
             //* pre vývoj mám statické kópie dvoch stránok v súbore
             $res = file_get_contents("vstup/TelZoznamLOTUS-" . $i . ".html");
         } catch (Exception $e) {
             continue;
-        }
-        
+        } */
+
+        // konvertovanie do UTF-ka so znakovej sady Windows-1250 v ktorej je vytvorená stránka
+        // https://davidwalsh.name/domdocument-utf8-problem
+        $res = iconv("windows-1250","UTF-8",$res);
 
         try {
 
             //* rozparsovanie DOm dokumentu stránky
             $dom = new DomDocument();
-            $dom->loadHTML($res);
+            // https://davidwalsh.name/domdocument-utf8-problem
+            $dom->loadHTML(mb_convert_encoding($res, 'HTML-ENTITIES', 'UTF-8'));
             $xpath = new DomXpath($dom);
             $data = $xpath->query('//td[@nowrap and not(@colspan)]');
 
             //* vytvorí s objektu Nodelist pole
             $pole = [];
+            
             foreach ($data as $rowNode) {
-                $pole[] = trim(utf8_decode($rowNode->nodeValue));
+                $pole[] = trim($rowNode->nodeValue);
             }
 
             //* rozdelí pole po 10 položkách
@@ -299,17 +307,17 @@ function AktualizujKlapky($rucnaAktualizacia = false) {
 
     foreach ($data as $value1) {
         foreach ($value1 as $value) {
-            $klapka             = $dbCRON->escapeString($value[1]);
-            $priezvisko         = $dbCRON->escapeString($value[2]);
-            $meno               = $dbCRON->escapeString($value[3]);
-            $titul              = $dbCRON->escapeString($value[4]);
-            $prevadzka          = $dbCRON->escapeString($value[5]);
-            $stredisko_cislo    = $dbCRON->escapeString($value[6]);
-            $mobil              = $dbCRON->escapeString($value[7]);
-            $poznamka           = $dbCRON->escapeString($value[8]);
-            $tarif              = $dbCRON->escapeString($value[9]);
+            $klapka             = !empty($value[1]) ? "'" . $dbCRON->escapeString($value[1]) . "'" : "'xxx'";
+            $priezvisko         = !empty($value[2]) ? "'" . $dbCRON->escapeString($value[2]) . "'" : "NULL";
+            $meno               = !empty($value[3]) ? "'" . $dbCRON->escapeString($value[3]) . "'" : "NULL";
+            $titul              = !empty($value[4]) ? "'" . $dbCRON->escapeString($value[4]) . "'" : "NULL";
+            $prevadzka          = !empty($value[5]) ? "'" . $dbCRON->escapeString($value[5]) . "'" : "NULL";
+            $stredisko_cislo    = !empty($value[6]) ? "'" . $dbCRON->escapeString($value[6]) . "'" : "NULL";
+            $mobil              = !empty($value[7]) ? "'" . $dbCRON->escapeString($value[7]) . "'" : "NULL";
+            $poznamka           = !empty($value[8]) ? "'" . $dbCRON->escapeString($value[8]) . "'" : "NULL";
+            $tarif              = !empty($value[9]) ? "'" . $dbCRON->escapeString($value[9]) . "'" : "NULL";
 
-            $sql .= PHP_EOL . "('$klapka', '$priezvisko', '$meno', '$titul', '$prevadzka', '$stredisko_cislo', '$mobil', '$poznamka', '$tarif'),";
+            $sql .= PHP_EOL . "($klapka, $priezvisko, $meno, $titul, $prevadzka, $stredisko_cislo, $mobil, $poznamka, $tarif),";
         }
     }
 
