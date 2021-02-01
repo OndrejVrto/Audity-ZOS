@@ -10,12 +10,13 @@
     $row = $db->query("SELECT `PoslednaAktualizacia`
                         FROM `52_sys_cache_cron_and_clean` 
                         WHERE `NazovCACHE` = 'IMPORT Lotus Klapky';")->fetchArray();
-    $verzia = date("d.m.Y \o H:i:s", strtotime($row['PoslednaAktualizacia']));
+    $verziaTime = date("d.m.Y \o H:i:s", strtotime($row['PoslednaAktualizacia']));
+    $verziaDiff = $page->dateDiff($row['PoslednaAktualizacia']);
 
 ob_start();  // Začiatok definície hlavného obsahu
 ?>
                 <div class="row justify-content-center">
-                    <div style="max-width: 1300px;">
+                    <div>
 
                         <table class='table table-sm hover compact' id='tabulka'>
                             <thead>
@@ -62,8 +63,10 @@ ob_start();  // Začiatok definície hlavného obsahu
                             </tbody>
                         </table>
 
-                        <p class="small font-italic">(Aktualizácia z VISu: <?= $verzia ?>)</p>
-
+                        <p class="small text-muted">
+                            <span class="font-italic font-weight-bold">Aktualizácia z VISu:</span>
+                            <?= $verziaTime ?> (<?= $verziaDiff ?>)
+                        </p>
                     </div>
                 </div>
 <?php

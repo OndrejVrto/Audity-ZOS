@@ -4,6 +4,8 @@ namespace Page;
 
 class Page
 {
+    
+    use \Funkcie;
 
     // Vlastnosti třídy Page
     public $content;
