@@ -93,7 +93,7 @@ class Validator
         if (!array_key_exists($MenoPola, $this->form_variables)) {
             return null;
         } else {
-            return htmlspecialchars(trim($this->form_variables[$MenoPola]), ENT_HTML5, 'UTF-8');
+            return vycistiText($this->form_variables[$MenoPola]);
         };
     }
     
@@ -116,7 +116,7 @@ class Validator
     public function getMSG($MenoPola)
     {
         if (array_key_exists($MenoPola, $this->error_hash)) {
-            return '<div class="mb-n2 d-block invalid-feedback">'.$this->error_hash[$MenoPola].'</div>';
+            return '<div class="mb-n2 d-block invalid-feedback">'.vycistiText($this->error_hash[$MenoPola]).'</div>';
         } else {
             return null;
         };
@@ -214,10 +214,6 @@ class Validator
             }
         } //if
         return $vysledok;
-    }
-
-    public function PurifiText($vstup){
-        return htmlspecialchars($vstup, ENT_HTML5, 'UTF-8');
     }
 
 

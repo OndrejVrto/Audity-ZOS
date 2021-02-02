@@ -181,7 +181,7 @@ class Page
         }
         echo $this->skriptySpecial;
 
-        ( VYVOJ OR $this->levelUser >= 20 ) ? $this->VYVOJ() : '';
+        echo ( VYVOJ OR $this->levelUser >= 20 ) ? $this->VYVOJ() : '';
         echo "\n</body>\n</html>";
         
         // vloží kompletnú stránku s buferu do premennej
@@ -899,70 +899,73 @@ class Page
         'HTTP_X_FORWARDED_FOR',
         'HTTP_CLIENT_IP') ;
         
-        echo "\n\n". '<!--  LEN Pre potreby vývoja tejto stránky. Po vývoji ZMAZať !!!!!!!!!  -->' ;
-        echo "\n\n". '<div>';
+        $html = "";
+        $html .= "\n\n". '<!--  LEN Pre potreby vývoja tejto stránky. Po vývoji ZMAZať !!!!!!!!!  -->' ;
+        $html .= "\n\n". '<div>';
         // celkový počet vykonaných dotazov do databazy
         global $db;
         $dotazov = $db->query_count;
         $data = $db->query("SELECT *, TIMESTAMPDIFF( MINUTE, PoslednaAktualizacia, NOW() ) AS Rozdiel FROM `52_sys_cache_cron_and_clean`;")->fetchAll();
 
-        echo "\n\n". '<footer class="main-footer pt-5"> <h3 class="text-warning">Štatistika</h3>' ;
-        echo "\n\t".'<b>Dotazov do databázy:</b> ' . $dotazov . '<br><br>';
+        $html .= "\n\n". '<footer class="main-footer pt-5"> <h3 class="text-warning">Štatistika</h3>' ;
+        $html .= "\n\t".'<b>Dotazov do databázy:</b> ' . $dotazov . '<br><br>';
         foreach ($data as $key => $value) {
-            echo "\n\t".'Posledná aktualizácia <b>' . $value['NazovCACHE'] . '</b> pred <b>' . $value['Rozdiel'] . '</b> minútami ( ' . $value['PoslednaAktualizacia'] . ' )' . '<br>';
+            $html .= "\n\t".'Posledná aktualizácia <b>' . $value['NazovCACHE'] . '</b> pred <b>' . $value['Rozdiel'] . '</b> minútami ( ' . $value['PoslednaAktualizacia'] . ' )' . '<br>';
         }
-        echo "\n".'</footer>' ;
+        $html .= "\n".'</footer>' ;
 
-        echo "\n\n". '<footer class="main-footer"> <h3 class="text-success">VZORY</h3>' ;
-            echo '<a href="/_vzor/index.html">audity.zoszv.adminlte/_vzor</a>';
-        echo '</footer>' ;
+        $html .= "\n\n". '<footer class="main-footer"> <h3 class="text-success">VZORY</h3>' ;
+            $html .= '<a href="/_vzor/index.html">audity.zoszv.adminlte/_vzor</a>';
+        $html .= '</footer>' ;
         
-        echo "\n\n". '<footer class="main-footer"> <h3 class="text-danger">php Info</h3>' ;
-            echo '<a href="/test/phpinfo">PHPinfo()</a>';
-        echo '</footer>' ;  
+        $html .= "\n\n". '<footer class="main-footer"> <h3 class="text-danger">php Info</h3>' ;
+            $html .= '<a href="/test/phpinfo">PHPinfo()</a>';
+        $html .= '</footer>' ;  
 
-        echo "\n\n". '<footer class="main-footer"> <h3 class="text-warning">$_GET</h3>' ;
-            print_r($_GET);
-        echo '</footer>' ;
+        $html .= "\n\n". '<footer class="main-footer"> <h3 class="text-warning">$_GET</h3>' ;
+            $html .= vycistiText(print_r($_GET, true));
+        $html .= '</footer>' ;
 
-        echo "\n\n". '<footer class="main-footer"> <h3 class="text-danger">$_POST</h3>' ;
-            print_r($_POST);
-        echo '</footer>' ;
+        $html .= "\n\n". '<footer class="main-footer"> <h3 class="text-danger">$_POST</h3>' ;
+            $html .= vycistiText(print_r($_POST, true));
+        $html .= '</footer>' ;
 
-        echo "\n\n". '<footer class="main-footer"> <h3 class="text-secondary">$_REQUEST</h3>' ;
-            print_r($_REQUEST);
-        echo '</footer>' ;
+        $html .= "\n\n". '<footer class="main-footer"> <h3 class="text-secondary">$_REQUEST</h3>' ;
+            $html .= vycistiText(print_r($_REQUEST, true));
+        $html .= '</footer>' ;
 
-        echo "\n\n". '<footer class="main-footer"> <h3 class="text-info">$_COOKIE</h3>' ;
-            print_r($_COOKIE);
-        echo '</footer>' ;
+        $html .= "\n\n". '<footer class="main-footer"> <h3 class="text-info">$_COOKIE</h3>' ;
+            $html .= vycistiText(print_r($_COOKIE, true));
+        $html .= '</footer>' ;
 
-        echo "\n\n". '<footer class="main-footer"> <h3 class="text-info">$_SESSION</h3>' ;
-            print_r($_SESSION);
-        echo '</footer>' ;     
+        $html .= "\n\n". '<footer class="main-footer"> <h3 class="text-info">$_SESSION</h3>' ;
+            $html .= vycistiText(print_r($_SESSION, true));
+        $html .= '</footer>' ;     
 
-        echo "\n\n". '<footer class="main-footer"> <h3 class="text-secondary">$_FILES</h3>' ;
-            print_r($_FILES);
-        echo '</footer>' ;
-        echo "\n\n". '<footer class="main-footer"> <h3 class="text-primary">$_SERVER</h3>';
-            echo '<div class="table-responsive"> <table class="table table-sm table-borderless table-hover">' ;
+        $html .= "\n\n". '<footer class="main-footer"> <h3 class="text-secondary">$_FILES</h3>' ;
+            $html .= vycistiText(print_r($_FILES, true));
+        $html .= '</footer>' ;
+        $html .= "\n\n". '<footer class="main-footer"> <h3 class="text-primary">$_SERVER</h3>';
+            $html .= '<div class="table-responsive"> <table class="table table-sm table-borderless table-hover">' ;
             foreach ($indicesServer as $arg) {
                 if (isset($_SERVER[$arg])) {
-                    echo '<tr><td>'.$arg.'</td><td>' . $_SERVER[$arg] . '</td></tr>'.PHP_EOL ;
+                    $html .= '<tr><td>'.$arg.'</td><td>' . vycistiText($_SERVER[$arg]) . '</td></tr>'.PHP_EOL ;
                 }
                 else {
-                    echo '<tr><td>'.$arg.'</td><td>-</td></tr>'.PHP_EOL ;
+                    $html .= '<tr><td>'.$arg.'</td><td>-</td></tr>'.PHP_EOL ;
                 }
             }
-            echo '</table> </div>';
-        echo "</footer>\n\n";
+            $html .= '</table> </div>';
+        $html .= "</footer>\n\n";
         
         $caskonecny = microtime(true) - $this->starttime;
-        echo "\n\n". '<footer class="main-footer pb-5"> <h3 class="text-warning">Presný ČAS spracovania stránky</h3>';
-            print_r(round($caskonecny, 4)); echo "s";
-        echo '</footer>' ;
+        $html .= "\n\n". '<footer class="main-footer pb-5"> <h3 class="text-warning">Presný ČAS spracovania stránky</h3>';
+            $html .= vycistiText(print_r(round($caskonecny, 4), true)); $html .= "s";
+        $html .= '</footer>' ;
 
-        echo "\n\n". '</div><hr>' . "\n\n";
+        $html .= "\n\n". '</div><hr>' . "\n\n";
+
+        return $html;
     }
 
     // funkcia  upravLink  vymaže posledný podadresár z cesty

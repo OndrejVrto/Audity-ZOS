@@ -30,7 +30,7 @@ class Login extends \Validator\Validator
 
                     // uživateľovi bolo odobraté právo sa prihlásiť - záznam sa aktualizuje automaticky s MAXu
                     if ($row['ID53_sys_levels'] === 2 OR $row['ID53_sys_levels'] === 1) {
-                        $error_hash['login-osobne-cislo'] = $this->PurifiText($row['Meno']." ".$row['Priezvisko']) ." už v ŽOS nepracuje.";
+                        $error_hash['login-osobne-cislo'] = vycistiText($row['Meno']." ".$row['Priezvisko']) ." už v ŽOS nepracuje.";
                         $vysledok = false;
                         break;
                     }
@@ -42,7 +42,7 @@ class Login extends \Validator\Validator
                         $pwdCheck = strcmp($password, $row['Password_NEW']) === 0;
                     }
                     if ($pwdCheck === false) {
-                        $error_hash['login-pasword']="Zadali ste nesprávne heslo pre uživateľa " . $this->PurifiText($user);
+                        $error_hash['login-pasword']="Zadali ste nesprávne heslo pre uživateľa " . $this->vycistiText($user);
                         $vysledok = false;
                         break;
                     }
