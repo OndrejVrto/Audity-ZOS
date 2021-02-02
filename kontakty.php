@@ -18,11 +18,11 @@ ob_start();  // Začiatok definície hlavného obsahu
                                 Slovenská Republika
                             </address>
                         <h4 class="text-muted pt-4"><i class="fas fa-phone-alt mr-3" aria-hidden="true"></i>Telefón</h4>
-                            <a class="text-muted" href="tel:+421455302111">(00421 45) 53 02 111</a>
+                            <a href="tel:+421455302111">(00421 45) 53 02 111</a>
                         <h4 class="text-muted pt-4"><i class="far fa-envelope mr-3" aria-hidden="true"></i>E-mail</h4>
-                            <a class="text-muted" href="mailto:zoszv&#64;zoszv.sk?subject=Aplikácia (audity.zoszv.sk)">zoszv&#64;zoszv.sk</a>
+                            <a href="mailto:zoszv&#64;zoszv.sk?subject=Aplikácia (audity.zoszv.sk)">zoszv&#64;zoszv.sk</a>
                         <h4 class="text-muted pt-4"><i class="fas fa-network-wired mr-3" aria-hidden="true"></i>WWW</h4>
-                            <a class="text-muted"  target="_blank" href="http://www.zoszv.sk">www.zoszv.sk</a>
+                            <a target="_blank" href="http://www.zoszv.sk">www.zoszv.sk</a>
                     </div>
                     <div class="col-12 col-md-6 py-4 py-md-0">
                         <h4 class="text-muted"><i class="fas fa-piggy-bank mr-3"></i>Bankové spojenie</h4>
@@ -37,6 +37,23 @@ ob_start();  // Začiatok definície hlavného obsahu
                     </div>
 
                 </div>
+
+                <hr class="my-4">
+                
+                <div class="row">
+                    <div class="col-12">
+                        <h4 class="text-muted"><i class="fas fa-map-marker-alt mr-3"></i>Poloha areálu</h4>
+                        <p>
+                            <span class="text-bold mr-2">GPS:</span>
+                            <a target="_blank" href="https://sk.mapy.cz/zakladni?vlastni-body&ut=%C5%BDelezni%C4%8Dn%C3%A9%20opravovne%20a%20stroj%C3%A1rne%20Zvolen%20a.s.&uc=9sYHzxQQB4&ud=M%C3%B4%C5%A5ovsk%C3%A1%20cesta%20259%2F11">
+                            48.5732472N, 19.1586297E</a>
+                        </p>
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <iframe style='background-image: url("/dist/img/mapaZOS.png");' class="embed-responsive-item" src="https://sk.frame.mapy.cz/s/bazegekamo"></iframe>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 <?php
 $page->content = ob_get_clean();  // Koniec hlavného obsahu

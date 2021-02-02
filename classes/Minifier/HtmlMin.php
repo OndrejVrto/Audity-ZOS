@@ -45,7 +45,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 		public static function minify($html, $js = true, $css = true){
 			$doc = new \DOMDocument();
 			$doc->preserveWhiteSpace = false;
-			@$doc->loadHTML($html);
+			@$doc->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'));
 			$xpath = new \DOMXPath($doc);
 			foreach ($xpath->query('//comment()') as $comment) {
 				$val= $comment->nodeValue;
