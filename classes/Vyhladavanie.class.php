@@ -234,10 +234,13 @@ class Vyhladavanie {
             $this->Tabulka_Stlpec
         );
 
-        // v prípade predvyplnenej hodnoty v databáze sa táto vloží ako nová hodnota
-        if ($db->affectedRows() == 0) {
+        //TODO:  v prípade predvyplnenej hodnoty v databáze sa táto vloží ako nová hodnota
+        //! tento kód spôsoboval niekedy chybu pri editácii položky
+        //! Nutné preprogramovať alebo naplniť datadázu testovacími dátami nakomplet
+/*         if ($db->affectedRows() == 0) {
             $this->insertSearch();
-        }
+        } */
+        //! --
     }
 
     public function deleteSearch() {

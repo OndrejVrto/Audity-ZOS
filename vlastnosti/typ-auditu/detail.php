@@ -15,7 +15,6 @@
     $skratka    = vycistiText($data['Skratka']);
     $farba      = vycistiText($data['Farba']);
     $referencny = vycistiText($data['ReferencnyDokument']);
-    $checkbox   = vycistiText($data['PovinnostMatPlatny']); 
     $poznamka   = vycistiText($data['Poznamka']);
 
 ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
@@ -123,16 +122,6 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
         </div> <!-- /row  -->
 
         <div class="row">
-
-        <!-- FORM - Typ auditu - Checkbox  -->
-        <div class="col-xl-12">
-            <div class="icheck-secondary">
-                <input type="checkbox" <?php if ($checkbox == 1){ echo ' checked';} ?>>
-                <label>
-                    Audit musí byť udržiavaný !
-                </label>
-            </div>
-        </div>
 
         <!-- FORM - Typ auditu - Poznámka -->
         <div class="col-xl-12">                        

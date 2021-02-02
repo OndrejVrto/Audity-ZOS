@@ -173,7 +173,7 @@ class Page
         // vypíše upozornenie pri zobrazení stránky
         if ($this->alert) {
             echo "\n\t<!--  Okno s upozornením zobrazené pri neautorizovanej požiadavke -->\n\t";
-            echo '<script>alert(' . (string)$this->alert . ');</script>' . PHP_EOL;
+            echo '<script>alert(' . $this->alert . ');</script>' . PHP_EOL;
         }
         $this->displayScripts();
         if ( strlen($this->LoginUser) > 1 ) {

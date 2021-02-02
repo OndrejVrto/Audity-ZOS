@@ -20,6 +20,7 @@ class db {
         if (!$this->query_closed) {
             $this->query->close();
         }
+
         if ($this->query = $this->connection->prepare($query)) {
             if (func_num_args() > 1) {
                 $x = func_get_args();
@@ -43,13 +44,13 @@ class db {
             $this->query->execute();
             if ($this->query->errno) {
                 $text = "Zlyhal proces vykonania dotazu MySQL (skontroluj svoje parametre)<br>". PHP_EOL;
-                $this->error($text . SqlFormatter::format($query) . PHP_EOL . "<br>" . $this->query->error);
+                $this->error($text . SqlFormatter::format($query) . PHP_EOL . "<br>". vycistiText(print_r(func_get_args(), true)). PHP_EOL . "<br>" . $this->query->error);
             }
             $this->query_closed = FALSE;
             $this->query_count++;
         } else {
             $text = "Zlyhal proces zostavenia parametrického dotazu MySQL (skontroluj syntax dotazu)<br>". PHP_EOL;
-            $this->error($text . SqlFormatter::format($query) . PHP_EOL . "<br>" . $this->connection->error);
+            $this->error($text . SqlFormatter::format($query) . PHP_EOL . "<br>". vycistiText(print_r(func_get_args(), true)). PHP_EOL . "<br><br>" . $this->connection->error);
         }
         return $this;
     }

@@ -19,6 +19,15 @@ class Login extends \Validator\Validator
                 case 'login-osobne-cislo': {
                     $user = $formars['login-osobne-cislo'];
                     $password = $formars['login-pasword'];
+
+                    $pocetUtokov = testSqlInjestion($user);
+                    if ($pocetUtokov > 0) {
+                        $error_hash['login-osobne-cislo']="Pokúšate sa o SQL injection? O vašom pokuse bol oboznámený administrátor.";
+                        $vysledok = false;
+                        $_SESSION['ALERT'] = ' "Pokúšate sa o SQL injection?" + "\n" + "O vašom pokuse bol oboznámený administrátor!" ';
+                        break;
+                    }
+
                     $row = $db->query('SELECT * FROM `50_sys_users` WHERE `OsobneCislo` = ?', $user )->fetchArray();
                     
                     // záznam neexistuje v tabuľke
@@ -42,11 +51,21 @@ class Login extends \Validator\Validator
                         $pwdCheck = strcmp($password, $row['Password_NEW']) === 0;
                     }
                     if ($pwdCheck === false) {
-                        $error_hash['login-pasword']="Zadali ste nesprávne heslo pre uživateľa " . $this->vycistiText($user);
+                        $error_hash['login-pasword']="Zadali ste nesprávne heslo pre uživateľa " . vycistiText($user);
                         $vysledok = false;
                         break;
                     }
 
+                }
+                case 'login-pasword': {
+                    // Parser na zistenie či sa nejedná o hackerský pokus o SQL injection
+                    $pocetUtokov = testSqlInjestion($password);
+                    if ($pocetUtokov > 0) {
+                        $error_hash['login-pasword']="Pokúšate sa o SQL injection? O vašom pokuse bol oboznámený administrátor.";
+                        $vysledok = false;
+                        $_SESSION['ALERT'] = ' "Pokúšate sa o SQL injection?" + "\n" + "O vašom pokuse bol oboznámený administrátor!" ';
+                        break;
+                    }
                 }
 
             /*      case 'signup-osobne-cislo': {

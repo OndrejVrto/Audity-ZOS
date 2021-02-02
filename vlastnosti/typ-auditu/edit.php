@@ -45,11 +45,11 @@
             $db->query('UPDATE `31_zoznam_typ_auditu` 
                         SET `ID30_zoznam_oblast_auditu` = ?, `Nazov_Norma` = ?, `RokVydaniaNormy` = ?,
                         `Skratka` = ?, `Farba` = ?, `ReferencnyDokument` = ?,
-                        `PovinnostMatPlatny` = ?, `Poznamka` = ?, `KtoVykonalZmenu` = ?
+                        `Poznamka` = ?, `KtoVykonalZmenu` = ?
                         WHERE `ID31` = ?',
                         $oblast, $nazov, $rok,
                         $skratka, $farba, $referencny,
-                        $checkbox, $poznamka, $user,  $id);
+                        $poznamka, $user,  $id);
 
             header("Location: $page->linkZoznam");
             exit();
@@ -80,7 +80,6 @@
         $v->form_variables['typ-auditu--skratka']               = $data['Skratka'];
         $v->form_variables['typ-auditu--farba']                 = $data['Farba'];
         $v->form_variables['typ-auditu--ReferencnyDokument']    = $data['ReferencnyDokument'];
-        $v->form_variables['typ-auditu--checkbox']              = $data['PovinnostMatPlatny'];
         $v->form_variables['typ-auditu--poznamka']              = $data['Poznamka'];
 
     }
@@ -217,17 +216,6 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
                         </div> <!-- /row  -->
 
                         <div class="row">
-
-                            <?php $pole = 'typ-auditu--checkbox'; echo PHP_EOL; ?>
-                            <!-- FORM - Typ auditu - Checkbox  -->
-                            <div class="col-xl-12">
-                                <div class="icheck-primary">
-                                    <input type="checkbox" id="<?= $pole ?>" name="<?= $pole ?>" <?php if ($v->getVAL($pole)){ echo ' checked';} ?>>
-                                    <label for="<?= $pole ?>">
-                                        Audit musí byť udržiavaný !
-                                    </label>
-                                </div>
-                            </div>
 
                             <?php $pole = 'typ-auditu--poznamka'; echo PHP_EOL; ?>
                             <!-- FORM - Typ auditu - Poznámka -->
