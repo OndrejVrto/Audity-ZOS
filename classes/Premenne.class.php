@@ -17,8 +17,8 @@ class Premenne
 
     function __construct($link, $linkZoznam)
     {
-        $this->konstantyStranokKomplet = $this->konstantyDoplnkoveStranky + $this->konstantyStrankyMenu;
         
+        $this->konstantyStranokKomplet = array_merge_recursive($this->konstantyDoplnkoveStranky, $this->konstantyStrankyMenu);
         $this->getParametre($this->konstantyStranokKomplet, $link, $linkZoznam);
     }
 
