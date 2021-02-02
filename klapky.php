@@ -39,14 +39,14 @@ ob_start();  // Začiatok definície hlavného obsahu
 
     foreach ($data as $key => $value):
 
-        $klapka         = htmlspecialchars($value['Klapka']);
-        $priezvisko     = htmlspecialchars($value['Priezvisko']);
-        $meno           = htmlspecialchars($value['Meno']);
-        $titul          = htmlspecialchars($value['Titul']);
-        $kancelaria     = htmlspecialchars($value['Prevadzka']);
-        $strediskoCislo = htmlspecialchars($value['Cislo_strediska']);
-        $mobil          = htmlspecialchars($value['Mobil']);
-        $poznamka       = htmlspecialchars($value['Poznamka']);
+        $klapka         = vycistiText($value['Klapka']);
+        $priezvisko     = vycistiText($value['Priezvisko']);
+        $meno           = vycistiText($value['Meno']);
+        $titul          = vycistiText($value['Titul']);
+        $kancelaria     = vycistiText($value['Prevadzka']);
+        $strediskoCislo = vycistiText($value['Cislo_strediska']);
+        $mobil          = vycistiText($value['Mobil']);
+        $poznamka       = vycistiText($value['Poznamka']);
 
         if (!empty($strediskoCislo)) {
             $strediskoCislo_Cast1 = substr($strediskoCislo, 0, 3);

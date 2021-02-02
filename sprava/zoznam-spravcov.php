@@ -49,15 +49,15 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 
     foreach ($data as $key => $value)
     {
-        $osCislo = $id  = htmlspecialchars($value['OsobneCislo']);
-        $avatar         = htmlspecialchars($value['AvatarFILE']);
-        $TypKonta       = htmlspecialchars(add_leading_zero($value['ID53']) .' - '. $value['NazovCACHE']);
-        $meno           = htmlspecialchars("[".$osCislo."] ".(isset($value['Titul']) ? $value['Titul'] . " " : "" ) . $value['Meno'] . " " . $value['Priezvisko']);
-        $stredisko      = htmlspecialchars($value['Stredisko'] . ' ' . $value['NazovStrediska']);
-        $aktivacia      = htmlspecialchars($value['PoslednePrihlasenie']);
-        $IPadresa       = htmlspecialchars($value['IP']);
-        $email          = htmlspecialchars($value['Email']);
-        $telefon        = htmlspecialchars($value['TelefonneCislo']);
+        $osCislo = $id  = vycistiText($value['OsobneCislo']);
+        $avatar         = vycistiText($value['AvatarFILE']);
+        $TypKonta       = vycistiText(add_leading_zero($value['ID53']) .' - '. $value['NazovCACHE']);
+        $meno           = vycistiText("[".$osCislo."] ".(isset($value['Titul']) ? $value['Titul'] . " " : "" ) . $value['Meno'] . " " . $value['Priezvisko']);
+        $stredisko      = vycistiText($value['Stredisko'] . ' ' . $value['NazovStrediska']);
+        $aktivacia      = vycistiText($value['PoslednePrihlasenie']);
+        $IPadresa       = vycistiText($value['IP']);
+        $email          = vycistiText($value['Email']);
+        $telefon        = vycistiText($value['TelefonneCislo']);
 ?>
                             <tr id='<?= $id ?>'>
                                 <td class="text-center"><?= $poradie ?>.</td>

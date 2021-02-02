@@ -32,7 +32,7 @@
         $pocet = (int)$data['Pocet'];
     }
 
-    $page->id = htmlspecialchars($id);
+    $page->id = vycistiText($id);
     $page->pocet = $pocet;
 
 
@@ -58,14 +58,14 @@ ob_start();  // Začiatok definície hlavného obsahu -> 5x a 6x tabulátor
         
         $data = $db->query('SELECT * FROM `31_zoznam_typ_auditu`, `30_zoznam_oblast_auditu` WHERE ID30_zoznam_oblast_auditu = ID30 AND ID31 = ?', $id)->fetchArray();
     
-        $nazov      = htmlspecialchars($data['Nazov_Norma']);
-        $rok        = htmlspecialchars($data['RokVydaniaNormy']);
-        $skratka    = htmlspecialchars($data['Skratka']);
-        $farba      = htmlspecialchars($data['Farba']);
-        $referencny = htmlspecialchars($data['ReferencnyDokument']);
-        $checkbox   = htmlspecialchars($data['PovinnostMatPlatny']); 
-        $poznamka   = htmlspecialchars($data['Poznamka']);
-        $oblast     = htmlspecialchars($data['OblastAuditovania']);
+        $nazov      = vycistiText($data['Nazov_Norma']);
+        $rok        = vycistiText($data['RokVydaniaNormy']);
+        $skratka    = vycistiText($data['Skratka']);
+        $farba      = vycistiText($data['Farba']);
+        $referencny = vycistiText($data['ReferencnyDokument']);
+        $checkbox   = vycistiText($data['PovinnostMatPlatny']); 
+        $poznamka   = vycistiText($data['Poznamka']);
+        $oblast     = vycistiText($data['OblastAuditovania']);
 
 ?>
 

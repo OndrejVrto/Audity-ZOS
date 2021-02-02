@@ -38,13 +38,13 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 
     foreach ($data as $key => $value)
     {
-        $osCislo = $id  = htmlspecialchars($value['ucislo']);
-        $meno           = htmlspecialchars($value['umeno']);
-        $priezvisko     = htmlspecialchars($value['upriezv']);
-        $titul          = htmlspecialchars($value['utitul']);
-        $strediskoCislo = htmlspecialchars($value['ustred']);
-        $stredisko      = htmlspecialchars($value['nazstred']);
-        $nastup         = htmlspecialchars($value['ondate']);
+        $osCislo = $id  = vycistiText($value['ucislo']);
+        $meno           = vycistiText($value['umeno']);
+        $priezvisko     = vycistiText($value['upriezv']);
+        $titul          = vycistiText($value['utitul']);
+        $strediskoCislo = vycistiText($value['ustred']);
+        $stredisko      = vycistiText($value['nazstred']);
+        $nastup         = vycistiText($value['ondate']);
 ?>
                             <tr id='<?= $id ?>'>
                                 <td><?= $poradie ?>.</td>

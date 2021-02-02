@@ -27,7 +27,7 @@
         $pocet = (int)$data['Pocet'];
     }
 
-    $page->id = htmlspecialchars($id);
+    $page->id = vycistiText($id);
     $page->pocet = $pocet;
 
 
@@ -53,8 +53,8 @@ ob_start();  // Začiatok definície hlavného obsahu -> 5x a 6x tabulátor
         
         $data = $db->query('SELECT * FROM `34_zoznam_privlastok_auditu` WHERE ID34 = ?', $id)->fetchArray();
 
-        $PrivlastokAuditu = htmlspecialchars($data['PrivlastokAuditu']);
-        $Poznamka = htmlspecialchars($data['Poznamka']);
+        $PrivlastokAuditu = vycistiText($data['PrivlastokAuditu']);
+        $Poznamka = vycistiText($data['Poznamka']);
 ?>
 
                         <div>

@@ -132,7 +132,7 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
                                         echo PHP_EOL;
                                         foreach ($data as $hodnota) {
                                             $id = $hodnota['ID30'];
-                                            $val = htmlspecialchars($hodnota['OblastAuditovania']);
+                                            $val = vycistiText($hodnota['OblastAuditovania']);
                                             echo TAB10 . '<option value="' . $id . '"' . (($id == $selected) ? ' selected' : '') . '>' . $val . '</option>' . PHP_EOL;
                                         }
 

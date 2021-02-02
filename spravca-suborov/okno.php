@@ -1240,7 +1240,7 @@ if (isset($_GET['upload']) && !FM_READONLY) {
                     <?php echo lng('DestinationFolder') ?>: <?php echo fm_enc(fm_convert_win(FM_ROOT_PATH . '/' . FM_PATH)) ?>
                 </p>
 
-                <form action="<?php echo htmlspecialchars(FM_SELF_URL) . '?p=' . fm_enc(FM_PATH) ?>" class="dropzone card-tabs-container" id="fileUploader" enctype="multipart/form-data">
+                <form action="<?php echo vycistiText(FM_SELF_URL) . '?p=' . fm_enc(FM_PATH) ?>" class="dropzone card-tabs-container" id="fileUploader" enctype="multipart/form-data">
                     <input type="hidden" name="p" value="<?php echo fm_enc(FM_PATH) ?>">
                     <input type="hidden" name="fullpath" id="fullpath" value="<?php echo fm_enc(FM_PATH) ?>">
                     <div class="fallback">
@@ -1839,9 +1839,9 @@ if (isset($_GET['edit'])) {
         </div>
         <?php
         if ($is_text && $isNormalEditor) {
-            echo '<textarea class="mt-2" id="normal-editor" rows="33" cols="120" style="width: 99.5%;">' . htmlspecialchars($content) . '</textarea>';
+            echo '<textarea class="mt-2" id="normal-editor" rows="33" cols="120" style="width: 99.5%;">' . vycistiText($content) . '</textarea>';
         } elseif ($is_text) {
-            echo '<div id="editor" contenteditable="true">' . htmlspecialchars($content) . '</div>';
+            echo '<div id="editor" contenteditable="true">' . vycistiText($content) . '</div>';
         } else {
             fm_set_msg('FILE EXTENSION HAS NOT SUPPORTED', 'error');
         }
@@ -2619,7 +2619,7 @@ function fm_get_zif_info($path, $ext)
  */
 function fm_enc($text)
 {
-    return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+    return vycistiText($text, ENT_QUOTES, 'UTF-8');
 }
 
 /**

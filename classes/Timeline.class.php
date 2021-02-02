@@ -108,7 +108,7 @@ class Timeline {
 
         <!-- TimeLine položka -->
         <div>
-            <i class="<?= htmlspecialchars($ikona . ' ' . $farbaPozadia) ?>"></i>
+            <i class="<?= vycistiText($ikona . ' ' . $farbaPozadia) ?>"></i>
             <div class="timeline-item">
                 <span class="time"><i class="fas fa-clock"></i> <?= $this->dateDiff($cas) ?></span>
                 <h3 class="timeline-header<?= ($body and $footer) ? '' : ' no-border' ?>">

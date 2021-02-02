@@ -9,7 +9,7 @@
 
     $data = $db->query('SELECT * FROM `37_zoznam_rola_pri_opatreni` WHERE `ID37` = ?', $id)->fetchArray();
 
-    $RolaOpatrenie = htmlspecialchars($data['RolaOpatrenie']);
+    $RolaOpatrenie = vycistiText($data['RolaOpatrenie']);
 
 ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 ?>

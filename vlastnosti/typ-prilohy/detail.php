@@ -9,7 +9,7 @@
 
     $data = $db->query('SELECT * FROM `38_zoznam_typ_prilohy` WHERE `ID38` = ?', $id)->fetchArray();
 
-    $TypPrilohy = htmlspecialchars($data['TypPrilohy']);
+    $TypPrilohy = vycistiText($data['TypPrilohy']);
 
 ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 ?>

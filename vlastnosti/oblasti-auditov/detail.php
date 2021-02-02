@@ -9,8 +9,8 @@
 
     $data = $db->query('SELECT * FROM `30_zoznam_oblast_auditu` WHERE ID30 = ?', $id)->fetchArray();
 
-    $oblast = htmlspecialchars($data['OblastAuditovania']);
-    $poznamka = htmlspecialchars($data['Poznamka']);
+    $oblast = vycistiText($data['OblastAuditovania']);
+    $poznamka = vycistiText($data['Poznamka']);
 
 ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 ?>

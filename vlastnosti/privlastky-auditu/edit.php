@@ -47,7 +47,7 @@
 
     }
 
-    $page->id = htmlspecialchars($id);
+    $page->id = vycistiText($id);
 
 ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 ?>

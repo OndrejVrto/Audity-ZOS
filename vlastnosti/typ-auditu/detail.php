@@ -9,14 +9,14 @@
 
     $data = $db->query('SELECT * FROM `31_zoznam_typ_auditu`, `30_zoznam_oblast_auditu` WHERE ID30_zoznam_oblast_auditu = ID30 AND ID31 = ?', $id)->fetchArray();
     
-    $nazov      = htmlspecialchars($data['Nazov_Norma']);
-    $oblast     = htmlspecialchars($data['OblastAuditovania']);
-    $rok        = htmlspecialchars($data['RokVydaniaNormy']);
-    $skratka    = htmlspecialchars($data['Skratka']);
-    $farba      = htmlspecialchars($data['Farba']);
-    $referencny = htmlspecialchars($data['ReferencnyDokument']);
-    $checkbox   = htmlspecialchars($data['PovinnostMatPlatny']); 
-    $poznamka   = htmlspecialchars($data['Poznamka']);
+    $nazov      = vycistiText($data['Nazov_Norma']);
+    $oblast     = vycistiText($data['OblastAuditovania']);
+    $rok        = vycistiText($data['RokVydaniaNormy']);
+    $skratka    = vycistiText($data['Skratka']);
+    $farba      = vycistiText($data['Farba']);
+    $referencny = vycistiText($data['ReferencnyDokument']);
+    $checkbox   = vycistiText($data['PovinnostMatPlatny']); 
+    $poznamka   = vycistiText($data['Poznamka']);
 
 ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 ?>

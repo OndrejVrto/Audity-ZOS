@@ -387,8 +387,8 @@ class Page
                 <img src="<?= $this->suborAvatara ?>" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="/user/detail" class="d-block text-warning"><?= htmlspecialchars($this->userNameShort).PHP_EOL ?>
-                    <span class="text-danger ml-2 align-top"><small>[ <?= htmlspecialchars($this->typKonta) ?> ]</small></span>
+                <a href="/user/detail" class="d-block text-warning"><?= vycistiText($this->userNameShort).PHP_EOL ?>
+                    <span class="text-danger ml-2 align-top"><small>[ <?= vycistiText($this->typKonta) ?> ]</small></span>
                 </a>
             </div>
 <?php else: ?>
@@ -445,7 +445,7 @@ class Page
 
             if (array_key_exists('Hlavicka', $value)) {
                     $html .= "\n".$odsad.'<li class="nav-header">';
-                    $html .= "\n\t".$odsad.htmlspecialchars($value['Hlavicka']);
+                    $html .= "\n\t".$odsad.vycistiText($value['Hlavicka']);
                     $html .= "\n".$odsad.'</li>';
             } else {
                 if (is_array($value['SUBMENU'])) {

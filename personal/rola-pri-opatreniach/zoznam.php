@@ -25,8 +25,8 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 <?php
     $poradie = 1;
     foreach ($data as $key => $value):
-        $id = htmlspecialchars($value['ID37']);
-        $RolaOpatrenie = htmlspecialchars($value['RolaOpatrenie']);
+        $id = vycistiText($value['ID37']);
+        $RolaOpatrenie = vycistiText($value['RolaOpatrenie']);
 ?>
                             <tr id='<?= $id ?>'>
                                 <td class="text-center"><?= $poradie ?>.</td>

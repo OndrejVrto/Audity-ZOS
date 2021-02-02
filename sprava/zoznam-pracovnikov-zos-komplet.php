@@ -36,17 +36,17 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
     foreach ($data as $key => $value) 
     {
 ?>
-                            <tr id='<?= htmlspecialchars($value['ucislo']) ?>'>
+                            <tr id='<?= vycistiText($value['ucislo']) ?>'>
                                 <td><?= $poradie ?>.</td>
-                                <td><?= htmlspecialchars($value['ucislo']) ?></td>
-                                <td><?= htmlspecialchars($value['umeno']) ?></td>
-                                <td><?= htmlspecialchars($value['upriezv']) ?></td>
-                                <td><?= htmlspecialchars($value['utitul']) ?></td>
-                                <td><?= htmlspecialchars($value['ustred']) ?></td>
-                                <td><?= htmlspecialchars($value['nazstred']) ?></td>
-                                <td><?= htmlspecialchars($value['firma']) ?></td>
-                                <td><?= htmlspecialchars($value['ondate']) ?></td>
-                                <td><?= htmlspecialchars($value['offdate']) ?></td>
+                                <td><?= vycistiText($value['ucislo']) ?></td>
+                                <td><?= vycistiText($value['umeno']) ?></td>
+                                <td><?= vycistiText($value['upriezv']) ?></td>
+                                <td><?= vycistiText($value['utitul']) ?></td>
+                                <td><?= vycistiText($value['ustred']) ?></td>
+                                <td><?= vycistiText($value['nazstred']) ?></td>
+                                <td><?= vycistiText($value['firma']) ?></td>
+                                <td><?= vycistiText($value['ondate']) ?></td>
+                                <td><?= vycistiText($value['offdate']) ?></td>
                             </tr>
 <?php
         $poradie += 1;

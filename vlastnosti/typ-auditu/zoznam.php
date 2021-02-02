@@ -29,15 +29,15 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 <?php
     $poradie = 1;
     foreach ($data as $key => $value):
-        $id         = htmlspecialchars($value['ID31']);
-        $nazov      = htmlspecialchars($value['Nazov_Norma']);
-        $rok        = htmlspecialchars($value['RokVydaniaNormy']);
-        $skratka    = htmlspecialchars($value['Skratka']);
-        $farba      = htmlspecialchars($value['Farba']);
-        $referencny = htmlspecialchars($value['ReferencnyDokument']);
-        $checkbox   = htmlspecialchars($value['PovinnostMatPlatny']); 
-        $poznamka   = htmlspecialchars($value['Poznamka']);
-        $oblast     = htmlspecialchars($value['OblastAuditovania']);
+        $id         = vycistiText($value['ID31']);
+        $nazov      = vycistiText($value['Nazov_Norma']);
+        $rok        = vycistiText($value['RokVydaniaNormy']);
+        $skratka    = vycistiText($value['Skratka']);
+        $farba      = vycistiText($value['Farba']);
+        $referencny = vycistiText($value['ReferencnyDokument']);
+        $checkbox   = vycistiText($value['PovinnostMatPlatny']); 
+        $poznamka   = vycistiText($value['Poznamka']);
+        $oblast     = vycistiText($value['OblastAuditovania']);
 
         list($r, $g, $b) = sscanf($value['Farba'], "#%02x%02x%02x");
 ?>

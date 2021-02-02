@@ -15,7 +15,7 @@ ob_start();  // Začiatok definície hlavného obsahu
 
                 <!-- SEARCH FORM -->
                 <form class="input-group input-group-lg m-auto p-4" action="/vyhladavanie" method="GET">
-                    <input class="form-control" type="search" name="search" aria-label="Search" value="<?= htmlspecialchars($page->searchValue) ?>" placeholder="Hľadaj ...">
+                    <input class="form-control" type="search" name="search" aria-label="Search" value="<?= vycistiText($page->searchValue) ?>" placeholder="Hľadaj ...">
                     <span class="input-group-append">
                         <button class="btn btn-warning" type="submit">
                             <i class="fas fa-search" aria-hidden="true"></i>

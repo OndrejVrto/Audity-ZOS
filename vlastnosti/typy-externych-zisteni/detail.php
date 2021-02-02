@@ -9,8 +9,8 @@
 
     $data = $db->query('SELECT * FROM `33_zoznam_typ_externych_zisteni` WHERE ID33 = ?', $id)->fetchArray();
 
-    $NazovExternehoZistenia = htmlspecialchars($data['NazovExternehoZistenia']);
-    $poznamka = htmlspecialchars($data['Poznamka']);
+    $NazovExternehoZistenia = vycistiText($data['NazovExternehoZistenia']);
+    $poznamka = vycistiText($data['Poznamka']);
 
 ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 ?>

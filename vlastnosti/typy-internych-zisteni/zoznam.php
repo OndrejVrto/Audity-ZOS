@@ -28,9 +28,9 @@ ob_start();  // Začiatok definície hlavného obsahu -> 6x tabulátor
 <?php
     $poradie = 1;
     foreach ($data as $key => $value):
-        $id = htmlspecialchars($value['ID32']);
-        $NazovZistenia = htmlspecialchars($value['NazovZistenia']);
-        $Poznamka = htmlspecialchars($value['Poznamka']);
+        $id = vycistiText($value['ID32']);
+        $NazovZistenia = vycistiText($value['NazovZistenia']);
+        $Poznamka = vycistiText($value['Poznamka']);
         $PotrebaNapravnehoOpatrenia = ($value['JePovinneNapravneOpatrenie'] == 1) ? 'Áno' : 'Nie';
 ?>
                             <tr id='<?= $id ?>'>

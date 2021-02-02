@@ -27,7 +27,7 @@
         $pocet = (int)$data['Pocet'];
     }
 
-    $page->id = htmlspecialchars($id);
+    $page->id = vycistiText($id);
     $page->pocet = $pocet;
 
 
@@ -53,7 +53,7 @@ ob_start();  // Začiatok definície hlavného obsahu -> 5x a 6x tabulátor
         
         $data = $db->query('SELECT * FROM `36_zoznam_rola_pri_audite` WHERE ID36 = ?', $id)->fetchArray();
 
-        $RolaAudit = htmlspecialchars($data['RolaAudit']);
+        $RolaAudit = vycistiText($data['RolaAudit']);
 ?>
 
                         <div>
