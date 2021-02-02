@@ -133,9 +133,9 @@ class Vyhladavanie {
             $i < min($this->stranka * $this->zaznamov, $this->pocetVysledkov);
             $i++
         ) {
-            $titulok = $this->VysledokHladania[$i]['Titulok'];
+            $titulok = vycistiText($this->VysledokHladania[$i]['Titulok']);
             $link = $this->VysledokHladania[$i]['Link'];
-            $text = $zvyraznovac->highlight($this->VysledokHladania[$i]['TEXT'], $this->hladanaHodnota);  // zvýraznenie hľadaných slov
+            $text = $zvyraznovac->highlight(vycistiText($this->VysledokHladania[$i]['TEXT']), vycistiText($this->hladanaHodnota));  // zvýraznenie hľadaných slov
 
             $html .= PHP_EOL . '<div class="card py-2 px-3 mb-2">';
             $html .= PHP_EOL . TAB1 . '<a class="h5" href="' . $link . '" title="' . ($i + 1) . '">' . $titulok . '</a>';
@@ -150,7 +150,7 @@ class Vyhladavanie {
             $aktivnaStranka = $this->stranka,
             $pocetStran,
             $url_zaciatok = "/vyhladavanie/",
-            $url_koniec = '/' . $this->hladanaHodnota,
+            $url_koniec = '/' . vycistiText($this->hladanaHodnota),
             $opacneCislovanie = false,
             $velkost = 0,
             $odsadenie = 0,
@@ -180,10 +180,10 @@ class Vyhladavanie {
 
     public function DATAinHTML() {
         $html = '<pre class="bg-dark text-white">';
-        $html .= print_r($this->hladanaHodnotaPole, true);
+        $html .= vycistiText(print_r($this->hladanaHodnotaPole, true));
         $html .= "</pre>";
         $html .= '<pre class="bg-dark text-white">';
-        $html .= print_r($this->VysledokHladania, true);
+        $html .= vycistiText(print_r($this->VysledokHladania, true));
         $html .= "</pre>";
         return $html;
     }
