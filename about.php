@@ -29,13 +29,15 @@ ob_start();  // Začiatok definície hlavného obsahu
                         <div class="row mt-3">
                             <div class="col-12 col-md-6">
                                 <div class="row">
-                                    <div class="col-3 text-center">
-                                        <a href="/user/detail">
+                                    <div class="col-3">
+                                        <a href="/user/detail/7706" title="Viac o autorovi ...">
                                             <img class="profile-user-img img-fluid img-circle" src="/dist/avatar/[7706] ondrej vrto.svg" alt="User Avatar Ondrej Vrťo">
                                         </a>
                                     </div>
                                     <div class="col-9">
-                                        <h5 class="font-weight-bold text-warning">Ing. Ondrej VRŤO, IWE</h5>
+                                        <a href="/user/detail/7706" title="Viac o autorovi ...">
+                                            <h5 class="font-weight-bold text-warning">Ing. Ondrej VRŤO, IWE</h5>
+                                        </a>
                                         <dl class="row p-0 m-0">
                                             <dt class="col-3">Email</dt><dd class="col-9"><a href="mailto:vrto&#64;zoszv.sk">vrto&#64;zoszv.sk</a></dd>
                                             <dt class="col-3">Email 2</dt><dd class="col-9"><a href="mailto:ondrej.vrto&#64;gmail.com">ondrej.vrto&#64;gmail.com</a></dd>
@@ -48,13 +50,15 @@ ob_start();  // Začiatok definície hlavného obsahu
 
                             <div class="col-12 col-md-6 py-4 py-md-0">
                                 <div class="row">
-                                    <div class="col-3 text-center">
-                                        <a href="/user/detail">
-                                            <img src="/dist/avatar/[7880] vladimir hancinsky.svg" class="profile-user-img img-fluid img-circle" alt="User Image Avatar">
+                                    <div class="col-3">
+                                        <a href="/user/detail/7880" title="Viac o autorovi ...">
+                                            <img class="profile-user-img img-fluid img-circle" src="/dist/avatar/[7880] vladimir hancinsky.svg" alt="User Image Avatar">
                                         </a>
                                     </div>
                                     <div class="col-9">
-                                        <h5 class="font-weight-bold text-warning">Ing. Vladimír HANČINSKÝ</h5>
+                                        <a href="/user/detail/7880" title="Viac o autorovi ...">
+                                            <h5 class="font-weight-bold text-warning">Ing. Vladimír HANČINSKÝ</h5>
+                                        </a>
                                         <dl class="row p-0 m-0">
                                             <dt class="col-3">Email</dt><dd class="col-9"><a href="mailto:hancinsky&#64;zoszv.sk">hancinsky&#64;zoszv.sk</a></dd>
                                             <dt class="col-3">Telefón</dt><dd class="col-9"><a href="tel:+42153022181">kl. 181</a></dd>
