@@ -1,8 +1,7 @@
 <?php
 
 // Inicializačné konštanty každej stránky: audity.zos.sk
-class Premenne
-{
+class Premenne {
 
     public $titulokStranky = "Audity ŽOS Zvolen";
     public $popisStranky = "stránka bez špeciálneho popisu";
@@ -10,26 +9,22 @@ class Premenne
     public $levelStranky = 1;
     public $konstantyStranokKomplet;
 
-    public function __set($name, $value)
-    {
+    public function __set($name, $value) {
         $this->$name = $value;
     }
 
-    function __construct($link, $linkZoznam)
-    {
-        
+    function __construct($link, $linkZoznam) {
         $this->konstantyStranokKomplet = array_merge_recursive($this->konstantyDoplnkoveStranky, $this->konstantyStrankyMenu);
         $this->getParametre($this->konstantyStranokKomplet, $link, $linkZoznam);
     }
 
-    private function getParametre($pole ,$link1, $link2) {
-        
-        foreach ($pole as $key => $value) {
+    private function getParametre($pole, $link1, $link2) {
+        foreach ($pole as $value) {
             if (is_array($value['SUBMENU'])) {
                 // rekurzívna funkcia - volá sama seba pri každej ďalšej vrste Menu !!!
-                $this->getParametre( $value['SUBMENU'], $link1, $link2 );
+                $this->getParametre($value['SUBMENU'], $link1, $link2);
             } else {
-                if ($value['Link'] == $link1 OR $value['Link'] == $link2) {
+                if ($value['Link'] == $link1 or $value['Link'] == $link2) {
                     if (isset($value['LEVEL'])) {
                         $this->levelStranky = $value['LEVEL'];
                     }
@@ -41,7 +36,7 @@ class Premenne
                     }
                     if (isset($value['Nadpis'])) {
                         $this->nadpisPrvejSekcie = $value['Nadpis'];
-                    } 
+                    }
                 }
             }
         }
@@ -132,7 +127,7 @@ class Premenne
                     "Title" => "Login",
                     "Description" => "prihlasovanie uživateľa",
                     "Nadpis" => "",
-                    "NazovMENU" => "Login",                    
+                    "NazovMENU" => "Login",
                 ),
                 array(
                     "LEVEL" => 0,
@@ -186,7 +181,7 @@ class Premenne
             "PopisDoplnku" => false,
             "Ikona" => "fas fa-certificate",
             "SUBMENU" => false,
-        ),        
+        ),
         array(
             "LEVEL" => 0,
             "Link" => false,
@@ -213,7 +208,7 @@ class Premenne
         ),
 
 
-        array("Hlavicka" => "Audity"),   
+        array("Hlavicka" => "Audity"),
         array(
             "LEVEL" => 0,
             "Link" => "#",
@@ -262,8 +257,8 @@ class Premenne
             "Ikona" => "fas fa-praying-hands",
             "SUBMENU" => false,
         ),
-        array(    
-            "LEVEL" => 0,      
+        array(
+            "LEVEL" => 0,
             "Link" => "#",
             "Title" => "",
             "Description" => "",
@@ -274,8 +269,8 @@ class Premenne
             "Ikona" => "fas fa-flag-checkered",
             "SUBMENU" => false,
         ),
-        array(  
-            "LEVEL" => 0,         
+        array(
+            "LEVEL" => 0,
             "Link" => "#",
             "Title" => "",
             "Description" => "",
@@ -406,9 +401,9 @@ class Premenne
                     "NazovMENU" => "Typy internych zistení",
                     "Doplnok" => false,
                     "PopisDoplnku" => false,
-                    "Ikona" => "far fa-circle text-danger",                    
+                    "Ikona" => "far fa-circle text-danger",
                     "SUBMENU" => false,
-                ),                
+                ),
                 array(
                     "LEVEL" => 0,
                     "Link" => "/vlastnosti/typy-externych-zisteni/zoznam",
@@ -444,7 +439,7 @@ class Premenne
                     "PopisDoplnku" => false,
                     "Ikona" => "far fa-check-circle text-success",
                     "SUBMENU" => false,
-                ),                
+                ),
             ),
         ),
         array(
@@ -483,7 +478,7 @@ class Premenne
                     "SUBMENU" => false,
                 ),
                 array(
-                    "LEVEL" => 0,                    
+                    "LEVEL" => 0,
                     "Link" => "/sprava/zoznam-spravcov",
                     "Title" => "Zoznam správcov",
                     "Description" => "aktuálny zoznam uživateľov, ktorý majú oprávnenia správcu",
@@ -505,7 +500,7 @@ class Premenne
                     "PopisDoplnku" => false,
                     "Ikona" => "far fa-check-circle text-warning",
                     "SUBMENU" => false,
-                ),                
+                ),
                 array(
                     "LEVEL" => 16,
                     "Link" => "/sprava/zoznam-pracovnikov-zos-komplet",
@@ -521,5 +516,4 @@ class Premenne
             ),
         ),
     );
-
 }

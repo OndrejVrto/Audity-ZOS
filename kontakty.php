@@ -19,9 +19,9 @@ ob_start();  // Začiatok definície hlavného obsahu
                         <h4 class="text-muted pt-4"><i class="fas fa-phone-alt mr-3" aria-hidden="true"></i>Telefón</h4>
                             <a class="text-muted" href="tel:+421455302111">(00421 45) 53 02 111</a>
                         <h4 class="text-muted pt-4"><i class="far fa-envelope mr-3" aria-hidden="true"></i>E-mail</h4>
-                            <a class="text-muted" href="mailto:zoszv&#64;zoszv.sk">zoszv&#64;zoszv.sk</a>
+                            <a class="text-muted" href="mailto:zoszv&#64;zoszv.sk?subject=Aplikácia (audity.zoszv.sk)">zoszv&#64;zoszv.sk</a>
                         <h4 class="text-muted pt-4"><i class="fas fa-network-wired mr-3" aria-hidden="true"></i>WWW</h4>
-                            <a class="text-muted" href="http://www.zoszv.sk">www.zoszv.sk</a>
+                            <a class="text-muted"  target="_blank" href="http://www.zoszv.sk">www.zoszv.sk</a>
                     </div>
                     <div class="col-12 col-md-6 py-4 py-md-0">
                         <h4 class="text-muted"><i class="fas fa-piggy-bank mr-3"></i>Bankové spojenie</h4>
