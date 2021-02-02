@@ -283,7 +283,7 @@ class Page
                     </li>
                     <li class="dropdown-divider"></li>
                     <li>
-                        <a href="#" class="dropdown-item">
+                        <a href="/about" class="dropdown-item">
                             <i class="nav-icon mr-3 fas fa-award"></i>O tomto programe ..
                         </a>
                     </li>

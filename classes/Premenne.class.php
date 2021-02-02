@@ -118,6 +118,14 @@ class Premenne {
         ),
         array(
             "LEVEL" => 0,
+            "Link" => "/about",
+            "Title" => "O tomto programe",
+            "Description" => "Informácie o programe audity.zoszv.sk. Licencia. Copyvright tvorcu šablony AdminLTE.",
+            "Nadpis" => "O tomto programe",
+            "NazovMENU" => "O tomto programe"
+        ),
+        array(
+            "LEVEL" => 0,
             "Link" => false,
             "NazovMENU" => "Uživateľ",
             "SUBMENU" => array(

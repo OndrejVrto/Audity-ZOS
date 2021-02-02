@@ -2,6 +2,7 @@
     require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
 
     $page = new \Page\Zoznam\ZoznamSkripty();
+    $page->zobrazitBublinky = false;
     $page->riadkov = 15;
 
     //!  Spustí aktualizáciu klapiek z VIS-u cez URL
