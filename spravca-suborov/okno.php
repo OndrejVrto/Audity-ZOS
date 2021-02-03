@@ -75,7 +75,7 @@ define('FM_EMBED', true);
  */
 
 //TFM version  2.4.3
-define('VERSION', '(ver. Vrťo)');
+define('VERSION', '2.4.3 (preklad Vrťo)');
 
 //Application Title
 define('APP_TITLE', 'Správa súborov');
@@ -520,9 +520,9 @@ if (isset($_POST['ajax']) && !FM_READONLY) {
                 throw new Exception("File {$fileName} not found");
             }
             if (copy($fullyQualifiedFileName, $fullPath . $newFileName)) {
-                echo "Backup {$newFileName} created";
+                echo "Záloha {$newFileName} vytvorená";
             } else {
-                throw new Exception("Could not copy file {$fileName}");
+                throw new Exception("Súbor sa nepodarilo skopírovať {$fileName}");
             }
         } catch (Exception $e) {
             echo $e->getMessage();
@@ -667,14 +667,14 @@ if (isset($_GET['del']) && !FM_READONLY) {
         }
         $is_dir = is_dir($path . '/' . $del);
         if (fm_rdelete($path . '/' . $del)) {
-            $msg = $is_dir ? 'Folder <b>%s</b> deleted' : 'File <b>%s</b> deleted';
+            $msg = $is_dir ? 'Adresár <b>%s</b> bol vymazaný' : 'Súbor <b>%s</b> bol vymazaný';
             fm_set_msg(sprintf($msg, fm_enc($del)));
         } else {
-            $msg = $is_dir ? 'Folder <b>%s</b> not deleted' : 'File <b>%s</b> not deleted';
+            $msg = $is_dir ? 'Adresár <b>%s</b> nebol vymazaný' : 'Súbor <b>%s</b> nebol vymazaný';
             fm_set_msg(sprintf($msg, fm_enc($del)), 'error');
         }
     } else {
-        fm_set_msg('Invalid file or folder name', 'error');
+        fm_set_msg('Chybný názov súboru alebo adresára', 'error');
     }
     fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
 }
@@ -694,22 +694,22 @@ if (isset($_GET['new']) && isset($_GET['type']) && !FM_READONLY) {
                     @fopen($path . '/' . $new, 'w') or die('Cannot open file:  ' . $new);
                     fm_set_msg(sprintf(lng('File') . ' <b>%s</b> ' . lng('Created'), fm_enc($new)));
                 } else {
-                    fm_set_msg('File extension is not allowed', 'error');
+                    fm_set_msg('Prípona súboru nie je povolená', 'error');
                 }
             } else {
-                fm_set_msg(sprintf('File <b>%s</b> already exists', fm_enc($new)), 'alert');
+                fm_set_msg(sprintf('Súbor <b>%s</b> už existuje', fm_enc($new)), 'alert');
             }
         } else {
             if (fm_mkdir($path . '/' . $new, false) === true) {
                 fm_set_msg(sprintf(lng('Folder') . ' <b>%s</b> ' . lng('Created'), $new));
             } elseif (fm_mkdir($path . '/' . $new, false) === $path . '/' . $new) {
-                fm_set_msg(sprintf('Folder <b>%s</b> already exists', fm_enc($new)), 'alert');
+                fm_set_msg(sprintf('Adresár <b>%s</b> už existuje', fm_enc($new)), 'alert');
             } else {
-                fm_set_msg(sprintf('Folder <b>%s</b> not created', fm_enc($new)), 'error');
+                fm_set_msg(sprintf('Adresár <b>%s</b> nebol vytvorený', fm_enc($new)), 'error');
             }
         }
     } else {
-        fm_set_msg('Invalid characters in file or folder name', 'error');
+        fm_set_msg('Neplatné znaky v názve súboru alebo adresára', 'error');
     }
     fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
 }
@@ -721,7 +721,7 @@ if (isset($_GET['copy'], $_GET['finish']) && !FM_READONLY) {
     $copy = fm_clean_path($copy);
     // empty path
     if ($copy == '') {
-        fm_set_msg('Source path not defined', 'error');
+        fm_set_msg('Zdrojová cesta nieje definovaná', 'error');
         fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
     }
     // abs path from
@@ -740,17 +740,17 @@ if (isset($_GET['copy'], $_GET['finish']) && !FM_READONLY) {
         if ($move) { // Move and to != from so just perform move
             $rename = fm_rename($from, $dest);
             if ($rename) {
-                fm_set_msg(sprintf('Moved from <b>%s</b> to <b>%s</b>', fm_enc($copy), fm_enc($msg_from)));
+                fm_set_msg(sprintf('Presunuté z <b>%s</b> do <b>%s</b>', fm_enc($copy), fm_enc($msg_from)));
             } elseif ($rename === null) {
-                fm_set_msg('File or folder with this path already exists', 'alert');
+                fm_set_msg('Súbor alebo adresár s touto cestou už neexistuje', 'alert');
             } else {
-                fm_set_msg(sprintf('Error while moving from <b>%s</b> to <b>%s</b>', fm_enc($copy), fm_enc($msg_from)), 'error');
+                fm_set_msg(sprintf('Chyba pri presúvaní z <b>%s</b> do <b>%s</b>', fm_enc($copy), fm_enc($msg_from)), 'error');
             }
         } else { // Not move and to != from so copy with original name
             if (fm_rcopy($from, $dest)) {
-                fm_set_msg(sprintf('Copied from <b>%s</b> to <b>%s</b>', fm_enc($copy), fm_enc($msg_from)));
+                fm_set_msg(sprintf('Skopírované z <b>%s</b> do <b>%s</b>', fm_enc($copy), fm_enc($msg_from)));
             } else {
-                fm_set_msg(sprintf('Error while copying from <b>%s</b> to <b>%s</b>', fm_enc($copy), fm_enc($msg_from)), 'error');
+                fm_set_msg(sprintf('Chyba pri kopírovaní z <b>%s</b> do <b>%s</b>', fm_enc($copy), fm_enc($msg_from)), 'error');
             }
         }
     } else {
@@ -772,12 +772,12 @@ if (isset($_GET['copy'], $_GET['finish']) && !FM_READONLY) {
                 $loop_count++;
             }
             if (fm_rcopy($from, $fn_duplicate, False)) {
-                fm_set_msg(sprintf('Copyied from <b>%s</b> to <b>%s</b>', fm_enc($copy), fm_enc($fn_duplicate)));
+                fm_set_msg(sprintf('Spopírované do <b>%s</b> do <b>%s</b>', fm_enc($copy), fm_enc($fn_duplicate)));
             } else {
-                fm_set_msg(sprintf('Error while copying from <b>%s</b> to <b>%s</b>', fm_enc($copy), fm_enc($fn_duplicate)), 'error');
+                fm_set_msg(sprintf('Chyba pri kopírovaní z <b>%s</b> do <b>%s</b>', fm_enc($copy), fm_enc($fn_duplicate)), 'error');
             }
         } else {
-            fm_set_msg('Paths must be not equal', 'alert');
+            fm_set_msg('Cesty sa nesmú rovnať', 'alert');
         }
     }
     fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
@@ -797,12 +797,12 @@ if (isset($_POST['file'], $_POST['copy_to'], $_POST['finish']) && !FM_READONLY) 
         $copy_to_path .= '/' . $copy_to;
     }
     if ($path == $copy_to_path) {
-        fm_set_msg('Paths must be not equal', 'alert');
+        fm_set_msg('Cesty sa nesmú rovnať', 'alert');
         fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
     }
     if (!is_dir($copy_to_path)) {
         if (!fm_mkdir($copy_to_path, true)) {
-            fm_set_msg('Unable to create destination folder', 'error');
+            fm_set_msg('Nie je možné vytvoriť cieľový priečinok', 'error');
             fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
         }
     }
@@ -832,14 +832,14 @@ if (isset($_POST['file'], $_POST['copy_to'], $_POST['finish']) && !FM_READONLY) 
             }
         }
         if ($errors == 0) {
-            $msg = $move ? 'Selected files and folders moved' : 'Selected files and folders copied';
+            $msg = $move ? 'Označené súbory a priečinky boli presunuté' : 'Označené súbory a priečinky boli skopírované';
             fm_set_msg($msg);
         } else {
-            $msg = $move ? 'Error while moving items' : 'Error while copying items';
+            $msg = $move ? 'Chyba pri presúvaní položiek' : 'Chyba pri kopírovaní položiek';
             fm_set_msg($msg, 'error');
         }
     } else {
-        fm_set_msg('Nothing selected', 'alert');
+        fm_set_msg('Nie je nič označené', 'alert');
     }
     fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
 }
@@ -862,12 +862,12 @@ if (isset($_GET['ren'], $_GET['to']) && !FM_READONLY) {
     // rename
     if (fm_isvalid_filename($new) && $old != '' && $new != '') {
         if (fm_rename($path . '/' . $old, $path . '/' . $new)) {
-            fm_set_msg(sprintf('Renamed from <b>%s</b> to <b>%s</b>', fm_enc($old), fm_enc($new)));
+            fm_set_msg(sprintf('Premenované z <b>%s</b> na <b>%s</b>', fm_enc($old), fm_enc($new)));
         } else {
-            fm_set_msg(sprintf('Error while renaming from <b>%s</b> to <b>%s</b>', fm_enc($old), fm_enc($new)), 'error');
+            fm_set_msg(sprintf('Chyba pri premenovaní z <b>%s</b> na <b>%s</b>', fm_enc($old), fm_enc($new)), 'error');
         }
     } else {
-        fm_set_msg('Invalid characters in file name', 'error');
+        fm_set_msg('Nesprávny znak v názve súboru', 'error');
     }
     fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
 }
@@ -885,7 +885,7 @@ if (isset($_GET['dl'])) {
         fm_download_file($path . '/' . $dl, $dl, 1024);
         exit;
     } else {
-        fm_set_msg('File not found', 'error');
+        fm_set_msg('Súbor nenájdený', 'error');
         fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
     }
 }
@@ -905,7 +905,7 @@ if (!empty($_FILES) && !FM_READONLY) {
     $allowed = (FM_UPLOAD_EXTENSION) ? explode(',', FM_UPLOAD_EXTENSION) : false;
     $response = array(
         'status' => 'error',
-        'info'   => 'Oops! Try again'
+        'info'   => 'Ojoj! Skúste to znova'
     );
 
     $filename = $f['file']['name'];
@@ -935,25 +935,25 @@ if (!empty($_FILES) && !FM_READONLY) {
                 if (file_exists($fullPath)) {
                     $response = array(
                         'status'    => 'success',
-                        'info' => "file upload successful"
+                        'info' => "Nahranie súboru bolo úspešné"
                     );
                 } else {
                     $response = array(
                         'status' => 'error',
-                        'info'   => 'Couldn\'t upload the requested file.'
+                        'info'   => 'Nepodarilo sa nahrať požadovaný súbor'
                     );
                 }
             } else {
                 $response = array(
                     'status'    => 'error',
-                    'info'      => "Error while uploading files. Uploaded files $uploads",
+                    'info'      => "Chyba pri nahrávaní súborov. Nahrávané súbory $uploads",
                 );
             }
         }
     } else {
         $response = array(
             'status' => 'error',
-            'info'   => 'The specified folder for upload isn\'t writeable.'
+            'info'   => 'Do zvoleného priečinku nemáte pridelené oprávnenia na zapisovanie.'
         );
     }
     // Return the response
@@ -980,12 +980,12 @@ if (isset($_POST['group'], $_POST['delete']) && !FM_READONLY) {
             }
         }
         if ($errors == 0) {
-            fm_set_msg('Selected files and folder deleted');
+            fm_set_msg('Vybraté súbory a priečinok boli odstránené');
         } else {
-            fm_set_msg('Error while deleting items', 'error');
+            fm_set_msg('Chyba pri odstraňovaní položiek', 'error');
         }
     } else {
-        fm_set_msg('Nothing selected', 'alert');
+        fm_set_msg('Nič nie je označené', 'alert');
     }
 
     fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
@@ -1004,7 +1004,7 @@ if (isset($_POST['group']) && (isset($_POST['zip']) || isset($_POST['tar'])) && 
 
 
     if (($ext == "zip" && !class_exists('ZipArchive')) || ($ext == "tar" && !class_exists('PharData'))) {
-        fm_set_msg('Operations with archives are not available', 'error');
+        fm_set_msg('Funkcie na prácu s archívmi nie sú k dispozícii', 'error');
         fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
     }
 
@@ -1029,12 +1029,12 @@ if (isset($_POST['group']) && (isset($_POST['zip']) || isset($_POST['tar'])) && 
         }
 
         if ($res) {
-            fm_set_msg(sprintf('Archive <b>%s</b> created', fm_enc($zipname)));
+            fm_set_msg(sprintf('Archív <b>%s</b> vytvorený', fm_enc($zipname)));
         } else {
-            fm_set_msg('Archive not created', 'error');
+            fm_set_msg('Archív nebol vytvorený', 'error');
         }
     } else {
-        fm_set_msg('Nothing selected', 'alert');
+        fm_set_msg('Nič nie je označené', 'alert');
     }
 
     fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
@@ -1057,12 +1057,12 @@ if (isset($_GET['unzip']) && !FM_READONLY) {
         $ext = pathinfo($zip_path, PATHINFO_EXTENSION);
         $isValid = true;
     } else {
-        fm_set_msg('File not found', 'error');
+        fm_set_msg('Súbor neexistuje', 'error');
     }
 
 
     if (($ext == "zip" && !class_exists('ZipArchive')) || ($ext == "tar" && !class_exists('PharData'))) {
-        fm_set_msg('Operations with archives are not available', 'error');
+        fm_set_msg('Funkcie na prácu s archívmi nie sú k dispozícii', 'error');
         fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
     }
 
@@ -1094,12 +1094,12 @@ if (isset($_GET['unzip']) && !FM_READONLY) {
         }
 
         if ($res) {
-            fm_set_msg('Archive unpacked');
+            fm_set_msg('Archív bol rozbalený');
         } else {
-            fm_set_msg('Archive not unpacked', 'error');
+            fm_set_msg('Archív nebol rozbalený', 'error');
         }
     } else {
-        fm_set_msg('File not found', 'error');
+        fm_set_msg('Súbor neexistuje', 'error');
     }
     fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
 }
@@ -1115,7 +1115,7 @@ if (isset($_POST['chmod']) && !FM_READONLY && !FM_IS_WIN) {
     $file = fm_clean_path($file);
     $file = str_replace('/', '', $file);
     if ($file == '' || (!is_file($path . '/' . $file) && !is_dir($path . '/' . $file))) {
-        fm_set_msg('File not found', 'error');
+        fm_set_msg('Súbor neexistuje', 'error');
         fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
     }
 
@@ -1149,9 +1149,9 @@ if (isset($_POST['chmod']) && !FM_READONLY && !FM_IS_WIN) {
     }
 
     if (@chmod($path . '/' . $file, $mode)) {
-        fm_set_msg('Permissions changed');
+        fm_set_msg('Oprávnenia boli zmenené');
     } else {
-        fm_set_msg('Permissions not changed', 'error');
+        fm_set_msg('Oprávnenia neboli zmenené', 'error');
     }
 
     fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
@@ -1229,7 +1229,7 @@ if (isset($_GET['upload']) && !FM_READONLY) {
                     <li class="nav-item">
                         <a class="nav-link active" href="#fileUploader" data-target="#fileUploader"><i class="fa fa-arrow-circle-o-up"></i> <?php echo lng('UploadingFiles') ?></a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item active">
                         <a class="nav-link" href="#urlUploader" class="js-url-upload" data-target="#urlUploader"><i class="fa fa-link"></i> Vložiť z adresy URL</a>
                     </li>
                 </ul>
@@ -1298,7 +1298,7 @@ if (isset($_GET['upload']) && !FM_READONLY) {
 if (isset($_POST['copy']) && !FM_READONLY) {
     $copy_files = isset($_POST['file']) ? $_POST['file'] : null;
     if (!is_array($copy_files) || empty($copy_files)) {
-        fm_set_msg('Nothing selected', 'alert');
+        fm_set_msg('Nič nie je označené', 'alert');
         fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
     }
 
@@ -1351,17 +1351,17 @@ if (isset($_GET['copy']) && !isset($_GET['finish']) && !FM_READONLY) {
     fm_show_nav_path(FM_PATH); // current path
 ?>
     <div class="path">
-        <p><b>Copying</b></p>
+        <p><b>Kopírovanie</b></p>
         <p class="break-word">
-            Source path: <?php echo fm_enc(fm_convert_win(FM_ROOT_PATH . '/' . $copy)) ?><br>
-            Destination folder: <?php echo fm_enc(fm_convert_win(FM_ROOT_PATH . '/' . FM_PATH)) ?>
+            Zdrojový adresár: <?php echo fm_enc(fm_convert_win(FM_ROOT_PATH . '/' . $copy)) ?><br>
+            Cieľový adreár: <?php echo fm_enc(fm_convert_win(FM_ROOT_PATH . '/' . FM_PATH)) ?>
         </p>
         <p>
-            <b><a href="?p=<?php echo urlencode(FM_PATH) ?>&amp;copy=<?php echo urlencode($copy) ?>&amp;finish=1"><i class="fa fa-check-circle"></i> Copy</a></b> &nbsp;
-            <b><a href="?p=<?php echo urlencode(FM_PATH) ?>&amp;copy=<?php echo urlencode($copy) ?>&amp;finish=1&amp;move=1"><i class="fa fa-check-circle"></i> Move</a></b> &nbsp;
-            <b><a href="?p=<?php echo urlencode(FM_PATH) ?>"><i class="fa fa-times-circle"></i> Cancel</a></b>
+            <b><a href="?p=<?php echo urlencode(FM_PATH) ?>&amp;copy=<?php echo urlencode($copy) ?>&amp;finish=1"><i class="fa fa-check-circle"></i> Kopírovať</a></b> &nbsp;
+            <b><a href="?p=<?php echo urlencode(FM_PATH) ?>&amp;copy=<?php echo urlencode($copy) ?>&amp;finish=1&amp;move=1"><i class="fa fa-check-circle"></i> Presunúť</a></b> &nbsp;
+            <b><a href="?p=<?php echo urlencode(FM_PATH) ?>"><i class="fa fa-times-circle"></i> Späť</a></b>
         </p>
-        <p><i>Select folder</i></p>
+        <p><i>Označený adresár</i></p>
         <ul class="folders break-word">
             <?php
             if ($parent !== false) {
@@ -1565,7 +1565,7 @@ if (isset($_GET['view'])) {
     $file = fm_clean_path($file, false);
     $file = str_replace('/', '', $file);
     if ($file == '' || !is_file($path . '/' . $file) || in_array($file, $GLOBALS['exclude_items'])) {
-        fm_set_msg('File not found', 'error');
+        fm_set_msg('Súbor neexistuje', 'error');
         fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
     }
 
@@ -1590,7 +1590,7 @@ if (isset($_GET['view'])) {
     $is_text = false;
     $is_onlineViewer = false;
 
-    $view_title = 'File';
+    $view_title = 'Súbor';
     $filenames = false; // for zip
     $content = ''; // for text
     $online_viewer = strtolower(FM_DOC_VIEWER);
@@ -1599,11 +1599,11 @@ if (isset($_GET['view'])) {
         $is_onlineViewer = true;
     } elseif ($ext == 'zip' || $ext == 'tar') {
         $is_zip = true;
-        $view_title = 'Archive';
+        $view_title = 'Archív';
         $filenames = fm_get_zif_info($file_path, $ext);
     } elseif (in_array($ext, fm_get_image_exts())) {
         $is_image = true;
-        $view_title = 'Image';
+        $view_title = 'Obrázok';
     } elseif (in_array($ext, fm_get_audio_exts())) {
         $is_audio = true;
         $view_title = 'Audio';
@@ -1621,9 +1621,9 @@ if (isset($_GET['view'])) {
             <?php if (!$quickView) { ?>
                 <p class="break-word"><b><?php echo $view_title ?> "<?php echo fm_enc(fm_convert_win($file)) ?>"</b></p>
                 <p class="break-word">
-                    Full path: <?php echo fm_enc(fm_convert_win($file_path)) ?><br>
-                    File size: <?php echo ($filesize_raw <= 1000) ? "$filesize_raw bytes" : $filesize; ?><br>
-                    MIME-type: <?php echo $mime_type ?><br>
+                    Plná cesta: <?php echo fm_enc(fm_convert_win($file_path)) ?><br>
+                    Veľkosť súboru: <?php echo ($filesize_raw <= 1000) ? "$filesize_raw bytes" : $filesize; ?><br>
+                    Typ MIME: <?php echo $mime_type ?><br>
                     <?php
                     // ZIP info
                     if (($is_zip || $is_gzip) && $filenames !== false) {
@@ -1638,16 +1638,16 @@ if (isset($_GET['view'])) {
                             $total_uncomp += $fn['filesize'];
                         }
                     ?>
-                        Files in archive: <?php echo $total_files ?><br>
-                        Total size: <?php echo fm_get_filesize($total_uncomp) ?><br>
-                        Size in archive: <?php echo fm_get_filesize($total_comp) ?><br>
-                        Compression: <?php echo round(($total_comp / $total_uncomp) * 100) ?>%<br>
+                        Súborov v archíve: <?php echo $total_files ?><br>
+                        Veľkosť súborov v archíve: <?php echo fm_get_filesize($total_uncomp) ?><br>
+                        Veľkosť archívu: <?php echo fm_get_filesize($total_comp) ?><br>
+                        Kompresia: <?php echo round(($total_comp / $total_uncomp) * 100) ?>%<br>
                     <?php
                     }
                     // Image info
                     if ($is_image) {
                         $image_size = getimagesize($file_path);
-                        echo 'Image sizes: ' . (isset($image_size[0]) ? $image_size[0] : '0') . ' x ' . (isset($image_size[1]) ? $image_size[1] : '0') . '<br>';
+                        echo 'Rozmery obrázka: ' . (isset($image_size[0]) ? $image_size[0] : '0') . ' x ' . (isset($image_size[1]) ? $image_size[1] : '0') . '<br>';
                     }
                     // Text info
                     if ($is_text) {
@@ -1657,7 +1657,7 @@ if (isset($_GET['view'])) {
                                 $content = iconv(FM_ICONV_INPUT_ENC, 'UTF-8//IGNORE', $content);
                             }
                         }
-                        echo 'Charset: ' . ($is_utf8 ? 'utf-8' : '8 bit') . '<br>';
+                        echo 'Znaková sada: ' . ($is_utf8 ? 'utf-8' : '8 bit') . '<br>';
                     }
                     ?>
                 </p>
@@ -1705,7 +1705,7 @@ if (isset($_GET['view'])) {
                     }
                     echo '</code>';
                 } else {
-                    echo '<p>Error while fetching archive info</p>';
+                    echo '<p>Chyba pri načítaní informácií z archívu</p>';
                 }
             } elseif ($is_image) {
                 // Image content
@@ -1757,7 +1757,7 @@ if (isset($_GET['edit'])) {
     $file = fm_clean_path($file, false);
     $file = str_replace('/', '', $file);
     if ($file == '' || !is_file($path . '/' . $file)) {
-        fm_set_msg('File not found', 'error');
+        fm_set_msg('Súbor neexistuje', 'error');
         fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
     }
     header('X-XSS-Protection:0');
@@ -1781,7 +1781,7 @@ if (isset($_GET['edit'])) {
         $fd = fopen($file_path, "w");
         @fwrite($fd, $writedata);
         fclose($fd);
-        fm_set_msg('File Saved Successfully');
+        fm_set_msg('Súbor bol úspešne uložený');
     }
 
     $ext = strtolower(pathinfo($file_path, PATHINFO_EXTENSION));
@@ -1878,7 +1878,7 @@ if (isset($_GET['chmod']) && !FM_READONLY && !FM_IS_WIN) {
             </h6>
             <div class="card-body">
                 <p class="card-text">
-                    Full path: <?php echo $file_path ?><br>
+                    Celá cesta: <?php echo $file_path ?><br>
                 </p>
                 <form action="" method="post">
                     <input type="hidden" name="p" value="<?php echo fm_enc(FM_PATH) ?>">
@@ -2102,7 +2102,7 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
                 <tfoot>
                     <tr><?php if (!FM_READONLY) : ?>
                             <td></td><?php endif; ?>
-                        <td colspan="<?php echo (!FM_IS_WIN && !$hide_Cols) ? '6' : '4' ?>"><em><?php echo 'Folder is empty' ?></em></td>
+                        <td colspan="<?php echo (!FM_IS_WIN && !$hide_Cols) ? '6' : '4' ?>"><em><?php echo 'Adresár je prázdny' ?></em></td>
                     </tr>
                 </tfoot>
             <?php
@@ -2133,13 +2133,13 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
                     <li class="list-inline-item"> <a href="#/select-all" class="btn btn-small btn-outline-primary btn-2" onclick="select_all();return false;"><i class="fa fa-check-square"></i> <?php echo lng('SelectAll') ?> </a></li>
                     <li class="list-inline-item"><a href="#/unselect-all" class="btn btn-small btn-outline-primary btn-2" onclick="unselect_all();return false;"><i class="fa fa-window-close"></i> <?php echo lng('UnSelectAll') ?> </a></li>
                     <li class="list-inline-item"><a href="#/invert-all" class="btn btn-small btn-outline-primary btn-2" onclick="invert_all();return false;"><i class="fa fa-th-list"></i> <?php echo lng('InvertSelection') ?> </a></li>
-                    <li class="list-inline-item"><input type="submit" class="hidden" name="delete" id="a-delete" value="Delete" onclick="return confirm('Delete selected files and folders?')">
+                    <li class="list-inline-item"><input type="submit" class="hidden" name="delete" id="a-delete" value="Delete" onclick="return confirm('Odstrániť vybrané súbory a priečinky?')">
                         <a href="javascript:document.getElementById('a-delete').click();" class="btn btn-small btn-outline-primary btn-2"><i class="fa fa-trash"></i> <?php echo lng('Delete') ?> </a>
                     </li>
-                    <li class="list-inline-item"><input type="submit" class="hidden" name="zip" id="a-zip" value="zip" onclick="return confirm('Create archive?')">
+                    <li class="list-inline-item"><input type="submit" class="hidden" name="zip" id="a-zip" value="zip" onclick="return confirm('Vytvoriť archív?')">
                         <a href="javascript:document.getElementById('a-zip').click();" class="btn btn-small btn-outline-primary btn-2"><i class="fa fa-file-archive-o"></i> <?php echo lng('Zip') ?> </a>
                     </li>
-                    <li class="list-inline-item"><input type="submit" class="hidden" name="tar" id="a-tar" value="tar" onclick="return confirm('Create archive?')">
+                    <li class="list-inline-item"><input type="submit" class="hidden" name="tar" id="a-tar" value="tar" onclick="return confirm('Vytvoriť archív?')">
                         <a href="javascript:document.getElementById('a-tar').click();" class="btn btn-small btn-outline-primary btn-2"><i class="fa fa-file-archive-o"></i> <?php echo lng('Tar') ?> </a>
                     </li>
                     <li class="list-inline-item"><input type="submit" class="hidden" name="copy" id="a-copy" value="Copy">
@@ -3486,10 +3486,10 @@ function fm_show_nav_path($path)
                             </div>
                             <!--                             <div class="input-group-append btn-group">
                                 <span class="input-group-text dropdown-toggle" id="search-addon2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
-                                  <div class="dropdown-menu dropdown-menu-right">
+                                <div class="dropdown-menu dropdown-menu-right">
                                     <a class="dropdown-item" href="<?php //echo $path2 = $path ? $path : '.'; 
                                                                     ?>" id="js-search-modal" data-toggle="modal" data-target="#searchModal">Advanced Search</a>
-                                  </div>
+                                </div>
                             </div> -->
                         </div>
                     </li>
@@ -3504,8 +3504,8 @@ function fm_show_nav_path($path)
                     <?php if (FM_USE_AUTH) : ?>
                         <li class="nav-item avatar dropdown">
                             <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="fa fa-user-circle"></i> <?php if (isset($_SESSION[FM_SESSION_ID]['logged'])) {
-                                                                                                                                                                                                        echo $_SESSION[FM_SESSION_ID]['logged'];
-                                                                                                                                                                                                    } ?></a>
+                                echo $_SESSION[FM_SESSION_ID]['logged'];
+                            } ?></a>
                             <div class="dropdown-menu dropdown-menu-right <?php echo fm_get_theme(); ?>" aria-labelledby="navbarDropdownMenuLink-5">
                                 <?php if (!FM_READONLY) : ?>
                                     <a title="<?php echo lng('Settings') ?>" class="dropdown-item nav-link" href="?p=<?php echo urlencode(FM_PATH) ?>&amp;settings=1"><i class="fa fa-cog" aria-hidden="true"></i> <?php echo lng('Settings') ?></a>
@@ -4542,7 +4542,7 @@ function fm_show_header_login()
             }
 
             function rename(e, t) {
-                var n = prompt("New name", t);
+                var n = prompt("Nový názov", t);
                 null !== n && "" !== n && n != t && (window.location.search = "p=" + encodeURIComponent(e) + "&ren=" + encodeURIComponent(t) + "&to=" + encodeURIComponent(n))
             }
 
@@ -4607,13 +4607,13 @@ function fm_show_header_login()
                             contentType: "multipart/form-data-encoded; charset=utf-8",
                             //dataType: "json",
                             success: function(mes) {
-                                toast("Saved Successfully");
+                                toast("Uložené úspešne");
                                 window.onbeforeunload = function() {
                                     return
                                 }
                             },
                             failure: function(mes) {
-                                toast("Error: try again");
+                                toast("Chyba: skúste to znova");
                             },
                             error: function(mes) {
                                 toast(`<p style="background-color:red">${mes.responseText}</p>`);
@@ -4703,10 +4703,10 @@ function fm_show_header_login()
                         if (data) {
                             data = JSON.parse(data);
                             if (data.done) {
-                                resultWrapper.append('<div class="alert alert-success row">Uploaded Successful: ' + data.done.name + '</div>');
+                                resultWrapper.append('<div class="alert alert-success row">Nahrané úspešne: ' + data.done.name + '</div>');
                                 form.find("input[name=uploadurl]").val('');
                             } else if (data['fail']) {
-                                resultWrapper.append('<div class="alert alert-danger row">Error: ' + data.fail.message + '</div>');
+                                resultWrapper.append('<div class="alert alert-danger row">Chyba: ' + data.fail.message + '</div>');
                             }
                             form.find("input[name=uploadurl]").removeAttr("disabled");
                             form.find("button").show();
@@ -4759,20 +4759,20 @@ function fm_show_header_login()
                                 _html = search_template(data);
                                 searchWrapper.html(_html);
                             } else {
-                                searchWrapper.html('<p class="m-2">No result found!<p>');
+                                searchWrapper.html('<p class="m-2">Nebol nájdený žiadny výsledok!<p>');
                             }
                         },
                         error: function(xhr) {
                             $loader.removeClass('show-me');
-                            searchWrapper.html('<p class="m-2">ERROR: Try again later!</p>');
+                            searchWrapper.html('<p class="m-2">CHYBA: Skúste to znova neskôr!</p>');
                         },
                         failure: function(mes) {
                             $loader.removeClass('show-me');
-                            searchWrapper.html('<p class="m-2">ERROR: Try again later!</p>');
+                            searchWrapper.html('<p class="m-2">CHYBA: Skúste to znova neskôr!</p>');
                         }
                     });
                 } else {
-                    searchWrapper.html("OOPS: minimum 3 characters required!");
+                    searchWrapper.html("Ojoj! vyžadujú sa minimálne 3 znaky!");
                 }
             }
 

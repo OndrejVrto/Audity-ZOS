@@ -73,7 +73,7 @@ class Premenne {
             "Nadpis" => "Vyhľadávanie v databáze",
         ),
         array(
-            "LEVEL" => 0,
+            "LEVEL" => 2,
             "Link" => "/timeline",
             "Title" => "Časová os",
             "Description" => "stránka sumarizuje akcie v aplikácii",

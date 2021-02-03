@@ -1446,7 +1446,9 @@
         "Preview": "Náhľad",
         "Help": "Pomoc",
         "FullSize": "Celková veľkosť",
-        "FreeOf": "voľné z"
+        "FreeOf": "voľné z",
+        "Created": "vytvorený",
+        "Folder is empty": "Adresár je prázdny"
       }
     },
     {

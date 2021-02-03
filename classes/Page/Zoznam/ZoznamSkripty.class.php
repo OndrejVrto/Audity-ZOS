@@ -87,6 +87,13 @@ ob_start();  // Začiatok definície Špeciálnych SKRIPTov pre túto stránku
                 oAria: {
                     sSortAscending:  ": aktivujte na zoradenie stĺpca vzostupne",
                     sSortDescending: ": aktivujte na zoradenie stĺpca zostupne"
+                },
+                select: {
+                    rows: {
+                        _: "Označených %d riadkov",
+                        0: "",
+                        1: "Označený jeden riadok"
+                    }
                 }
             },
         } );
