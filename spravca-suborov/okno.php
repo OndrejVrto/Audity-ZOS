@@ -1265,8 +1265,8 @@ if (isset($_GET['upload']) && !FM_READONLY) {
         </div>
     </div>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js"></script> -->
-    <script src="dist/js/dropzone-5.5.1.min.js"></script>
-    <script>
+    <script src="dist/js/dropzone-5.5.1.min.js" nonce="<?= $GLOBALS["nonce"] ?>"></script>
+    <script nonce="<?= $GLOBALS["nonce"] ?>">
         Dropzone.options.fileUploader = {
             timeout: 120000,
             maxFilesize: <?php echo MAX_UPLOAD_SIZE; ?>,
@@ -3687,8 +3687,8 @@ function fm_show_header_login()
     {
         ?>
         </div>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.slim.min.js" nonce="<?= $GLOBALS["nonce"] ?>"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" nonce="<?= $GLOBALS["nonce"] ?>"></script>
     </body>
 
     </html>
@@ -4458,27 +4458,27 @@ function fm_show_header_login()
         ?>
         </div>
         <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
-        <script src="dist/js/jquery-3.5.1.min.js"></script>
+        <script src="dist/js/jquery-3.5.1.min.js" nonce="<?= $GLOBALS["nonce"] ?>"></script>
 
         <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script> -->
-        <script src="dist/js/bootstrap-4.5.0.min.js"></script>
+        <script src="dist/js/bootstrap-4.5.0.min.js" nonce="<?= $GLOBALS["nonce"] ?>"></script>
 
         <!-- <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script> -->
-        <script src="dist/js/jquery.dataTables.1.10.21.min.js"></script>
+        <script src="dist/js/jquery.dataTables.1.10.21.min.js" nonce="<?= $GLOBALS["nonce"] ?>"></script>
 
         <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.min.js"></script> -->
-        <script src="dist/js/ekko-lightbox-5.3.0.min.js"></script>
+        <script src="dist/js/ekko-lightbox-5.3.0.min.js" nonce="<?= $GLOBALS["nonce"] ?>"></script>
 
         <?php if (FM_USE_HIGHLIGHTJS) : ?>
             <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/highlight.min.js"></script> -->
-            <script src="dist/js/highlight.js-10.0.3-vs.min.js"></script>
+            <script src="dist/js/highlight.js-10.0.3-vs.min.js" nonce="<?= $GLOBALS["nonce"] ?>"></script>
 
-            <script>
+            <script nonce="<?= $GLOBALS["nonce"] ?>">
                 hljs.initHighlightingOnLoad();
                 var isHighlightingEnabled = true;
             </script>
         <?php endif; ?>
-        <script>
+        <script nonce="<?= $GLOBALS["nonce"] ?>">
             $(document).on('click', '[data-toggle="lightbox"]', function(event) {
                 event.preventDefault();
                 var reInitHighlight = function() {
@@ -4851,8 +4851,8 @@ function fm_show_header_login()
             $ext = pathinfo($_GET["edit"], PATHINFO_EXTENSION);
         ?>
             <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.1/ace.js"></script> -->
-            <script src="dist/js/ace-1.4.1.min.js"></script>
-            <script>
+            <script src="dist/js/ace-1.4.1.min.js" nonce="<?= $GLOBALS["nonce"] ?>"></script>
+            <script nonce="<?= $GLOBALS["nonce"] ?>">
                 var editor = ace.edit("editor");
                 editor.getSession().setMode({
                     path: "ace/mode/<?php echo $ext; ?>",

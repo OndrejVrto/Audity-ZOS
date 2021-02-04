@@ -7,14 +7,20 @@ $page->zobrazitBublinky = false;
 
 ob_start();
 ?>
-            <script language="javascript" type="text/javascript">
-                function resizeIframe(obj) {
-                    obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
-                }
-            </script>
-
-            <iframe src="/spravca-suborov/okno" class="w-100" frameborder="0" scrolling="no" onload='resizeIframe(this);' style="min-height: 1000px !important;"></iframe>
+            <iframe class="iframe-full-height w-100" src="/spravca-suborov/okno" class="w-100" frameborder="0" scrolling="no" style="min-height: 1000px !important;"></iframe>
 <?php
 $page->content = ob_get_clean();  // Koniec hlavného obsahu
+
+ob_start();
+?>
+    <script language="javascript" type="text/javascript" nonce="<?= $GLOBALS["nonce"] ?>">
+        
+        $('.iframe-full-height').on('load', function(){
+            this.style.height=this.contentWindow.document.body.scrollHeight + 'px'
+        });
+
+    </script>
+<?php
+$page->skriptySpecial = ob_get_clean();  // Koniec hlavného obsahu
 
 $page->display();

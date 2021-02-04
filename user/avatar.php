@@ -69,10 +69,10 @@ ob_start();  // scripts
 ?>
     
     <!-- START - SCRIPT Avatar -->
-    <script src="/svgavatars/js/svgavatars.tools.js"></script>
-    <script src="/svgavatars/js/svgavatars.defaults.js"></script>
-    <script src="/svgavatars/js/languages/svgavatars.sk.js"></script>
-    <script src="/svgavatars/js/svgavatars.core.min.js"></script>
+    <script src="/svgavatars/js/svgavatars.tools.js" nonce="<?= $GLOBALS["nonce"] ?>"></script>
+    <script src="/svgavatars/js/svgavatars.defaults.js" nonce="<?= $GLOBALS["nonce"] ?>"></script>
+    <script src="/svgavatars/js/languages/svgavatars.sk.js" nonce="<?= $GLOBALS["nonce"] ?>"></script>
+    <script src="/svgavatars/js/svgavatars.core.min.js" nonce="<?= $GLOBALS["nonce"] ?>"></script>
     <!-- END - SCRIPT Avatar -->
 <?php
 $page->skriptySpecial = ob_get_clean();  // scripts
