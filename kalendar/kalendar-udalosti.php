@@ -10,6 +10,9 @@
     $page->nadpis = "Kalendár s udalosťami";
 
     $page->stylySpecial = PHP_EOL.TAB1.'<link rel="stylesheet" href="style.css">';
+    
+    //TODO>  zmeniť načítananie fontov lokálne
+    header("Content-Security-Policy: default-src 'self' 'unsafe-inline';");
 
 ob_start();
 ?>
@@ -22,5 +25,7 @@ ob_start();
 
 <?php
 $page->content = ob_get_clean();  // Koniec hlavného obsahu
+
+$page->skriptySpecial = getSkriptyKalendar();
 
 $page->display();

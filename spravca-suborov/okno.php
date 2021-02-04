@@ -10,6 +10,8 @@ $CONFIG = '{"lang":"sk","error_reporting":false,"show_hidden":false,"hide_Cols":
 require_once $_SERVER['DOCUMENT_ROOT'] . "/include/_autoload.php";
 $page = new \Page\Page();
 
+header("Content-Security-Policy: default-src 'self' 'unsafe-inline';");
+
 if ($page->levelUser >= 20) {
 
     // ADMIN God

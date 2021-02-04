@@ -134,7 +134,14 @@ function getCalender($year = '', $month = '')
         </section>
     </main>
 
-    <script>
+    <?php
+}
+
+    function getSkriptyKalendar(){
+
+ob_start();
+?>
+    <script nonce="<?= $GLOBALS["nonce"] ?>">
         function getCalendar(target_div, year, month) {
             $.ajax({
                 type: 'POST',
@@ -170,8 +177,8 @@ function getCalender($year = '', $month = '')
             });
         });
     </script>
-
 <?php
+    return ob_get_clean();
 }
 
 /* 

@@ -14,8 +14,8 @@ ob_start();
                 <div id="calendar"></div>
             </div>
 
-            <script type="text/javascript" src="dist/calendarize.js"></script>
-            <script type="text/javascript">
+            <script type="text/javascript" src="dist/calendarize.js" nonce="<?= $GLOBALS["nonce"] ?>"></script>
+            <script type="text/javascript" nonce="<?= $GLOBALS["nonce"] ?>">
                 var $calendar = document.getElementById("calendar");
                 var currentYear = new Date().getFullYear();
                 var calendarize = new Calendarize();
