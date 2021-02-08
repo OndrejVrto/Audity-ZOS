@@ -58,6 +58,7 @@
     // nastavenie Content-Security-Policy
     $nonce = base64_encode(RandomToken(16));
     header("Content-Security-Policy: default-src 'self' 'unsafe-inline'; script-src 'nonce-" . $nonce ."' 'unsafe-eval'; object-src 'none'; img-src 'self'; child-src 'self' *.mapy.cz;");
+    header("X-XSS-Protection: 1; mode=block");
 
     // zapnutie session
     session_start();

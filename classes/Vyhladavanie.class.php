@@ -24,7 +24,7 @@ class Vyhladavanie {
     private $SQLprikaz;
     private $pocetVysledkov;
     private $VysledokHladania = false;
-    private $stranka;
+    private $stranka = 1;
     private $zaznamov = 5;
 
     private $odsadenie = 4;
@@ -52,7 +52,13 @@ class Vyhladavanie {
 
     function __construct($uzivatel) {
         $this->user = $uzivatel;
-        $this->stranka = $_GET['p'];
+        
+        //SQL injection prevencia - vyberie prvé číslo z reťazca
+        preg_match('/\d*/',  $_GET['p'], $vystup);
+        $stranka = (int)$vystup[0];
+        if (!empty($stranka)) {
+            $this->stranka = $stranka;
+        }
     }
 
     public function Hladat() {
@@ -120,6 +126,11 @@ class Vyhladavanie {
         }
 
         $pocetStran = (int)ceil($this->pocetVysledkov / $this->zaznamov);
+        
+        if ($this->stranka > $pocetStran) {
+            $this->stranka = $pocetStran;
+        }
+
         if ($this->stranka == $pocetStran) {
             $x = $this->pocetVysledkov - ($this->zaznamov * ($pocetStran - 1));
         } else {
