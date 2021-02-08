@@ -52,6 +52,7 @@ class db {
             $text = "Zlyhal proces zostavenia parametrického dotazu MySQL (skontroluj syntax dotazu)<br>". PHP_EOL;
             $this->error($text . SqlFormatter::format($query) . PHP_EOL . "<br>". vycistiText(print_r(func_get_args(), true)). PHP_EOL . "<br><br>" . $this->connection->error);
         }
+        $this->logLastChange();
         return $this;
     }
 
@@ -99,6 +100,14 @@ class db {
         $this->query->close();
         $this->query_closed = TRUE;
         return $result;
+    }
+
+    private function logLastChange (){
+        if ($this->affectedRows() > 0) {
+            $this->query("UPDATE `52_sys_cache_cron_and_clean`
+                        SET `PoslednaAktualizacia` = NOW()
+                        WHERE `NazovCACHE` = 'LAST CHANGE APP'");
+        }
     }
 
     public function close() {
