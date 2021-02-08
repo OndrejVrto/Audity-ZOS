@@ -60,6 +60,13 @@
     header("Content-Security-Policy: default-src 'self' 'unsafe-inline'; script-src 'nonce-" . $nonce ."' 'unsafe-eval'; object-src 'none'; img-src 'self'; child-src 'self' *.mapy.cz;");
     header("X-XSS-Protection: 1; mode=block");
 
+    // nastavenie coockie pre session
+    $maxlifetime = 8*60*60; // 8 hodín v sekundách
+    $secure = false; // if you only want to receive the cookie over HTTPS
+    $httponly = true; // prevent JavaScript access to session cookie
+    $samesite = 'strict';
+    session_set_cookie_params($maxlifetime, '/; samesite='.$samesite, $_SERVER['HTTP_HOST'], $secure, $httponly);
+
     // zapnutie session
     session_start();
 
