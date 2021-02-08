@@ -67,7 +67,7 @@
     
     // lavička ochraňuje uživatele od zneužití pomocí tzv. „clickjackingu“, kdy útočník na podvodné stránce 
     // vloží cizí stránku a nad ní umístí průhlednou vrstvu s vlastními událostmi a odkazy o kterých návštěvník netuší.
-    header("X-Frame-Options: DENY");
+    header("X-Frame-Options: SAMEORIGIN");
     // Pokud prohlížeč ignoruje hlášený typ MIME, webmaster či administrátor webu nemá plnou kontrolu nad tím, 
     // jak má být obsah zpracováván. Když webový server nebo aplikace hlásí nesprávný typ MIME pro obsah, 
     // webový prohlížeč nemůže zjistit, jak se má soubor zpracovat a může se rozhodnout jiným způsobem než bylo zamýšleno.
