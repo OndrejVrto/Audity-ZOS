@@ -10,7 +10,7 @@ class PageClear extends \Page\Page
     function __construct()
     {
         parent::__construct();
-        $this->link = $_SERVER['REQUEST_URI'];
+        $this->link = trim(strtok($_SERVER['REQUEST_URI'], '?"'));
     }
     
     public function display()

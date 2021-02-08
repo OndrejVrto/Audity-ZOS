@@ -28,6 +28,7 @@ class Page
     
     protected $_nazovstranky;
     public $link;
+    public $url;
     
     private $zbalHTML = false;
     private $aktivnemenu = false;
@@ -60,7 +61,9 @@ class Page
 
         // header('Content-Type: text/html; charset=utf-8');
 
-        $this->link = $_SERVER['REQUEST_URI'];
+        $this->url = filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL, FILTER_FLAG_QUERY_REQUIRED);
+        $this->link = trim(strtok($_SERVER['REQUEST_URI'], '?"'));
+
         $this->linkCisty = $this->upravLink($this->link);
         $this->linkZoznam = $this->linkCisty . "zoznam";
 
@@ -920,7 +923,13 @@ class Page
         
         $html .= "\n\n". '<footer class="main-footer"> <h3 class="text-danger">php Info</h3>' ;
             $html .= '<a href="/test/phpinfo">PHPinfo()</a>';
-        $html .= '</footer>' ;  
+        $html .= '</footer>' ;
+
+        $html .= "\n\n". '<footer class="main-footer"> <h3 class="text-info">URL</h3>' ;
+            $html .= "<p>URL: <span class=\"text-green\">" . vycistiText($this->url, true) . "</span><br>\n";
+            $html .= "Link: <span class=\"text-green\">" . vycistiText($this->link, true) . "</span><br>\n";
+            $html .= "Link-cisty: <span class=\"text-green\">" . vycistiText($this->linkCisty, true) . "</span>\n</p>";
+        $html .= '</footer>' ;
 
         $html .= "\n\n". '<footer class="main-footer"> <h3 class="text-warning">$_GET</h3>' ;
             $html .= vycistiText(print_r($_GET, true));
