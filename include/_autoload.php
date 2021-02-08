@@ -33,6 +33,10 @@
     require_once $pathInclude . 'inc.Paginate.php';
     require_once $pathInclude . 'inc.cron.php';
 
+    // Set Time Zone
+    date_default_timezone_set('Europe/Bratislava');
+
+//! Nastavenie hlavičiek
     // kontrola poslednej zmeny dát v aplikácii
     // poľle hlavičku poslednej zmeny
     $row = $db->query("SELECT UNIX_TIMESTAMP(`PoslednaAktualizacia`) AS Cas
@@ -45,26 +49,10 @@
     }
     header("Last-Modified: " . gmdate("D, d M Y H:i:s", $last_modified) . " GMT");
 
-    // derfinície Konštant
-    defined("TAB1") or define("TAB1", "\t");
-    defined("TAB2") or define("TAB2", "\t\t");
-    defined("TAB3") or define("TAB3", "\t\t\t");
-    defined("TAB4") or define("TAB4", "\t\t\t\t");
-    defined("TAB5") or define("TAB5", "\t\t\t\t\t");
-    defined("TAB6") or define("TAB6", "\t\t\t\t\t\t");
-    defined("TAB7") or define("TAB7", "\t\t\t\t\t\t\t");
-    defined("TAB8") or define("TAB8", "\t\t\t\t\t\t\t\t");
-    defined("TAB9") or define("TAB9", "\t\t\t\t\t\t\t\t\t");
-    defined("TAB10") or define("TAB10", "\t\t\t\t\t\t\t\t\t\t");
-
-    defined("TRUE") or define("TRUE", 1);
-    defined("FALSE") or define("FALSE", 0);
-
-    // Set Time Zone
-    date_default_timezone_set('Europe/Bratislava');
-    
     // nastavenie znakovej sady
     header('Content-Type: text/html; charset=utf-8');
+    // jazyk stránky
+    header('Content-Language: sk-SK');
     
     // nastavenie Content-Security-Policy
     $nonce = base64_encode(RandomToken(16));
@@ -86,6 +74,14 @@
     // Nastavením X-Content-Type-Options sdělujeme prohlížečům, že nemají odhadovat typ souboru/média a řídit se pouze 
     // předanými informacemi. Tím zvýšíme bezpečnost uživatele před škodlivým obsahem, který předstírá, že je bezpečným typem dokumentu.
     header("X-Content-Type-Options: nosniff");
+    
+    //! nastavenie platnosti certifikátu na HTTPS na 1 rok
+    header("Strict-Transport-Security: max-age=31536000; includeSubDomains");
+    header("Referrer-Policy: strict-origin-when-cross-origin");
+    header("Feature-Policy: microphone 'none'; camera 'none'; geolocation 'none';");
+
+
+//! / Nastavenie hlavičiek
 
     // nastavenie coockie pre session
     $maxlifetime = 8*60*60; // 8 hodín v sekundách
@@ -115,3 +111,15 @@
     if ( isset($_SESSION['Login']) AND $_SESSION['Login'] == 'true' ) {
         $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
     }
+
+    // derfinície Konštant
+    defined("TAB1") or define("TAB1", "\t");
+    defined("TAB2") or define("TAB2", "\t\t");
+    defined("TAB3") or define("TAB3", "\t\t\t");
+    defined("TAB4") or define("TAB4", "\t\t\t\t");
+    defined("TAB5") or define("TAB5", "\t\t\t\t\t");
+    defined("TAB6") or define("TAB6", "\t\t\t\t\t\t");
+    defined("TAB7") or define("TAB7", "\t\t\t\t\t\t\t");
+    defined("TAB8") or define("TAB8", "\t\t\t\t\t\t\t\t");
+    defined("TAB9") or define("TAB9", "\t\t\t\t\t\t\t\t\t");
+    defined("TAB10") or define("TAB10", "\t\t\t\t\t\t\t\t\t\t");

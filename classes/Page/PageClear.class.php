@@ -15,6 +15,8 @@ class PageClear extends \Page\Page
     
     public function display()
     {
+        ob_start(); // celá stránka sa načíta najskôr do pamäte pre potreby minimalizácie na konci tejto funkcie 
+
         if (isset($_SESSION['ALERT'])) {
             $this->alert = $_SESSION['ALERT'];
             unset($_SESSION['ALERT']);
@@ -37,5 +39,24 @@ class PageClear extends \Page\Page
         $this->displayScripts();
         echo $this->skriptySpecial;
         echo "\n</body>\n</html>\n";
+
+        // vloží kompletnú stránku s buferu do premennej
+        $CelaStranka = ob_get_clean();
+
+        // aktivuje triedu na minimalizáciu kódu
+        if ( VYVOJ OR $this->levelUser >= 20 OR !$this->zbalHTML) {
+            // pošle verziu bez minifikácie
+        } else {
+            $CelaStranka =  \Minifier\Minify::html($CelaStranka);
+        }
+        // zbalí stránku pred odoslaním do zip-u
+        $stranka = gzencode($CelaStranka, 6, ZLIB_ENCODING_GZIP);
+        $velkostStrankyVbitoch = strlen($stranka);
+        // nastaví hlavičku súboru s veľkosťou stránky
+        header("Content-Length: $velkostStrankyVbitoch");
+        // nastaví hlavičku o zbalení
+        header('Content-Encoding: gzip');
+        // vykreslí stránku
+        echo $stranka;
     }
 }

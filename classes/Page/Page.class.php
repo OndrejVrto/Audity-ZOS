@@ -30,7 +30,7 @@ class Page
     public $link;
     public $url;
     
-    private $zbalHTML = false;
+    private $zbalHTML = true;
     private $aktivnemenu = false;
     private $levelStranky;
     private $starttime;
@@ -129,7 +129,8 @@ class Page
 
     public function display()
     {
-        ob_start(); // celá stránka sa načíta najskôr do pamäte pre potreby minimalizácie na konci tejto funkcie 
+        // celá stránka sa načíta najskôr do pamäte pre potreby minimalizácie na konci tejto funkcie 
+        ob_start(); 
 
         $this->PredvyplnenieKonstant(); // pre potreby odvodených tried
         $this->displayBegin();
@@ -186,12 +187,25 @@ class Page
 
         echo ( VYVOJ OR $this->levelUser >= 20 ) ? $this->VYVOJ() : '';
         echo "\n</body>\n</html>";
-        
+
         // vloží kompletnú stránku s buferu do premennej
         $CelaStranka = ob_get_clean();
-        // aktivuje triedu na minimalizáciu kódu
-        echo ( VYVOJ OR $this->levelUser >= 20 OR !$this->zbalHTML) ? $CelaStranka : \Minifier\Minify::html($CelaStranka);
 
+        // aktivuje triedu na minimalizáciu kódu
+        if ( VYVOJ OR $this->levelUser >= 20 OR !$this->zbalHTML) {
+            // pošle verziu bez minifikácie
+        } else {
+            $CelaStranka =  \Minifier\Minify::html($CelaStranka);
+        }
+        // zbalí stránku pred odoslaním do zip-u
+        $stranka = gzencode($CelaStranka, 6, ZLIB_ENCODING_GZIP);
+        $velkostStrankyVbitoch = strlen($stranka);
+        // nastaví hlavičku súboru s veľkosťou stránky
+        header("Content-Length: $velkostStrankyVbitoch");
+        // nastaví hlavičku o zbalení
+        header('Content-Encoding: gzip');
+        // vykreslí stránku
+        echo $stranka;
     }
 
     protected function PredvyplnenieKonstant(){} // pre potreby odvodených tried
