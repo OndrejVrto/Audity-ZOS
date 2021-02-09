@@ -9,6 +9,9 @@
 
     if (isset($_POST['submit'])) {
 
+        // preuloženie cesty
+        $_SESSION['RefererURL'] = $_POST['urlAdresa'];
+
         // validačné podmienky jednotlivých polí
         $v->addValidation("login-pasword","req","");
         $custom_validator = new \Validator\Login();
@@ -55,8 +58,17 @@
                 exit;
             }
 
-            header("Location: /");
+            if (isset($_POST['urlAdresa'])) {
+                $navrat = $_POST['urlAdresa'];
+            } else {
+                $navrat = "/";
+            }
+            header("Location: " . $navrat);
             exit;
+        }
+    } else {
+        if ($page->link <> "/user/lock") {
+            $_SESSION['RefererURL'] = $page->link;
         }
     }
 
@@ -83,6 +95,7 @@ ob_start();  // Začiatok definície hlavného obsahu
             <form class="lockscreen-credentials" action="<?= $page->link ?>" method="POST">
                 <div class="input-group">
                     <input type="hidden" name="login-osobne-cislo" value="<?= $page->LoginUser ?>">
+                    <input type="hidden" name="urlAdresa" value="<?= vycistiText($_SESSION['RefererURL']) ?>">
                     <input type="password" name="login-pasword" class="form-control" placeholder="Heslo">
 
                     <div class="input-group-append">
