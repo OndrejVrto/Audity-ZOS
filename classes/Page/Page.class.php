@@ -29,6 +29,7 @@ class Page
     protected $_nazovstranky;
     public $link;
     public $url;
+    public $refererURL = "/";
     
     private $zbalHTML = true;
     private $aktivnemenu = false;
@@ -63,9 +64,12 @@ class Page
 
         $this->url = filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL, FILTER_FLAG_QUERY_REQUIRED);
         $this->link = trim(strtok($_SERVER['REQUEST_URI'], '?"'));
-
         $this->linkCisty = $this->upravLink($this->link);
         $this->linkZoznam = $this->linkCisty . "zoznam";
+        if (isset($_SERVER['HTTP_REFERER'])) {
+            $this->refererURL = filter_var($_SERVER['HTTP_REFERER'], FILTER_SANITIZE_URL, FILTER_FLAG_QUERY_REQUIRED);
+        }
+        $_SESSION['RefererURL'] = $this->refererURL;
 
         // priradenie všetkých SESSION premenných do vlastností triedy
         $this->LoginUser = ( isset($_SESSION['LoginUser']) ) ? $_SESSION['LoginUser'] : "" ;

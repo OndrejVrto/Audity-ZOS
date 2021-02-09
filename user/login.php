@@ -11,6 +11,9 @@
 
     if (isset($_POST['submit'])) {
 
+        // preuloženie cesty
+        $_SESSION['RefererURL'] = $_POST['urlAdresa'];
+
         // validačné podmienky jednotlivých polí
         $v->addValidation("login-osobne-cislo","req","Prosím vyplň svoje osobné číslo zamestnanca.");
         $custom_validator = new \Validator\Login();
@@ -59,7 +62,12 @@
                 exit;
             }
 
-            header("Location: /");
+            if (isset($_POST['urlAdresa'])) {
+                $navrat = $_POST['urlAdresa'];
+            } else {
+                $navrat = "/";
+            }
+            header("Location: " . $navrat);
             exit;
         }
     }
@@ -79,6 +87,9 @@ ob_start();  // Začiatok definície hlavného obsahu
             <p class="login-box-msg">Prihlás sa na začiatku práce</p>
 
             <form action="<?= $page->link ?>" method="POST">
+
+                <!-- FORM - URL adresa pre návrat -->
+                <input type="hidden" name="urlAdresa" value="<?= vycistiText($_SESSION['RefererURL']) ?>">
 
                 <?php $pole = 'login-osobne-cislo'; echo PHP_EOL; ?>
                 <!-- FORM - osobne cislo -->

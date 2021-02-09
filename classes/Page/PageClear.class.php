@@ -38,6 +38,13 @@ class PageClear extends \Page\Page
         }
         $this->displayScripts();
         echo $this->skriptySpecial;
+        
+        if (VYVOJ OR $this->levelUser >= 20) {
+            echo '<dim class="overflow-auto">';
+            echo $this->VYVOJ();
+            echo "</dim>";
+        }
+
         echo "\n</body>\n</html>\n";
 
         // vloží kompletnú stránku s buferu do premennej
