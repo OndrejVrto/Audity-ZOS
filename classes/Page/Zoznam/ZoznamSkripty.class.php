@@ -7,7 +7,7 @@ class ZoznamSkripty extends \Page\Page
 
     public $pagination = true;
     public $info = false;
-    public $riadkov = 10;
+    public $riadkov = 15;
 
     public function PredvyplnenieKonstant(){
         
