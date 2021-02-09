@@ -117,6 +117,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 					$d->nodeValue = CssMin::minify( $d->nodeValue);
 				}
 			}
-			return ($doc->saveHTML());
+			return (mb_convert_encoding($doc->saveHTML(), 'UTF-8', 'HTML-ENTITIES'));
 		}
 	}
