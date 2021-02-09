@@ -12,8 +12,7 @@ class Novy extends \Page\Page
 
         // ak uživateľ nieje prihlásený alebo nemá oprávnenia, presmeruje ho na chybovú stránku
         if ( $this->levelUser <= 2 ){
-            header('HTTP/1.0 401 Unauthorized');
-            header("Location: /errorpages/401");
+            header("Location: $this->linkZoznam");
             exit();
         }
 
