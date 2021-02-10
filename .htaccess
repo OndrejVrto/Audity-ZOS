@@ -8,7 +8,7 @@ ErrorDocument 401 /errorpages/401.php
 ErrorDocument 500 /errorpages/500.php
 
 # pravidlá presmerovania pre chybovku
-RewriteRule ^chyba/ 404.php [QSA,L]
+#RewriteRule ^chyba/ 404.php [QSA,L]
 
 # zabráni zobrazeniu stromovaj struktúry ak stránka neexistuje
 Options All -Indexes
@@ -126,12 +126,11 @@ RewriteCond %{HTTP_USER_AGENT} ^Zeus
 RewriteRule ^.* - [F,L]
 
 
-# nastavenie expirácie jednotlivých typov súborov na nekonečno
+# nastavenie expirácie jednotlivých typov súborov na 1 rok
 #  https://jecas.cz/cache-immutable
 <filesMatch ".(css|js|jpg|jpeg|png|gif|svg|ico)$">
     Header set Cache-Control "max-age=365000000, public, immutable"
 </filesMatch>
-
 
 # nastavenie expirácie jednotlivých typov súborov
 # nastavenie meniť podľa toho ako často bude menený obsah
@@ -202,4 +201,21 @@ RewriteRule ^.* - [F,L]
 </IfModule>
 ## EXPIRES CACHING ##
 
-# povolenie zbalenia suborov do gzip pred odoslaním so servera
+
+# Security Headers settings
+# V tomto projekte Nastavujem priamo v php
+
+# X-XSS-Protection
+# Header set X-XSS-Protection "1; mode=block" 
+# X-Content-Type-Options
+# Header set X-Content-Type-Options nosniff 
+# X-Download-Options
+# Header set X-Download-Options: noopen 
+# X-Frame-Options settings
+# Header set X-Frame-Options DENY
+# Referrer-Policy settings
+# Header set Referrer-Policy "strict-origin-when-cross-origin"
+# HSTS 190 days
+# Header set Strict-Transport-Security "max-age=16416000; includeSubdomains"
+# CSP settings
+# Header set Content-Security-Policy: "upgrade-insecure-requests;"
