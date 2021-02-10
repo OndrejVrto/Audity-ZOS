@@ -196,15 +196,16 @@ class Page
         $CelaStranka = ob_get_clean();
 
         // aktivuje triedu na minimalizáciu kódu - 
-        //! Nefunguje správne, lebo na celej stránke prepisuje entity a potom mi nefunguje gramatika v JS
-        // if ( VYVOJ OR $this->levelUser >= 20 OR !$this->zbalHTML) {
-        //     // pošle verziu bez minifikácie
-        // } else {
-        //     $CelaStranka =  \Minifier\Minify::html($CelaStranka);
-        // }
+        if ( VYVOJ OR $this->levelUser >= 20 OR !$this->zbalHTML) {
+            // pošle verziu bez minifikácie
+        } else {
+            $CelaStranka =  $this->MinifiHTML($CelaStranka);
+            // Minifier nefunguje správne, lebo na celej stránke prepisuje entity a potom mi nefunguje gramatika v JS
+            //$CelaStranka =  \Minifier\Minify::html($CelaStranka);
+        }
 
         // zbalí stránku pred odoslaním do zip-u
-        $stranka = gzencode($CelaStranka, 6, ZLIB_ENCODING_GZIP);
+        $stranka = gzencode($CelaStranka, 8, ZLIB_ENCODING_GZIP);
         $velkostStrankyVbitoch = strlen($stranka);
         // nastaví hlavičku súboru s veľkosťou stránky
         header("Content-Length: $velkostStrankyVbitoch");
@@ -447,8 +448,7 @@ class Page
             <!-- Sidebar Menu -->
             <nav class="mt-2 pb-5">
                 <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent nav-compact" data-widget="treeview" role="menu" data-accordion="true" data-animation-speed="200">
-                    <!-- Add icons to the links using the .nav-icon class
-                        with font-awesome or any other icon font library -->
+                    <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
 <?php
     }
 

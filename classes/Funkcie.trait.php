@@ -118,4 +118,17 @@ trait Funkcie {
         );
         return $farba[date_format(date_create($datum), "N")];
     }
+
+    public function MinifiHTML($html)
+    {
+        $vstup = array(
+                    "/<!--.*-->/m",     // odstráni komentáre
+                    "/\s{2,}/",         // dve medzery, konce riadkov a tabulátory za jednu medzeru
+                    "/\n/",             // odstráni zvyšné konce riadkov
+                    "/> </",            // odstráni medery medzi TAGmi
+                    );
+        $vystup = array(""," ","","><");
+
+        return preg_replace($vstup, $vystup, $html);
+    }
 }
