@@ -407,21 +407,24 @@ class Page
 
     if ($this->levelUser >= 3): 
 ?>
-            <div class="image">
-                <img src="<?= $this->suborAvatara ?>" class="img-circle elevation-2" alt="User Image">
-            </div>
-            <div class="info">
-                <a href="/user/detail" class="d-block text-warning"><?= vycistiText($this->userNameShort).PHP_EOL ?>
-                    <span class="text-danger ml-2 align-top"><small>[ <?= vycistiText($this->typKonta) ?> ]</small></span>
-                </a>
-            </div>
+            <a href="/user/detail" class="w-100 d-flex">
+                <div class="image">
+                    <img class="img-circle elevation-2" src="<?= $this->suborAvatara ?>" alt="Malý obrázok avatara uživateľa">
+                </div>
+                <div class="info">
+                    <span class="text-warning"><?= vycistiText($this->userNameShort) ?></span>
+                    <span class="text-danger small ml-2">[ <?= vycistiText($this->typKonta) ?> ]</span>
+                </div>
+            </a>
 <?php else: ?>
-            <div class="image">
-                <img src="/dist/img/ avatar-clear.svg" class="img-circle elevation-2" alt="User Image">
-            </div>
-            <div class="info">
-                <a href="/user/login" class="d-block text-warning">NEPRIHLASENÝ</a>
-            </div>
+            <a href="/user/login" class="w-100 d-flex">
+                <div class="image">
+                    <img src="/dist/img/ avatar-clear.svg" class="img-circle elevation-2" alt="Ikona uživateľa">
+                </div>
+                <div class="info">
+                    <span class="text-warning">NEPRIHLASENÝ</span>
+                </div>
+            </a>
 <?php endif;
     }
 
