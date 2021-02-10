@@ -74,19 +74,13 @@ ob_start();  // Začiatok definície hlavného obsahu
                         </td>
                         <td class="project-actions text-right">
                             <a class="btn btn-primary btn-sm" href="#">
-                                <i class="fas fa-folder">
-                                </i>
-                                Detaily
+                                <i class="fas fa-folder mr-2"></i>Detaily
                             </a>
-                            <a class="btn btn-info btn-sm" href="#">
-                                <i class="fas fa-pencil-alt">
-                                </i>
-                                Editovať
+                            <a class="btn btn-info btn-sm mx-1" href="#">
+                                <i class="fas fa-pencil-alt mr-2"></i>Editovať
                             </a>
                             <a class="btn btn-danger btn-sm" href="#">
-                                <i class="fas fa-trash">
-                                </i>
-                                Vymazať
+                                <i class="fas fa-trash mr-2"></i>Vymazať
                             </a>
                         </td>
                     </tr>
@@ -128,19 +122,13 @@ ob_start();  // Začiatok definície hlavného obsahu
                         </td>
                         <td class="project-actions text-right">
                             <a class="btn btn-primary btn-sm" href="#">
-                                <i class="fas fa-folder">
-                                </i>
-                                Detaily
+                                <i class="fas fa-folder mr-2"></i>Detaily
                             </a>
-                            <a class="btn btn-info btn-sm" href="#">
-                                <i class="fas fa-pencil-alt">
-                                </i>
-                                Editovať
+                            <a class="btn btn-info btn-sm mx-1" href="#">
+                                <i class="fas fa-pencil-alt mr-2"></i>Editovať
                             </a>
                             <a class="btn btn-danger btn-sm" href="#">
-                                <i class="fas fa-trash">
-                                </i>
-                                Vymazať
+                                <i class="fas fa-trash mr-2"></i>Vymazať
                             </a>
                         </td>
                     </tr>
@@ -179,19 +167,13 @@ ob_start();  // Začiatok definície hlavného obsahu
                         </td>
                         <td class="project-actions text-right">
                             <a class="btn btn-primary btn-sm" href="#">
-                                <i class="fas fa-folder">
-                                </i>
-                                Detaily
+                                <i class="fas fa-folder mr-2"></i>Detaily
                             </a>
-                            <a class="btn btn-info btn-sm" href="#">
-                                <i class="fas fa-pencil-alt">
-                                </i>
-                                Editovať
+                            <a class="btn btn-info btn-sm mx-1" href="#">
+                                <i class="fas fa-pencil-alt mr-2"></i>Editovať
                             </a>
                             <a class="btn btn-danger btn-sm" href="#">
-                                <i class="fas fa-trash">
-                                </i>
-                                Vymazať
+                                <i class="fas fa-trash mr-2"></i>Vymazať
                             </a>
                         </td>
                     </tr>
