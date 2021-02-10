@@ -14,6 +14,8 @@ class Vyhladavanie {
     private $Titulok;
 
     private $user;
+    private $levelUser;
+
 
     private $Link = NULL;
     private $Nasobitel = 7;
@@ -50,8 +52,9 @@ class Vyhladavanie {
         }
     }
 
-    function __construct($uzivatel) {
+    function __construct($uzivatel, $levelUser = 2) {
         $this->user = $uzivatel;
+        $this->levelUser = $levelUser;
         
         //SQL injection prevencia - vyberie prvé číslo z reťazca
         preg_match('/\d*/',  $_GET['p'], $vystup);
@@ -74,16 +77,18 @@ class Vyhladavanie {
             // nahradí všetky otázniky v dotaze hľadanou hodnotou
             $sql_1 = sprintf(str_replace('?', '%1$s', $sql_1), $this->hladanaHodnota);
 
-            $sql_2 = 'SELECT *,
-                    LOCATE("' . $this->hladanaHodnotaPole[0] . '", Hodnota_CISTA) AS poloha,
-                    0.1 as score
-                    FROM 70_search_zaznamy
+            $sql_2 = 'SELECT 
+                    ZA.*,
+                    LOCATE("' . $this->hladanaHodnotaPole[0] . '", ZA.Hodnota_CISTA) AS poloha,
+                    NA.Nasobitel AS score 
+                    FROM 70_search_zaznamy AS ZA, 72_search_nasobitel AS NA
                     WHERE ';
             foreach ($this->hladanaHodnotaPole as $value) {
-                $sql_2 .= 'Hodnota_CISTA LIKE "%' . $value . '%" AND ';
+                $sql_2 .= 'ZA.Hodnota_CISTA LIKE "%' . $value . '%" AND ';
             }
             // odstráni z dotazu poslené AND
-            $sql_2 = rtrim($sql_2, ' AND ');
+            //$sql_2 = rtrim($sql_2, ' AND ');
+            $sql_2 .= 'ZA.ID72_search_nasobitel = NA.ID72';
 
             $sql_3 = '(' . $sql_1 . ') UNION ALL (' . $sql_2 . ') 
                     ORDER BY score DESC';
@@ -91,7 +96,8 @@ class Vyhladavanie {
             $sql = 'SELECT DISTINCT 
                         LEFT(X.`Hodnota_ORGINAL`, 150) AS TEXT, 
                         X.`Link`,
-                        X.`Titulok`
+                        X.`Titulok`,
+                        X.`score`
                     FROM (' . $sql_3 . ') AS X';
 
             $this->SQLprikaz = $sql;
@@ -147,8 +153,16 @@ class Vyhladavanie {
             $titulok = vycistiText($this->VysledokHladania[$i]['Titulok']);
             $link = $this->VysledokHladania[$i]['Link'];
             $text = $zvyraznovac->highlight(vycistiText($this->VysledokHladania[$i]['TEXT']), vycistiText($this->hladanaHodnota));  // zvýraznenie hľadaných slov
+            $score = $this->VysledokHladania[$i]['score'];
 
             $html .= PHP_EOL . '<div class="card py-2 px-3 mb-2">';
+            if ( VYVOJ OR $this->levelUser >= 20){
+                $html .= PHP_EOL . TAB1 .'<div class="ribbon-wrapper ribbon-lg">';
+                $html .= PHP_EOL . TAB2 .'<div class="ribbon bg-secondary">';
+                $html .= PHP_EOL . TAB3 . number_format($score,3);
+                $html .= PHP_EOL . TAB2 .'</div>';
+                $html .= PHP_EOL . TAB1 .'</div>';
+            }
             $html .= PHP_EOL . TAB1 . '<a class="h5" href="' . $link . '" title="' . ($i + 1) . '">' . $titulok . '</a>';
             $html .= PHP_EOL . TAB1 . '<a class="text-decoration-none text-success" href="' . $link . '">' . $link . '</a>';
             $html .= PHP_EOL . TAB1 . '<span class="text-break text-truncate">' . $text . '</span>';

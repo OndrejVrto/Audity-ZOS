@@ -4,7 +4,7 @@
     $page = new \Page\Page();
     $page->zobrazitBublinky = false;
 
-    $search = new Vyhladavanie($page->userName);
+    $search = new Vyhladavanie($page->userName, $page->levelUser);
     $search->setHladanaHodnota($page->searchValue);
     $search->zaznamov = 3;
     $search->Hladat();
