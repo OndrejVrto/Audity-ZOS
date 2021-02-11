@@ -305,14 +305,14 @@ class Premenne {
             "SUBMENU" => array(
                 array(
                     "LEVEL" => 0,
-                    "Link" => false,
-                    "Title" => "",
-                    "Description" => "",
-                    "Nadpis" => "",
+                    "Link" => "/personal/zoznam-firiem/zoznam",
+                    "Title" => "Zoznam firiem",
+                    "Description" => "Zioznam a kontakty na firmy ktoré sa zúčastňujú auditov",
+                    "Nadpis" => "Zoznam firiem",
                     "NazovMENU" => "Zoznam firiem",
                     "Doplnok" => "badge badge-warning",
                     "PopisDoplnku" => "TODO",
-                    "Ikona" => "far fa-circle",
+                    "Ikona" => "far fa-circle text-danger",
                     "SUBMENU" => false
                 ),
                 array(

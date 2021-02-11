@@ -71,11 +71,9 @@ class Delete extends \Page\Page
             </div>
         </div>
     </div>
-
 <?php
         } elseif($this->pocet <= 0) {
 ?>
-
                     </div>
 
                 </div>
@@ -89,7 +87,6 @@ class Delete extends \Page\Page
 
         </div>
     </div>
-
 <?php
         }
     }

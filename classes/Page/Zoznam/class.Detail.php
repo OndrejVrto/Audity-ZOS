@@ -33,25 +33,24 @@ class Detail extends \Page\Page
         <div class="<?= $this->bodyClassExtended ?>" style="<?= $this->bodyWidthExtended ?>">
 
             <form novalidate>
-            <fieldset disabled>
-                <div class="card" >
+                <fieldset disabled>
+                    <div class="card" >
 
-                    <div class="card-header">
-                        Detailné informácie o položke zoznamu
-                    </div>
-                    <div class="card-body register-card-body">
+                        <div class="card-header">
+                            Detailné informácie o položke zoznamu
+                        </div>
+
+                        <div class="card-body register-card-body">
 <?php
     }
 
     function ContentFooterZoznam()
     {
 ?>
+                        </div>
 
                     </div>
-
-                </div>
-
-            </fieldset>
+                </fieldset>
             </form>
 
             <div class="row justify-content-center">
@@ -60,8 +59,6 @@ class Detail extends \Page\Page
 
         </div>
     </div>
-
 <?php
     }
-
 }

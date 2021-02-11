@@ -120,6 +120,7 @@ class Page
         // zadefinovanie základných štýlov
         $this->addStyles("Font Awesome", true);
         $this->addStyles("Ionicons", true);
+        $this->addStyles("animate", true);
         $this->addStyles("iCheck", true);
         $this->addStyles("Adminlte style", false);
         $this->addStyles("Google Font: Source Sans Pro", false);
@@ -542,8 +543,8 @@ class Page
         <div class="content-header">
             <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-md-8 order-2 order-md-1">
-                <h1 class="m-0 text-dark"><?php echo $this->nadpis; ?></h1>
+                <div class="col-md-8 order-2 order-md-1 d-inline-flex">
+                <h1 class="m-0 text-dark animate__animated animate__fadeInRight"><?php echo $this->nadpis; ?></h1>
                 </div><!-- /.col -->
                 <div class="col-md-4 order-1 order-md-2">
 <?php
@@ -766,6 +767,9 @@ class Page
             case "CalcSS3-index":
                 $cssLink = '/plugins/CalcSS3/index';
             break;
+            case "animate":
+                $cssLink = '/dist/css/animate/animate';
+            break;
         }
 
         $this->stylyArray[] = ($cssComment != '' ? '<!-- '.$cssComment.' -->'.PHP_EOL.TAB1 : '').'<link rel="stylesheet" href="'.$cssLink.($min ? '.min' : '').'.css">';
@@ -978,26 +982,27 @@ class Page
             $html .= vycistiText(print_r($_FILES, true));
         $html .= '</footer>' ;
         $html .= "\n\n". '<footer class="main-footer"> <h3 class="text-primary">$_SERVER</h3>';
-            $html .= '<div class="table-responsive"> <table class="table table-sm table-borderless table-hover">' ;
+            $html .= "\n\n". '<div class="table-responsive"> <table class="table table-sm table-borderless table-hover">' ;
             foreach ($indicesServer as $arg) {
                 if (isset($_SERVER[$arg])) {
-                    $html .= '<tr><td>'.$arg.'</td><td>' . vycistiText($_SERVER[$arg]) . '</td></tr>'.PHP_EOL ;
+                    $html .= PHP_EOL . '<tr><td>'.$arg.'</td><td>' . vycistiText($_SERVER[$arg]) . '</td></tr>' ;
                 }
                 else {
-                    $html .= '<tr><td>'.$arg.'</td><td>-</td></tr>'.PHP_EOL ;
+                    $html .= PHP_EOL . '<tr><td>'.$arg.'</td><td>-</td></tr>';
                 }
             }
-            $html .= '</table> </div>';
-        $html .= "</footer>\n\n";
+            $html .= PHP_EOL . PHP_EOL . '</table> </div>';
+        $html .= PHP_EOL . "</footer>";
         
         $caskonecny = microtime(true) - $this->starttime;
         $html .= "\n\n". '<footer class="main-footer pb-5"> <h3 class="text-warning">Presný ČAS spracovania stránky</h3>';
             $html .= vycistiText(print_r(round($caskonecny, 4), true)); $html .= "s";
         $html .= '</footer>' ;
 
-        $html .= "\n\n". '</div><hr>' . "\n\n";
+        $html .= "\n\n". '</div><hr>';
+        $html .= "\n\n". '<!--  LEN Pre potreby vývoja tejto stránky. Po vývoji ZMAZať !!!!!!!!!  -->';
 
-        return $html;
+        return $this->pridaj_tabulator_html($html, 4);
     }
 
     // funkcia  upravLink  vymaže posledný podadresár z cesty

@@ -19,12 +19,12 @@
     // funkcia na automaticke registrovanie tried
     // prehľadá adresáre uvedené v poli
     spl_autoload_register ( function ($class) {
-        $pole = explode("\\", $class);  // rozdelí namespace 
+        $pole = explode("\\", $class);  // rozdelí namespace do prvkov
         $index = count($pole) - 1;
         $value = $pole[$index];
         $pole[$index] = "class." . $value . ".php"; //premenuje posledný prvok poľa na názov súboru triedy
         include_once $_SERVER['DOCUMENT_ROOT'] . "/classes/" . implode("/", $pole);
-    });    
+    });
 
     // globálne premenné
     $pathInclude = $_SERVER['DOCUMENT_ROOT'] . "/include/";

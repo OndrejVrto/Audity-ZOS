@@ -13,6 +13,7 @@ class ZoznamSkripty extends \Page\Page
         
         parent::clearStyles();
         parent::addStyles("Font Awesome", true);
+        parent::addStyles("animate", true);
         parent::addStyles("Ionicons", true);
         parent::addStyles("DataTables-jQuery", false);
         parent::addStyles("DataTables-Bootstrap", true);
