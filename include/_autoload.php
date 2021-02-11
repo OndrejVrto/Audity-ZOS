@@ -14,12 +14,16 @@
     }
 
     // trait roznych funkcií používaných v triedach
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/classes/Funkcie.trait.php';
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/classes/trait.Funkcie.php';
     
     // funkcia na automaticke registrovanie tried
     // prehľadá adresáre uvedené v poli
     spl_autoload_register ( function ($class) {
-        include_once $_SERVER['DOCUMENT_ROOT'] . "/classes/" . str_replace("\\", "/", $class).".class.php";
+        $pole = explode("\\", $class);  // rozdelí namespace 
+        $index = count($pole) - 1;
+        $value = $pole[$index];
+        $pole[$index] = "class." . $value . ".php"; //premenuje posledný prvok poľa na názov súboru triedy
+        include_once $_SERVER['DOCUMENT_ROOT'] . "/classes/" . implode("/", $pole);
     });    
 
     // globálne premenné
