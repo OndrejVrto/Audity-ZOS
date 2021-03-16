@@ -568,25 +568,27 @@ class Page
             if (array_key_exists('Hlavicka', $value)) {
                 // nerob nič
             } else {
-                if (is_array($value['SUBMENU'])) {
-                    // rekurzívna funkcia - volá sama seba pri každej ďalšej vrste Menu !!!
-                    $submenu = $this->displayBubleMenu($value['SUBMENU']);
-                    if ($this->aktivnemenu === true) {
-                        $html .= "\n".$odsad.'<li class="breadcrumb-item">';
-                        if ($value['Link'] !== false) {
-                            $html .= '<a href="'.$value['Link'].'">'.$value['NazovMENU'].'</a>';
-                        } else {
-                            $html .= $value['NazovMENU'];
+                if (isset($value['SUBMENU'])) {
+                    if (is_array($value['SUBMENU'])) {
+                        // rekurzívna funkcia - volá sama seba pri každej ďalšej vrste Menu !!!
+                        $submenu = $this->displayBubleMenu($value['SUBMENU']);
+                        if ($this->aktivnemenu === true) {
+                            $html .= "\n".$odsad.'<li class="breadcrumb-item">';
+                            if ($value['Link'] !== false) {
+                                $html .= '<a href="'.$value['Link'].'">'.$value['NazovMENU'].'</a>';
+                            } else {
+                                $html .= $value['NazovMENU'];
+                            }
+                            $html .= '</li>';
+                            $html .= $submenu;
                         }
-                        $html .= '</li>';
-                        $html .= $submenu;
-                    }
-                } else {
-                    if ($value['Link'] == $this->link || $value['Link'] == $this->linkZoznam) {
-                        $this->aktivnemenu = true;
-                        $html .= "\n".$odsad.'<li class="breadcrumb-item active">';
-                        $html .= $value['NazovMENU'];
-                        $html .= '</li>';
+                    } else {
+                        if ($value['Link'] == $this->link || $value['Link'] == $this->linkZoznam) {
+                            $this->aktivnemenu = true;
+                            $html .= "\n".$odsad.'<li class="breadcrumb-item active">';
+                            $html .= $value['NazovMENU'];
+                            $html .= '</li>';
+                        }
                     }
                 }
             }

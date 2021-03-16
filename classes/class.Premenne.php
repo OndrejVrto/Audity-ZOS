@@ -20,9 +20,13 @@ class Premenne {
 
     private function getParametre($pole, $link1, $link2) {
         foreach ($pole as $value) {
-            if (is_array($value['SUBMENU'])) {
-                // rekurzívna funkcia - volá sama seba pri každej ďalšej vrste Menu !!!
-                $this->getParametre($value['SUBMENU'], $link1, $link2);
+            if (isset($value['SUBMENU'])) {
+                if (is_array($value['SUBMENU'])) {
+                    // rekurzívna funkcia - volá sama seba pri každej ďalšej vrste Menu !!!
+                    $this->getParametre($value['SUBMENU'], $link1, $link2);
+                }
+            } elseif (isset($value['Hlavicka'])){
+                // nerob nič - ide o hlavičku
             } else {
                 if ($value['Link'] == $link1 or $value['Link'] == $link2) {
                     if (isset($value['LEVEL'])) {

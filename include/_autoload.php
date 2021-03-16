@@ -47,7 +47,7 @@
                         FROM `52_sys_cache_cron_and_clean`
                         WHERE `NazovCACHE` = 'LAST CHANGE APP'")->fetchArray();
     $last_modified = $row['Cas'];
-    if ($_SERVER["HTTP_IF_MODIFIED_SINCE"] && $last_modified <= strtotime($_SERVER["HTTP_IF_MODIFIED_SINCE"])) {
+    if ( isset($_SERVER["HTTP_IF_MODIFIED_SINCE"]) AND $last_modified <= strtotime($_SERVER["HTTP_IF_MODIFIED_SINCE"])) {
         header("HTTP/1.1 304 Not Modified");
         exit;
     }
